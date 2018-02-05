@@ -1,2 +1,4 @@
-#Zen Onlinejudge System
-##A powerful online judge system
+##Zen Online Judge
+
+A powerful online judge system
+
