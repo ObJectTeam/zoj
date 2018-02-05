@@ -26,9 +26,9 @@ app.get('/ranklist', async (req, res) => {
 	try {
 		let paginate = zoj.utils.paginate(await User.count({ is_show: true }), req.query.page, zoj.config.page.ranklist);
 		let ranklist = await User.query(paginate, { is_show: true }, [['ac_num', 'desc']]);
-		await ranklist.forEachAsync(async x => x.renderInformation());
 
 		res.render('ranklist', {
+			privilege: res.locals.user && res.locals.user.admin >= 4,
 			ranklist: ranklist,
 			paginate: paginate
 		});
@@ -93,7 +93,6 @@ app.get('/user/:id', async (req, res) => {
 		user.allowedEdit = await user.isAllowedEditBy(res.locals.user);
 
 		let statistics = await user.getStatistics();
-		await user.renderInformation();
 		user.emailVisible = user.public_email || user.allowedEdit;
 
 		res.render('user', {

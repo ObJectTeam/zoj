@@ -1,27 +1,13 @@
 /*
- *  This file is part of ZOJ.
- *
- *  Copyright (c) 2016 Menci <huanghaorui301@gmail.com>
- *
- *  ZOJ is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  ZOJ is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public
- *  License along with ZOJ. If not, see <http://www.gnu.org/licenses/>.
+ *  Package  : modules
+ *  Filename : problem.js
+ *  Create   : 2018-02-05
  */
 
 'use strict';
 
 let Problem = zoj.model('problem');
 let JudgeState = zoj.model('judge_state');
-let CustomTest = zoj.model('custom_test');
 let WaitingJudge = zoj.model('waiting_judge');
 let Contest = zoj.model('contest');
 let ProblemTag = zoj.model('problem_tag');
@@ -31,19 +17,30 @@ let Article = zoj.model('article');
 app.get('/problems', async (req, res) => {
 	try {
 		let where = {};
-		if (!res.locals.user || !await res.locals.user.admin >= 2) {
-			if (res.locals.user) {
-				where = {
-					$or: {
-						is_public: 1,
-						user_id: res.locals.user.id
-					}
-				};
-			} else {
-				where = {
-					is_public: 1
-				};
+		if(!res.locals.user){
+			where = {
+				$and: {
+					is_public: 1,
+					is_protected: 0
+				}
 			}
+		}else if(!await res.locals.user.admin >= 1){
+			where = {
+				$or: {
+					$and: {
+						is_public: 1,
+						is_protected: 0
+					},
+					user_id: res.locals.user.id
+				}
+			}
+		}else if(!await res.locals.user.admin >= 3){
+			where = {
+				$or: {
+					is_public: 1,
+					user_id: res.locals.user.id
+				}
+			};
 		}
 
 		let paginate = zoj.utils.paginate(await Problem.count(where), req.query.page, zoj.config.page.problem);
@@ -79,29 +76,45 @@ app.get('/problems/search', async (req, res) => {
 			}
 		};
 
-		if (!res.locals.user || !await res.locals.user.admin >= 2) {
-			if (res.locals.user) {
-				where = {
-					$and: [
-						where,
-						{
-							$or: {
+		if(!res.locals.user){
+			where = {
+				$and: [
+					where,
+					{
+						$and: {
+							is_public: 1,
+							is_protected: 0
+						}
+					}
+				]
+			};
+		}else if(!await res.locals.user.admin >= 1){
+			where = {
+				$and: [
+					where,
+					{
+						$or: {
+							$and: {
 								is_public: 1,
-								user_id: res.locals.user.id
-							}
+								is_protected: 0
+							},
+							user_id: res.locals.user.id
 						}
-					]
-				};
-			} else {
-				where = {
-					$and: [
-						where,
-						{
-							is_public: 1
+					}
+				]
+			};
+		}else if(!await res.locals.user.admin >= 3){
+			where = {
+				$and: [
+					where,
+					{
+						$or: {
+							is_public: 1,
+							user_id: res.locals.user.id
 						}
-					]
-				};
-			}
+					}
+				]
+			};
 		}
 
 		let order = [zoj.db.literal('`id` = ' + id + ' DESC'), ['id', 'ASC']];
@@ -295,7 +308,7 @@ app.post('/problem/:id/edit', async (req, res) => {
 
 			problem = await Problem.create();
 
-			if (await res.locals.user.admin >= 2) {
+			if (await res.locals.user.admin >= 3) {
 				let customID = parseInt(req.body.id);
 				if (customID) {
 					if (await Problem.fromID(customID)) throw new ErrorMessage('ID 已被使用。');
@@ -309,7 +322,7 @@ app.post('/problem/:id/edit', async (req, res) => {
 			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
 			if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
 
-			if (await res.locals.user.admin >= 2) {
+			if (await res.locals.user.admin >= 3) {
 				let customID = parseInt(req.body.id);
 				if (customID && customID !== id) {
 					if (await Problem.fromID(customID)) throw new ErrorMessage('ID 已被使用。');
@@ -388,7 +401,7 @@ app.post('/problem/:id/import', async (req, res) => {
 
 			problem = await Problem.create();
 
-			if (await res.locals.user.admin >= 2) {
+			if (await res.locals.user.admin >= 3) {
 				let customID = parseInt(req.body.id);
 				if (customID) {
 					if (await Problem.fromID(customID)) throw new ErrorMessage('ID 已被使用。');
@@ -443,7 +456,7 @@ app.post('/problem/:id/import', async (req, res) => {
 		try {
 			let data = await download(req.body.url + (req.body.url.endsWith('/') ? 'testdata/download' : '/testdata/download'));
 			await fs.writeFileAsync(tmpFile.path, data);
-			await problem.updateTestdata(tmpFile.path, await res.locals.user.admin >= 2);
+			await problem.updateTestdata(tmpFile.path, await res.locals.user.admin >= 3);
 		} catch (e) {
 			zoj.log(e);
 		}
@@ -511,11 +524,11 @@ app.post('/problem/:id/manage', app.multer.fields([{ name: 'testdata', maxCount:
 		if (validateMsg) throw new ErrorMessage('无效的题目数据配置。', null, validateMsg);
 
 		if (req.files['testdata']) {
-			await problem.updateTestdata(req.files['testdata'][0].path, await res.locals.user.admin >= 2);
+			await problem.updateTestdata(req.files['testdata'][0].path, await res.locals.user.admin >= 3);
 		}
 
 		if (req.files['additional_file']) {
-			await problem.updateFile(req.files['additional_file'][0].path, 'additional_file', await res.locals.user.admin >= 2);
+			await problem.updateFile(req.files['additional_file'][0].path, 'additional_file', await res.locals.user.admin >= 3);
 		}
 
 		await problem.save();
@@ -738,7 +751,7 @@ app.post('/problem/:id/testdata/upload', app.multer.array('file'), async (req, r
 
 		if (req.files) {
 			for (let file of req.files) {
-				await problem.uploadTestdataSingleFile(file.originalname, file.path, file.size, await res.locals.user.admin >= 2);
+				await problem.uploadTestdataSingleFile(file.originalname, file.path, file.size, await res.locals.user.admin >= 3);
 			}
 		}
 
@@ -858,62 +871,3 @@ app.get('/problem/:id/statistics/:type', async (req, res) => {
 		});
 	}
 });
-
-/*
-app.post('/problem/:id/custom-test', app.multer.fields([{ name: 'code_upload', maxCount: 1 }, { name: 'input_file', maxCount: 1 }]), async (req, res) => {
-  try {
-    let id = parseInt(req.params.id);
-    let problem = await Problem.fromID(id);
-
-    if (!problem) throw new ErrorMessage('无此题目。');
-    if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': zoj.utils.makeUrl(['problem', id]) }) });
-    if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
-
-    let filepath;
-    if (req.files['input_file']) {
-      if (req.files['input_file'][0].size > zoj.config.limit.custom_test_input) throw new ErrorMessage('输入数据过长。');
-      filepath = req.files['input_file'][0].path;
-    } else {
-      if (req.body.input_file_textarea.length > zoj.config.limit.custom_test_input) throw new ErrorMessage('输入数据过长。');
-      filepath = await require('tmp-promise').tmpName({ template: '/tmp/tmp-XXXXXX' });
-      await require('fs-extra').writeFileAsync(filepath, req.body.input_file_textarea);
-    }
-
-    let code;
-    if (req.files['code_upload']) {
-      if (req.files['code_upload'][0].size > zoj.config.limit.submit_code) throw new ErrorMessage('代码过长。');
-      code = (await require('fs-extra').readFileAsync(req.files['code_upload'][0].path)).toString();
-    } else {
-      if (req.body.code.length > zoj.config.limit.submit_code) throw new ErrorMessage('代码过长。');
-      code = req.body.code;
-    }
-
-    let custom_test = await CustomTest.create({
-      input_filepath: filepath,
-      code: code,
-      language: req.body.language,
-      user_id: res.locals.user.id,
-      problem_id: id
-    });
-
-    await custom_test.save();
-
-    let waiting_judge = await WaitingJudge.create({
-      judge_id: custom_test.id,
-      priority: 3,
-      type: 'custom_test'
-    });
-
-    await waiting_judge.save();
-
-    res.send({
-      id: custom_test.id
-    });
-  } catch (e) {
-    zoj.log(e);
-    res.send({
-      err: e
-    });
-  }
-});
-*/

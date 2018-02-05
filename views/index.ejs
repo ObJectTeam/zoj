@@ -68,21 +68,7 @@
 												<%- user.nameplate %>
 													<% } %>
 										</td>
-										<td style="font-content">
-											<script id="user-infomation-script-<%= i %>">
-												(function () {
-													var html = <% - JSON.stringify(user.information) %>;
-													var elem = document.createElement('div');
-													elem.style = 'overflow: hidden; width: 100%; position: relative; ';
-													elem.style.maxHeight = lineHeight + 'px';
-													elem.innerHTML = html;
-													var imgs = Array.prototype.slice.call(elem.getElementsByTagName('img'));
-													for (var i in imgs) imgs[i].parentNode.removeChild(imgs[i]);
-													var script = document.getElementById('user-infomation-script-<%= i %>');
-													script.parentNode.replaceChild(elem, script);
-												})();
-											</script>
-										</td>
+										<td><%= user.information %></td>
 									</tr>
 									<%
 			} %>

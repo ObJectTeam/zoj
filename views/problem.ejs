@@ -342,7 +342,6 @@ div[class*=ace_br] {
               </div>
               <div class="ui center aligned vertical segment" style="padding-bottom: 0; ">
                 <button type="submit" class="ui button">提交</button>
-                <!--div onclick="show_custom_test()" class="ui positive button">自定义测试</div-->
               </div>
             <% } %>
           </form>
@@ -418,65 +417,6 @@ div[class*=ace_br] {
       <div class="ui green button" id="submit-custom-test">提交</div>
     </div>
   </div>
-
-  <script>
-  var custom_test_id;
-
-  $('#submit-custom-test').click(function () {
-    $('#submit-custom-test').addClass('disabled');
-
-    var form = document.getElementById('form-custom-test');
-    $(form).find('[name=language]').val($('#languages-menu .item.active').data('value'));
-    $(form).find('[name=code]').val(editor.getValue());
-
-    var code_upload = $('#answer')[0].cloneNode(true);
-    code_upload.style.display = 'none';
-    code_upload.name = 'code_upload';
-    form.appendChild(code_upload);
-
-    $.ajax({
-      url: form.action,
-      type: 'post',
-      data: new FormData(form),
-      cache: false,
-      contentType: false,
-      processData: false,
-      success: function (data) {
-        custom_test_id = data.id;
-        update_custom_test_result();
-      }
-    });
-
-    form.removeChild(code_upload);
-  });
-
-  function show_custom_test() {
-    $('#modal-custom-test').modal('show');
-    new ResizeSensor($('#modal-custom-test'), function () {
-      $(window).resize();
-    });
-  }
-
-  function update_custom_test_result() {
-    $.get('/custom-test/' + custom_test_id + '/ajax', function (data) {
-      if (data.err) {
-        alert(data.err);
-      }
-
-      if ($('#custom-test-result').html() !== data.html) {
-        $('#custom-test-result').html(data.html);
-      }
-
-      if (data.pending) {
-        setTimeout(function () {
-          update_custom_test_result();
-        }, 500);
-      } else {
-        $('#submit-custom-test').removeClass('disabled');
-      }
-    });
-  }
-  </script>
 <% } else { %>
   <script>
   function submit_code() {

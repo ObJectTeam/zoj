@@ -1,6 +1,8 @@
 /*
- *  This file is part of ZOJ.
- *
+ *  Package  : models
+ *  Filename : contest.js
+ *  Create   : 2018-02-05
+ * 
  *  Introduce to Privilege System:
  *    Privileges:
  *      0 : Common user
@@ -184,10 +186,6 @@ class User extends Model {
 		}
 
 		return res;
-	}
-
-	async renderInformation() {
-		this.information = await zoj.utils.markdown(this.information);
 	}
 
 	async getPrivileges() {

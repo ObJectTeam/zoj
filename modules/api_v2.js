@@ -1,20 +1,7 @@
 /*
- *  This file is part of ZOJ.
- *
- *  Copyright (c) 2016 Menci <huanghaorui301@gmail.com>
- *
- *  ZOJ is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  ZOJ is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public
- *  License along with ZOJ. If not, see <http://www.gnu.org/licenses/>.
+ *  Package  : modules
+ *  Filename : api_v2.js
+ *  Create   : 2018-02-05
  */
 
 'use strict';
@@ -89,7 +76,7 @@ app.apiRouter.post('/api/v2/judge/peek', async (req, res) => {
 		let WaitingJudge = zoj.model('waiting_judge');
 		let JudgeState = zoj.model('judge_state');
 
-		let judge_state, custom_test;
+		let judge_state;
 		await zoj.utils.lock('/api/v2/judge/peek', async () => {
 			let waiting_judge = await WaitingJudge.findOne({ order: [['priority', 'ASC'], ['id', 'ASC']] });
 			if (!waiting_judge) {
@@ -99,9 +86,6 @@ app.apiRouter.post('/api/v2/judge/peek', async (req, res) => {
 			if (waiting_judge.type === 'submission') {
 				judge_state = await waiting_judge.getJudgeState();
 				await judge_state.loadRelationships();
-			} else {
-				custom_test = await waiting_judge.getCustomTest();
-				await custom_test.loadRelationships();
 			}
 			await waiting_judge.destroy();
 		});
@@ -132,21 +116,6 @@ app.apiRouter.post('/api/v2/judge/peek', async (req, res) => {
 					type: 'submission'
 				});
 			}
-		} else if (custom_test) {
-			res.send({
-				have_task: 1,
-				judge_id: custom_test.id,
-				code: custom_test.code,
-				language: custom_test.language,
-				input_file: (await require('fs-extra').readFileAsync(custom_test.input_filepath)).toString(),
-				time_limit: custom_test.problem.time_limit,
-				memory_limit: custom_test.problem.memory_limit,
-				file_io: custom_test.problem.file_io,
-				file_io_input_name: custom_test.problem.file_io_input_name,
-				file_io_output_name: custom_test.problem.file_io_output_name,
-				problem_type: custom_test.problem.type,
-				type: 'custom_test'
-			});
 		} else {
 			res.send({ have_task: 0 });
 		}
@@ -159,12 +128,7 @@ app.apiRouter.post('/api/v2/judge/update/:id', async (req, res) => {
 	try {
 		if (req.query.session_id !== zoj.config.judge_token) return res.status(404).send({ err: 'Permission denied' });
 
-		if (req.body.type === 'custom-test') {
-			let CustomTest = zoj.model('custom_test');
-			let custom_test = CustomTest.fromID(req.params.id);
-			await custom_test.updateResult(JSON.parse(req.body.result));
-			await custom_test.save();
-		} else if (req.body.type === 'submission') {
+		if (req.body.type === 'submission') {
 			let JudgeState = zoj.model('judge_state');
 			let judge_state = await JudgeState.fromID(req.params.id);
 			await judge_state.updateResult(JSON.parse(req.body.result));

@@ -31,6 +31,9 @@ global.zoj = {
 	log(obj) {
 		console.log(obj);
 	},
+	debug(obj) {
+		//console.log(obj);
+	},
 	async run() {
 		let Express = require('express');
 		global.app = Express();
@@ -83,7 +86,7 @@ global.zoj = {
 			host: this.config.db.host,
 			dialect: this.config.db.dialect,
 			storage: this.config.db.storage ? this.utils.resolvePath(this.config.db.storage) : null,
-			logging: zoj.production ? false : zoj.log
+			logging: zoj.production ? false : zoj.debug
 		});
 		global.Promise = Sequelize.Promise;
 		this.db.countQuery = async (sql, options) => (await this.db.query(`SELECT COUNT(*) FROM (${sql}) AS \`__tmp_table\``, options))[0][0]['COUNT(*)'];

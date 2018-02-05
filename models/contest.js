@@ -1,20 +1,7 @@
 /*
- *  This file is part of ZOJ.
- *
- *  Copyright (c) 2016 Menci <huanghaorui301@gmail.com>
- *
- *  ZOJ is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  ZOJ is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public
- *  License along with ZOJ. If not, see <http://www.gnu.org/licenses/>.
+ *  Package  : models
+ *  Filename : contest.js
+ *  Create   : 2018-02-05
  */
 
 'use strict';
@@ -28,135 +15,136 @@ let ContestRanklist = zoj.model('contest_ranklist');
 let ContestPlayer = zoj.model('contest_player');
 
 let model = db.define('contest', {
-  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-  title: { type: Sequelize.STRING(80) },
-  subtitle: { type: Sequelize.TEXT },
-  start_time: { type: Sequelize.INTEGER },
-  end_time: { type: Sequelize.INTEGER },
+	id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+	title: { type: Sequelize.STRING(80) },
+	subtitle: { type: Sequelize.TEXT },
+	start_time: { type: Sequelize.INTEGER },
+	end_time: { type: Sequelize.INTEGER },
 
-  holder_id: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'user',
-      key: 'id'
-    }
-  },
-  // type: noi, ioi, acm
-  type: { type: Sequelize.STRING(10) },
+	holder_id: {
+		type: Sequelize.INTEGER,
+		references: {
+			model: 'user',
+			key: 'id'
+		}
+	},
+	// type: noi, ioi, acm
+	type: { type: Sequelize.STRING(10) },
 
-  information: { type: Sequelize.TEXT },
-  problems: { type: Sequelize.TEXT },
+	information: { type: Sequelize.TEXT },
+	problems: { type: Sequelize.TEXT },
 
-  ranklist_id: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'contest_ranklist',
-      key: 'id'
-    }
-  },
+	ranklist_id: {
+		type: Sequelize.INTEGER,
+		references: {
+			model: 'contest_ranklist',
+			key: 'id'
+		}
+	},
 
-  is_public: { type: Sequelize.BOOLEAN },
-  is_protected: { type: Sequelize.BOOLEAN }
+	is_public: { type: Sequelize.BOOLEAN },
+	is_protected: { type: Sequelize.BOOLEAN }
 }, {
-  timestamps: false,
-  tableName: 'contest',
-  indexes: [
-    {
-      fields: ['holder_id'],
-    },
-    {
-      fields: ['ranklist_id'],
-    }
-  ]
-});
+		timestamps: false,
+		tableName: 'contest',
+		indexes: [
+			{
+				fields: ['holder_id'],
+			},
+			{
+				fields: ['ranklist_id'],
+			}
+		]
+	});
 
 let Model = require('./common');
 class Contest extends Model {
-  static async create(val) {
-    return Contest.fromRecord(Contest.model.build(Object.assign({
-      title: '',
-      subtitle: '',
-      problems: '',
-      information: '',
-      type: 'noi',
-      start_time: 0,
-      end_time: 0,
-      holder: 0,
-      ranklist_id: 0,
-      is_public: false
-    }, val)));
-  }
+	static async create(val) {
+		return Contest.fromRecord(Contest.model.build(Object.assign({
+			title: '',
+			subtitle: '',
+			problems: '',
+			information: '',
+			type: 'noi',
+			start_time: 0,
+			end_time: 0,
+			holder: 0,
+			ranklist_id: 0,
+			is_public: false,
+			is_protected: true
+		}, val)));
+	}
 
-  async loadRelationships() {
-    this.holder = await User.fromID(this.holder_id);
-    this.ranklist = await ContestRanklist.fromID(this.ranklist_id);
-  }
+	async loadRelationships() {
+		this.holder = await User.fromID(this.holder_id);
+		this.ranklist = await ContestRanklist.fromID(this.ranklist_id);
+	}
 
-  async isAllowedEditBy(user) {
-    return user && (user.admin >= 3 || this.holder_id === user.id);
-  }
+	async isAllowedEditBy(user) {
+		return user && (user.admin >= 3 || this.holder_id === user.id);
+	}
 
-  async isAllowedSeeResultBy(user) {
-    if (this.type === 'acm') return true;
-    return (user && (user.admin >= 3 || this.holder_id === user.id)) || !(await this.isRunning());
-  }
+	async isAllowedSeeResultBy(user) {
+		if (this.type === 'acm') return true;
+		return (user && (user.admin >= 3 || this.holder_id === user.id)) || !(await this.isRunning());
+	}
 
-  async getProblems() {
-    if (!this.problems) return [];
-    return this.problems.split('|').map(x => parseInt(x));
-  }
+	async getProblems() {
+		if (!this.problems) return [];
+		return this.problems.split('|').map(x => parseInt(x));
+	}
 
-  async setProblemsNoCheck(problemIDs) {
-    this.problems = problemIDs.join('|');
-  }
+	async setProblemsNoCheck(problemIDs) {
+		this.problems = problemIDs.join('|');
+	}
 
-  async setProblems(s) {
-    let a = [];
-    await s.split('|').forEachAsync(async x => {
-      let problem = await Problem.fromID(x);
-      if (!problem) return;
-      a.push(x);
-    });
-    this.problems = a.join('|');
-  }
+	async setProblems(s) {
+		let a = [];
+		await s.split('|').forEachAsync(async x => {
+			let problem = await Problem.fromID(x);
+			if (!problem) return;
+			a.push(x);
+		});
+		this.problems = a.join('|');
+	}
 
-  async newSubmission(judge_state) {
-    let problems = await this.getProblems();
-    if (!problems.includes(judge_state.problem_id)) throw new ErrorMessage('当前比赛中无此题目。');
+	async newSubmission(judge_state) {
+		let problems = await this.getProblems();
+		if (!problems.includes(judge_state.problem_id)) throw new ErrorMessage('当前比赛中无此题目。');
 
-    await zoj.utils.lock(['Contest::newSubmission', judge_state.user_id], async () => {
-      let player = await ContestPlayer.findInContest({
-        contest_id: this.id,
-        user_id: judge_state.user_id
-      });
+		await zoj.utils.lock(['Contest::newSubmission', judge_state.user_id], async () => {
+			let player = await ContestPlayer.findInContest({
+				contest_id: this.id,
+				user_id: judge_state.user_id
+			});
 
-      if (!player) {
-        player = await ContestPlayer.create({
-          contest_id: this.id,
-          user_id: judge_state.user_id
-        });
-      }
+			if (!player) {
+				player = await ContestPlayer.create({
+					contest_id: this.id,
+					user_id: judge_state.user_id
+				});
+			}
 
-      await player.updateScore(judge_state);
-      await player.save();
+			await player.updateScore(judge_state);
+			await player.save();
 
-      await this.loadRelationships();
-      await this.ranklist.updatePlayer(this, player);
-      await this.ranklist.save();
-    });
-  }
+			await this.loadRelationships();
+			await this.ranklist.updatePlayer(this, player);
+			await this.ranklist.save();
+		});
+	}
 
-  async isRunning(now) {
-    if (!now) now = zoj.utils.getCurrentDate();
-    return now >= this.start_time && now < this.end_time;
-  }
+	async isRunning(now) {
+		if (!now) now = zoj.utils.getCurrentDate();
+		return now >= this.start_time && now < this.end_time;
+	}
 
-  async isEnded(now) {
-    if (!now) now = zoj.utils.getCurrentDate();
-    return now >= this.end_time;
-  }
+	async isEnded(now) {
+		if (!now) now = zoj.utils.getCurrentDate();
+		return now >= this.end_time;
+	}
 
-  getModel() { return model; }
+	getModel() { return model; }
 }
 
 Contest.model = model;
