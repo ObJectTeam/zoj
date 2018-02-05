@@ -1,0 +1,46 @@
+<%
+this.getStatusMeta = (status) => {
+  if (status.startsWith('Running')) return 'Running';
+  else return status;
+};
+
+this.isPending = (status) => {
+  let pending = [
+    'Waiting',
+    'Compiling',
+    'Running'
+  ];
+  return pending.includes(this.getStatusMeta(status));
+};
+
+this.alpha = number => {
+  if (number && parseInt(number) == number && parseInt(number) > 0) return String.fromCharCode('A'.charCodeAt(0) + parseInt(number) - 1);
+};
+
+this.icon = {
+  'Accepted': 'checkmark',
+  'Success': 'checkmark',  // Custom test
+  'Wrong Answer': 'remove',
+  'Runtime Error': 'bomb',
+  'Invalid Interaction': 'ban',
+  'Time Limit Exceeded': 'clock',
+  'Memory Limit Exceeded': 'microchip',
+  'Output Limit Exceeded': 'print',
+  'File Error': 'file outline',
+  'Waiting': 'hourglass half',
+  'Running': 'spinner',
+  'Compiling': 'spinner',
+  'Compile Error': 'code',
+  'Submitted': 'checkmark', // NOI contests
+  'System Error': 'server',
+  'No Testdata': 'folder open outline',
+  'Partially Correct': 'minus',
+  'Judgement Failed': 'server',
+  'Skipped': 'ban'
+};
+
+this.iconHidden = [
+  'Success',
+  'Submitted'
+];
+%>

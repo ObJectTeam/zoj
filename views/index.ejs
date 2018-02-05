@@ -1,0 +1,194 @@
+<% this.title = '首页'; %>
+	<% include header %>
+		<div class="padding">
+			<div class="ui three column grid">
+				<div class="eleven wide column">
+					<h4 class="ui top attached block header">公告</h4>
+					<div class="ui bottom attached segment">
+						<table class="ui very basic table">
+							<thead>
+								<tr>
+									<th>标题</th>
+									<th>时间</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% for (let item of notices) { %>
+									<tr>
+										<td>
+											<a href="<%= item.url %>">
+												<%= item.title %>
+											</a>
+										</td>
+										<td>
+											<%= item.date %>
+										</td>
+									</tr>
+									<% } %>
+							</tbody>
+						</table>
+					</div>
+					<h4 class="ui top attached block header">排名</h4>
+					<div class="ui bottom attached segment">
+						<table class="ui very basic center aligned table" style="table-layout: fixed; ">
+							<thead>
+								<tr>
+									<th style="width: 50px; ">#</th>
+									<th style="width: 170px; ">用户名</th>
+									<th>个性签名</th>
+								</tr>
+							</thead>
+							<script>
+								var lineHeight = 0;
+								(function () {
+									var div = document.createElement('div');
+									div.style.position = 'fixed';
+									div.style.left = -10000;
+									div.style.visibility = 'hidden';
+									div.innerText = '测试，Test.';
+									document.body.appendChild(div);
+									lineHeight = div.clientHeight;
+								})();
+							</script>
+							<tbody>
+								<%
+			let i = 0;
+			for (let user of ranklist) {
+			  ++i;
+			%>
+									<tr>
+										<td>
+											<%= i %>
+										</td>
+										<td>
+											<a href="<%= zoj.utils.makeUrl(['user', user.id]) %>">
+												<%= user.username %>
+											</a>
+											<% if (user.nameplate) { %>
+												<%- user.nameplate %>
+													<% } %>
+										</td>
+										<td style="font-content">
+											<script id="user-infomation-script-<%= i %>">
+												(function () {
+													var html = <% - JSON.stringify(user.information) %>;
+													var elem = document.createElement('div');
+													elem.style = 'overflow: hidden; width: 100%; position: relative; ';
+													elem.style.maxHeight = lineHeight + 'px';
+													elem.innerHTML = html;
+													var imgs = Array.prototype.slice.call(elem.getElementsByTagName('img'));
+													for (var i in imgs) imgs[i].parentNode.removeChild(imgs[i]);
+													var script = document.getElementById('user-infomation-script-<%= i %>');
+													script.parentNode.replaceChild(elem, script);
+												})();
+											</script>
+										</td>
+									</tr>
+									<%
+			} %>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="right floated five wide column">
+					<h4 class="ui top attached block header">一言</h4>
+					<div class="ui bottom attached center aligned segment">
+						<div class="ui active centered inline loader" id="hitokoto-loader"></div>
+						<script>
+							$.get('https://sslapi.hitokoto.cn/?c=a', function (data) {
+								data = JSON.parse(data);
+								$('#hitokoto-loader').removeClass('active');
+								$('#hitokoto-content').css('display', '').text(data.hitokoto);
+								if (data.from) {
+									$('#hitokoto-from').css('display', '').text('——' + data.from);
+								}
+							});
+						</script>
+						<div style="font-size: 1em; line-height: 1.5em; display: none; " id="hitokoto-content"></div>
+						<div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666; display: none; " id="hitokoto-from"></div>
+					</div>
+					<h4 class="ui top attached block header">搜索题目</h4>
+					<div class="ui bottom attached segment">
+						<form action="<%= zoj.utils.makeUrl(['problems', 'search']) %>" method="get">
+							<div class="ui search" style="width: 100%; ">
+								<div class="ui left icon input" style="width: 100%; ">
+									<input class="prompt" style="width: 100%; " type="text" placeholder="ID / 题目名 …" name="keyword">
+									<i class="search icon"></i>
+								</div>
+								<div class="results" style="width: 100%; "></div>
+							</div>
+						</form>
+					</div>
+					<h4 class="ui top attached block header">近期比赛</h4>
+					<div class="ui bottom attached <% if (!contests || !contests.length) { %>center aligned <% } %>segment">
+						<% if (!contests || !contests.length) { %>
+							还没有举行过任何比赛
+							<% } else { %>
+								<table class="ui very basic center aligned table">
+									<thead>
+										<tr>
+											<th>比赛名称</th>
+											<th>开始时间</th>
+										</tr>
+									</thead>
+									<tbody>
+										<%
+			for (let contest of contests) {
+			  let now = zoj.utils.getCurrentDate();
+			  let tag = '';
+			%>
+											<tr>
+												<% if (now < contest.start_time) { %>
+													<% tag = '<span class="ui header"><div class="ui mini red label">未开始</div></span>' %>
+														<% } else if (now >= contest.start_time && now < contest.end_time) { %>
+															<% tag = '<span class="ui header"><div class="ui mini green label">进行中</div></span>' %>
+																<% } else { %>
+																	<% tag = '<span class="ui header"><div class="ui mini grey label">已结束</div></span>' %>
+																		<% } %>
+																			<td>
+																				<a href="<%= zoj.utils.makeUrl(['contest', contest.id]) %>">
+																					<%= contest.title %>
+																						<%- tag %>
+																				</a>
+																			</td>
+																			<td>
+																				<%= zoj.utils.formatDate(contest.start_time) %>
+																			</td>
+											</tr>
+											<% } %>
+									</tbody>
+								</table>
+								<% } %>
+					</div>
+					<% if (typeof links !== 'undefined' && links) { %>
+						<h4 class="ui top attached block header font-content">友情链接</h4>
+						<div class="ui bottom attached segment">
+							<ul style="margin: 0; padding-left: 20px; ">
+								<% for (let link of links) { %>
+									<li>
+										<a href="<%= link.url %>">
+											<%= link.title %>
+										</a>
+									</li>
+									<% } %>
+							</ul>
+						</div>
+						<% } %>
+				</div>
+			</div>
+		</div>
+		<script>
+			$(function () {
+				$('.ui.search').search({
+					debug: true,
+					apiSettings: {
+						url: '/api/v2/search/problems/{query}',
+						cache: false
+					},
+					fields: {
+						title: 'name'
+					}
+				});
+			});
+		</script>
+		<% include footer %>

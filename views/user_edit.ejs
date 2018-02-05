@@ -1,0 +1,112 @@
+<% this.title = '修改资料'; %>
+<% include header %>
+<div class="padding">
+    <div class="ui <% if (error_info === '') { %>success<% } else { %>error<% } %> message" id="error" <% if (error_info === null) { %>hidden<% } %>>
+      <% if (error_info !== null) {
+          if (error_info === '') error_info = '修改成功。';
+      %>
+      	<p id="error_info"><%= error_info %></p>
+      <% } %>
+    </div>
+		<form id="form" class="ui form" action="<%= zoj.utils.makeUrl(['user', edited_user.id, 'edit']) %>" method="post" onsubmit="return check()">
+      <div class="field">
+	    	<label for="username">用户名</label>
+	    	<input type="text" id="username" name="username" value="<%= edited_user.username %>"<% if (!user.allowedManage) { %> readonly<% } %>>
+	    </div>
+      <div class="field">
+	    	<label for="sex">性别</label>
+	    	<select class="ui dropdown" name="sex">
+          <option value="0" <%= edited_user.sex == 0 ? 'selected': '' %>>其它</option>
+          <option value="1" <%= edited_user.sex == 1 ? 'selected': '' %>>男</option>
+          <option value="-1" <%= edited_user.sex == -1 ? 'selected': '' %>>女</option>
+        </select>
+	    </div>
+	    <div class="field">
+	    	<label for="email">Email</label>
+	    	<input class="font-content" type="email" id="email" name="email" value="<%= edited_user.email %>"<% if (!user.allowedManage) { %> readonly<% } %>>
+	    </div>
+      <div class="inline field">
+        <label class="ui header">公开 Email</label>
+        <div class="ui toggle checkbox">
+          <input id="public_email" name="public_email" type="checkbox" <% if (edited_user.public_email) { %> checked<% } %>>
+          <label>　</label>
+        </div>
+	    </div>
+	    <div class="field">
+	    	<label for="information">个性签名</label>
+	    	<textarea class="font-content" rows="5" id="information" name="information"><%= edited_user.information %></textarea>
+	    </div>
+      <div class="field">
+      <label class="ui header">密码</label>
+        <input type="password" placeholder="原密码（留空则不修改）" name="old_password" id="old_password">
+      </div>
+      <div class="two fields" id="new_password_field">
+        <div class="field">
+          <input type="password" placeholder="新密码" name="new_password" id="password1">
+        </div>
+        <div class="field">
+          <input type="password" placeholder="确认密码" id="password2">
+        </div>
+      </div>
+      <%
+      let allowedManagePrivilege = user && user.admin >= 3;
+      %>
+      <% if(allowedManagePrivilege){ %>
+      <div class="inline field">
+        <label class="ui header">权限</label>
+        <input type="range" id="admin" name="admin" min="0" max="<%= user.admin - 1 %>" value="<%= edited_user.admin %>"<% if (!user.allowedManage || edited_user.id == user.id) { %> disabled<% } %>>
+      </div>
+      <% } %>
+      <div style="text-align: center; ">
+        <button type="submit" class="ui button">修改</button>
+        <a href="<%= zoj.utils.makeUrl(['user', edited_user.id]) %>" class="ui blue button">返回个人资料</a>
+      </div>
+		</form>
+	</div>
+</div>
+<script src="/libs/blueimp-md5/js/md5.min.js"></script>
+<script type="text/javascript">
+function make_md5(tag) {
+	if (tag.val()) {
+		tag.val(md5(tag.val() + "syzoj2_xxx"));
+	}
+}
+function check() {
+	old_password = $("#old_password");
+	password1 = $("#password1");
+	password2 = $("#password2");
+	if ($("#old_password").val() && password1.val() != password2.val()) {
+		$("#error").removeClass("success");
+		$("#error").removeClass("error");
+		$("#error").addClass("error");
+		$("#error_info").html("两次输入的密码不一致。");
+		$("#error").show();
+		return false;
+	}
+	make_md5(old_password);
+	make_md5(password1);
+	make_md5(password2);
+
+<% if (allowedManagePrivilege) { %>
+  $('.checkbox_privilege').each(function () {
+    if ($(this).checkbox('is checked')) {
+      var name = $(this).data('name');
+
+      var elem = document.createElement('input');
+      elem.type = 'hidden';
+      elem.value = name;
+      elem.name = 'privileges';
+      document.getElementById('form').appendChild(elem);
+    }
+  });
+<% } %>
+
+	return true;
+}
+</script>
+<script>
+$(function () {
+	$('.ui.dropdown').dropdown();
+});
+</script>
+<% include footer %>

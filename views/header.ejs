@@ -1,0 +1,57 @@
+<% include util %>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head data-csrf-token="<%= req.csrfToken() %>">
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title><%= title %> - <%= zoj.config.title %></title>
+    <link href="/libs/semantic-ui/semantic.min.css" rel="stylesheet">
+    <link href="/tomorrow.css" rel="stylesheet">
+    <link href="/mathjax.css?20170713" rel="stylesheet">
+    <link href="/libs/KaTeX/katex.min.css" rel="stylesheet">
+    <link href="/libs/morris.js/morris.css" rel="stylesheet">
+    <link href="/style.css?20170706" rel="stylesheet">
+    <script src="/libs/jquery/jquery.min.js"></script>
+</head>
+<body>
+    <div class="ui fixed borderless menu" style="position: fixed; ">
+        <div class="ui container">
+            <a class="header item" href="/"><span style="font-family: Raleway; font-size: 1.5em; font-weight: 300; "><%= zoj.config.title %></span></a>
+            <a class="item<% if (active === '') { %> active<% } %>" href="/"><i class="home icon"></i> 首页</a>
+            <a class="item<% if (active.startsWith('problem')) { %> active<% } %>" href="/problems"><i class="list icon"></i> 题库</a>
+            <a class="item<% if (active.startsWith('contest')) { %> active<% } %>" href="/contests"><i class="calendar icon"></i> 比赛</a>
+            <a class="item<% if (active.startsWith('submission')) { %> active<% } %>" href="/submissions"><i class="tasks icon"></i> 评测</a>
+            <a class="item<% if (active.startsWith('ranklist')) { %> active<% } %>" href="/ranklist"><i class="signal icon"></i> 排名</a>
+            <a class="item<% if (active.startsWith('discussion') || active.startsWith('article')) { %> active<% } %>" href="/discussion"><i class="comments icon"></i> 讨论</a>
+            <a class="item<% if (active.startsWith('help')) { %> active<% } %>" href="/help"><i class="help circle icon"></i> 帮助</a>
+            <% if (typeof contest !== 'undefined' && contest && contest.id) { %>
+              <a id="back_to_contest" class="item" href="<%= zoj.utils.makeUrl(['contest', contest.id]) %>"><i class="arrow left icon"></i> 返回比赛</a>
+            <% } %>
+            <div class="right menu">
+              <% if (user) { %>
+              <a href="<%= zoj.utils.makeUrl(['user', user.id]) %>" style="color: inherit; ">
+              <div class="ui simple dropdown item">
+                <%= user.username %><% if (user.nameplate) { %><%- user.nameplate %><% } %> <i class="dropdown icon"></i>
+                <div class="menu">
+                  <a class="item" href="<%= zoj.utils.makeUrl(['user', user.id, 'edit']) %>"><i class="edit icon"></i>修改资料</a>
+                  <% if (user.admin >= 4) { %>
+                    <a class="item" href="<%= zoj.utils.makeUrl(['admin', 'info']) %>"><i class="settings icon"></i>后台管理</a>
+                  <% } %>
+                  <a class="item" href-post="<%= zoj.utils.makeUrl(['logout'], { url: req.originalUrl }) %>"><i class="power icon"></i>注销</a>
+                </div>
+              </div>
+              </a>
+                <% } else { %>
+                <div class="item">
+                    <a class="ui button" style="margin-right: 0.5em; " href="<%= zoj.utils.makeUrl(['login'], { url: req.originalUrl }) %>">
+                        登录
+                    </a>
+                    <a class="ui primary button" href="<%= zoj.utils.makeUrl(['sign_up'], { url: req.originalUrl }) %>">
+                        注册
+                    </a>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="ui main container">
