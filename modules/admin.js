@@ -14,7 +14,7 @@ let db = zoj.db;
 
 app.get('/admin/info', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || await res.locals.user.admin < 4) throw new ErrorMessage('您没有权限进行此操作。');
 
 		let allSubmissionsCount = await JudgeState.count();
 		let todaySubmissionsCount = await JudgeState.count({ submit_time: { $gte: zoj.utils.getCurrentDate(true) } });
@@ -124,52 +124,6 @@ app.post('/admin/config', async (req, res) => {
 	}
 });
 
-// app.get('/admin/privilege', async (req, res) => {
-//   try {
-//     if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
-
-//     let users = {};
-//     for (let p of a) {
-//       if (!users[p.user_id]) {
-//         users[p.user_id] = {
-//           user: await User.fromID(p.user_id),
-//           privileges: []
-//         };
-//       }
-
-//       users[p.user_id].privileges.push(p.privilege);
-//     }
-
-//     res.render('admin_privilege', {
-//       users: Object.values(users)
-//     });
-//   } catch (e) {
-//     zoj.log(e);
-//     res.render('error', {
-//       err: e
-//     })
-//   }
-// });
-
-// app.post('/admin/privilege', async (req, res) => {
-//   try {
-//     if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
-
-//     let data = JSON.parse(req.body.data);
-//     for (let id in data) {
-//       let user = await User.fromID(id);
-//       if (!user) throw new ErrorMessage(`不存在 ID 为 ${id} 的用户。`);
-//       await user.setPrivileges(data[id]);
-//     }
-
-//     res.redirect(zoj.utils.makeUrl(['admin', 'privilege']));
-//   } catch (e) {
-//     zoj.log(e);
-//     res.render('error', {
-//       err: e
-//     })
-//   }
-// });
 
 app.get('/admin/rejudge', async (req, res) => {
 	try {
