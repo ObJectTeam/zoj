@@ -17,14 +17,14 @@ let Article = zoj.model('article');
 app.get('/problems', async (req, res) => {
 	try {
 		let where = {};
-		if(!res.locals.user){
+		if (!res.locals.user) {
 			where = {
 				$and: {
 					is_public: 1,
 					is_protected: 0
 				}
 			}
-		}else if(!await res.locals.user.admin >= 1){
+		} else if (!await res.locals.user.admin >= 1) {
 			where = {
 				$or: {
 					$and: {
@@ -34,7 +34,7 @@ app.get('/problems', async (req, res) => {
 					user_id: res.locals.user.id
 				}
 			}
-		}else if(!await res.locals.user.admin >= 3){
+		} else if (!await res.locals.user.admin >= 3) {
 			where = {
 				$or: {
 					is_public: 1,
@@ -76,7 +76,7 @@ app.get('/problems/search', async (req, res) => {
 			}
 		};
 
-		if(!res.locals.user){
+		if (!res.locals.user) {
 			where = {
 				$and: [
 					where,
@@ -88,7 +88,7 @@ app.get('/problems/search', async (req, res) => {
 					}
 				]
 			};
-		}else if(!await res.locals.user.admin >= 1){
+		} else if (!await res.locals.user.admin >= 1) {
 			where = {
 				$and: [
 					where,
@@ -103,7 +103,7 @@ app.get('/problems/search', async (req, res) => {
 					}
 				]
 			};
-		}else if(!await res.locals.user.admin >= 3){
+		} else if (!await res.locals.user.admin >= 3) {
 			where = {
 				$and: [
 					where,
@@ -395,20 +395,17 @@ app.get('/problem/:id/import', async (req, res) => {
 
 app.post('/problem/:id/import', async (req, res) => {
 	try {
+		if (!res.locals.user || await res.locals.user.admin < 3) throw new ErrorMessage('您没有权限进行此操作。');
 		let id = parseInt(req.params.id) || 0;
 		let problem = await Problem.fromID(id);
 		if (!problem) {
-			if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
-
 			problem = await Problem.create();
 
-			if (await res.locals.user.admin >= 3) {
-				let customID = parseInt(req.body.id);
-				if (customID) {
-					if (await Problem.fromID(customID)) throw new ErrorMessage('ID 已被使用。');
-					problem.id = customID;
-				} else if (id) problem.id = id;
-			}
+			let customID = parseInt(req.body.id);
+			if (customID) {
+				if (await Problem.fromID(customID)) throw new ErrorMessage('ID 已被使用。');
+				problem.id = customID;
+			} else if (id) problem.id = id;
 
 			problem.user_id = res.locals.user.id;
 			problem.publicizer_id = res.locals.user.id;
@@ -567,7 +564,7 @@ async function setPublic(req, res, is_public) {
 }
 
 // Set protect problems
-async function setProtect(req, res, is_protect){
+async function setProtect(req, res, is_protect) {
 	try {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);

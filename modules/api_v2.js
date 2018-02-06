@@ -143,9 +143,12 @@ app.apiRouter.post('/api/v2/judge/update/:id', async (req, res) => {
 	}
 });
 
-app.apiRouter.post('/api/v2/problemdata/:id', async (req, res) => {
+app.apiRouter.get('/api/v2/problemdata/:id/:token', async (req, res) => {
 	try {
-		if (req.query.session_id !== zoj.config.judge_token) return res.status(404).send({ err: 'Permission denied' });
+		let token = req.params.token;
+		if (token !== zoj.config.judge_token) return res.status(404).send({ err: 'Permission denied' });
+
+		let Problem = zoj.model('problem');
 
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
@@ -161,5 +164,6 @@ app.apiRouter.post('/api/v2/problemdata/:id', async (req, res) => {
 		res.download(filename, path.basename(filename));
 	} catch (e) {
 		res.status(500).send(e);
+		zoj.log(e);
 	}
 });
