@@ -51,7 +51,7 @@
       <%
       let allowedManagePrivilege = user && user.admin >= 3;
       %>
-      <% if(allowedManagePrivilege){ %>
+      <% if(allowedManagePrivilege && edited_user.id !== user.id){ %>
       <div class="inline field">
         <label class="ui header">权限</label>
         <input type="range" id="admin" name="admin" min="0" max="<%= user.admin - 1 %>" value="<%= edited_user.admin %>"<% if (!user.allowedManage || edited_user.id == user.id) { %> disabled<% } %>>
