@@ -9,8 +9,92 @@ let JudgeState = zoj.model('judge_state');
 let Article = zoj.model('article');
 let Contest = zoj.model('contest');
 let User = zoj.model('user');
+const RatingCalculation = zoj.model('rating_calculation');
+const RatingHistory = zoj.model('rating_history');
+const calcRating = require('../libs/rating');
+
 
 let db = zoj.db;
+
+app.get('/admin/rating', async (req, res) => {
+	try {
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		const contests = await Contest.query(null, {}, [['start_time', 'desc']]);
+		const calcs = await RatingCalculation.query(null, {}, [['id', 'desc']]);
+		const util = require('util');
+		for (const calc of calcs) await calc.loadRelationships();
+
+		res.render('admin_rating', {
+			contests: contests,
+			calcs: calcs
+		});
+	} catch (e) {
+		zoj.log(e);
+		res.render('error', {
+			err: e
+		})
+	}
+});
+
+app.post('/admin/rating/add', async (req, res) => {
+	try {
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		const contest = await Contest.fromID(req.body.contest);
+		if (!contest) throw new ErrorMessage('无此比赛');
+
+		await contest.loadRelationships();
+		const newcalc = await RatingCalculation.create(contest.id);
+		await newcalc.save();
+
+		if (!contest.ranklist || contest.ranklist.ranklist.player_num <= 1) {
+			throw new ErrorMessage("比赛人数太少。");
+		}
+
+		const players = [];
+		for (let i = 1; i <= contest.ranklist.ranklist.player_num; i++) {
+			const user = await User.fromID((await ContestPlayer.fromID(contest.ranklist.ranklist[i])).user_id);
+			players.push({
+				user: user,
+				rank: i,
+				currentRating: user.rating
+			});
+		}
+		const newRating = calcRating(players);
+		for (let i = 0; i < newRating.length; i++) {
+			const user = newRating[i].user;
+			user.rating = newRating[i].currentRating;
+			await user.save();
+			const newHistory = await RatingHistory.create(newcalc.id, user.id, newRating[i].currentRating, newRating[i].rank);
+			await newHistory.save();
+		}
+
+		res.redirect(zoj.utils.makeUrl(['admin', 'rating']));
+	} catch (e) {
+		zoj.log(e);
+		res.render('error', {
+			err: e
+		});
+	}
+});
+
+app.post('/admin/rating/delete', async (req, res) => {
+	try {
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		const calcList = await RatingCalculation.query(null, { id: { $gte: req.body.calc_id } }, [['id', 'desc']]);
+		if (calcList.length === 0) throw new ErrorMessage('ID 不正确');
+
+		for (let i = 0; i < calcList.length; i++) {
+			await calcList[i].delete();
+		}
+
+		res.redirect(zoj.utils.makeUrl(['admin', 'rating']));
+	} catch (e) {
+		zoj.log(e);
+		res.render('error', {
+			err: e
+		});
+	}
+});
 
 app.get('/admin/info', async (req, res) => {
 	try {

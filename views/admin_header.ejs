@@ -4,20 +4,23 @@ let items = {
   config: 'System',
   rejudge: 'Rejudge',
   links: 'Links',
+  rating: 'Rating',
   raw: 'Raw config'
 };
 %>
-<% this.title = 'Console - ' + items[this.adminPage]; %>
-<% include header %>
-<h1 style="text-align: center; margin-bottom: 27px; ">Console</h1>
-<div class="ui grid">
-  <div class="three wide column">
-    <div class="ui vertical fluid tabular menu" style="height: 100%; ">
-    <% for (let x in items) { %>
-      <a class="item<% if (this.adminPage === x) { %> active<% } %>"<% if (this.adminPage !== x) { %> href="<%= zoj.utils.makeUrl(['admin', x]) %>"<% } %>>
-        <%= items[x] %>
-      </a>
-    <% } %>
-    </div>
-  </div>
-  <div class="thirteen wide stretched column">
+	<% this.title = 'Console - ' + items[this.adminPage]; %>
+		<% include header %>
+			<h1 style="text-align: center; margin-bottom: 27px; ">Console</h1>
+			<div class="ui grid">
+				<div class="three wide column">
+					<div class="ui vertical fluid tabular menu" style="height: 100%; ">
+						<% for (let x in items) { %>
+							<a class="item<% if (this.adminPage === x) { %> active<% } %>" <% if (this.adminPage !==x ) { %> href="
+								<%= zoj.utils.makeUrl(['admin', x]) %>"
+									<% } %>>
+										<%= items[x] %>
+							</a>
+							<% } %>
+					</div>
+				</div>
+				<div class="thirteen wide stretched column">

@@ -1,36 +1,28 @@
-/*
- *  This file is part of ZOJ.
- *
- *  Copyright (c) 2016 Menci <huanghaorui301@gmail.com>
- *
- *  ZOJ is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  ZOJ is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public
- *  License along with ZOJ. If not, see <http://www.gnu.org/licenses/>.
- */
-
 'use strict';
 
 let User = zoj.model('user');
+const RatingCalculation = zoj.model('rating_calculation');
+const RatingHistory = zoj.model('rating_history');
+const Contest = zoj.model('contest');
+const ContestPlayer = zoj.model('contest_player');
 
 // Ranklist
 app.get('/ranklist', async (req, res) => {
 	try {
+		const sort = req.query.sort || zoj.config.sorting.ranklist.field;
+		const order = req.query.order || zoj.config.sorting.ranklist.order;
+		if (!['ac_num', 'rating', 'id', 'username', 'admin'].includes(sort) || !['asc', 'desc'].includes(order)) {
+			throw new ErrorMessage('错误的排序参数。');
+		}
 		let paginate = zoj.utils.paginate(await User.count({ is_show: true }), req.query.page, zoj.config.page.ranklist);
-		let ranklist = await User.query(paginate, { is_show: true }, [['ac_num', 'desc']]);
+		let ranklist = await User.query(paginate, { is_show: true }, [[sort, order]]);
 
 		res.render('ranklist', {
 			privilege: res.locals.user && res.locals.user.admin >= 4,
 			ranklist: ranklist,
-			paginate: paginate
+			paginate: paginate,
+			curSort: sort,
+			curOrder: order === 'asc'
 		});
 	} catch (e) {
 		zoj.log(e);
@@ -95,9 +87,30 @@ app.get('/user/:id', async (req, res) => {
 		let statistics = await user.getStatistics();
 		user.emailVisible = user.public_email || user.allowedEdit;
 
+		const ratingHistoryValues = await RatingHistory.query(null, { user_id: user.id }, [['rating_calculation_id', 'asc']]);
+		const ratingHistories = [{
+			contestName: "初始积分",
+			value: zoj.config.default.user.rating,
+			delta: null,
+			rank: null
+		}];
+
+		for (const history of ratingHistoryValues) {
+			const contest = await Contest.fromID((await RatingCalculation.fromID(history.rating_calculation_id)).contest_id);
+			ratingHistories.push({
+				contestName: contest.title,
+				value: history.rating_after,
+				delta: history.rating_after - ratingHistories[ratingHistories.length - 1].value,
+				rank: history.rank,
+				participants: await ContestPlayer.count({ contest_id: contest.id })
+			});
+		}
+		ratingHistories.reverse();
+
 		res.render('user', {
 			show_user: user,
-			statistics: statistics
+			statistics: statistics,
+			ratingHistories: ratingHistories
 		});
 	} catch (e) {
 		zoj.log(e);
