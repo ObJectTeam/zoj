@@ -573,7 +573,7 @@ async function setProtect(req, res, is_protect){
 		if (!problem) throw new ErrorMessage('无此题目。');
 
 		let allowedManage = await problem.isAllowedManageBy(res.locals.user);
-		if (!allowedManage) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !allowedManage) throw new ErrorMessage('您没有权限进行此操作。');
 
 		problem.is_protected = is_protect;
 		await problem.save();
@@ -701,7 +701,7 @@ app.post('/problem/:id/delete', async (req, res) => {
 		let problem = await Problem.fromID(id);
 		if (!problem) throw new ErrorMessage('无此题目。');
 
-		if (!problem.isAllowedManageBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !problem.isAllowedManageBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
 
 		await problem.delete();
 
@@ -720,7 +720,7 @@ app.get('/problem/:id/testdata', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
 
 		let testdata = await problem.listTestdata();
 		let testcases = await zoj.utils.parseTestdata(problem.getTestdataPath(), problem.type === 'submit-answer');
@@ -747,7 +747,7 @@ app.post('/problem/:id/testdata/upload', app.multer.array('file'), async (req, r
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
 
 		if (req.files) {
 			for (let file of req.files) {
@@ -770,7 +770,7 @@ app.post('/problem/:id/testdata/delete/:filename', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
 
 		await problem.deleteTestdataSingleFile(req.params.filename);
 
@@ -789,7 +789,7 @@ app.get('/problem/:id/testdata/download/:filename?', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
 
 		if (!req.params.filename) {
 			if (!await zoj.utils.isFile(problem.getTestdataPath() + '.zip')) {

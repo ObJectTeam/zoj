@@ -15,6 +15,7 @@
  *          No administration access
  *      2 : Student administrators
  *          Have permission to edit problems
+ *          Have permission to edit articles
  *          No other administration access
  *      3 : Teacher administrators
  *          Have permission to edit contests and peoples
@@ -92,8 +93,8 @@ class User extends Model {
 
 	async isAllowedEditBy(user) {
 		if (!user) return false;
-		if (await user.admin >= 3) return true;
-		return user && (user.admin >= 3 || this.id === user.id);
+		if(this.id === user.id)return true;
+		return user.admin >= 3 && user.admin > this.admin;
 	}
 
 	async refreshSubmitInfo() {
