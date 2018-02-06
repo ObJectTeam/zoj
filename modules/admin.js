@@ -12,6 +12,7 @@ let User = zoj.model('user');
 const RatingCalculation = zoj.model('rating_calculation');
 const RatingHistory = zoj.model('rating_history');
 const calcRating = require('../libs/rating');
+let ContestPlayer = zoj.model('contest_player');
 
 
 let db = zoj.db;

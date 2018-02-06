@@ -16,8 +16,8 @@ let User = zoj.model('user');
 app.get('/contests', async (req, res) => {
 	try {
 		let where;
-		if (res.locals.user && res.locals.user.admin >= 3) where = {}
-		else if (res.locals.user && res.locals.user.admin >= 1) where = { is_public: true };
+		if (res.locals.user && await res.locals.user.admin >= 3) where = {}
+		else if (res.locals.user && await res.locals.user.admin >= 1) where = { is_public: true };
 		else where = { $and: { is_public: true, is_protected: false } };
 
 		let paginate = zoj.utils.paginate(await Contest.count(where), req.query.page, zoj.config.page.contest);
