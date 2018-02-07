@@ -122,6 +122,7 @@ global.zoj = {
 		let Session = require('express-session');
 		let FileStore = require('session-file-store')(Session);
 		let sessionConfig = {
+			secret: this.config.session_secret,
 			cookie: {},
 			rolling: true,
 			saveUninitialized: true,
