@@ -157,6 +157,11 @@ app.post('/user/:id/edit', async (req, res) => {
 
 		if (req.body.admin && res.locals.user.id == user.id)
 			throw new ErrorMessage('You cannot change your privilege.');
+		
+		let is_show = req.body.is_show ? 0 : 1;
+
+		if(is_show != user.is_show  && res.locals.user.id == user.id)
+			throw new ErrorMessage('You cannot ban yourself.');
 
 		if (req.body.admin && (await res.locals.user.admin < 3 || res.locals.user.admin <= user.admin))
 			throw new ErrorMessage('您没有权限进行此操作。');
@@ -172,8 +177,9 @@ app.post('/user/:id/edit', async (req, res) => {
 			user.email = req.body.email;
 		}
 
-		if (req.body.admin && await res.locals.user.admin >= 3 && res.locals.user.admin > user.admin) {
-			user.admin = req.body.admin;
+		if(await res.locals.user.admin >= 3 && res.locals.user.admin > user.admin){
+			if(req.body.admin)user.admin = req.body.admin;
+			user.is_show = is_show;
 		}
 
 		user.information = req.body.information;

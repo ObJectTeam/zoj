@@ -21,6 +21,7 @@ app.post('/api/login', async (req, res) => {
 		let user = await User.fromName(req.body.username);
 
 		if (!user) res.send({ error_code: 1001 });
+		else if (!await user.is_show) res.send({ error_code: 1003 });
 		else if (user.password !== req.body.password) res.send({ error_code: 1002 });
 		else {
 			req.session.user_id = user.id;

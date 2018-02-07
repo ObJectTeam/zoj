@@ -71,6 +71,9 @@ function login() {
                 case 1002:
                     show_error("密码错误");
                     break;
+                case 1003:
+                    show_error("您处于封禁状态");
+                    break;
                 case 1:
                     success(data.session_id);
                     return;

@@ -19,13 +19,14 @@ let db = zoj.db;
 
 app.get('/admin/rating', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
 		const contests = await Contest.query(null, {}, [['start_time', 'desc']]);
 		const calcs = await RatingCalculation.query(null, {}, [['id', 'desc']]);
 		const util = require('util');
 		for (const calc of calcs) await calc.loadRelationships();
 
 		res.render('admin_rating', {
+			privilege: res.locals.user.admin >= 4,
 			contests: contests,
 			calcs: calcs
 		});
@@ -39,7 +40,7 @@ app.get('/admin/rating', async (req, res) => {
 
 app.post('/admin/rating/add', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
 		const contest = await Contest.fromID(req.body.contest);
 		if (!contest) throw new ErrorMessage('无此比赛');
 
@@ -80,7 +81,7 @@ app.post('/admin/rating/add', async (req, res) => {
 
 app.post('/admin/rating/delete', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
 		const calcList = await RatingCalculation.query(null, { id: { $gte: req.body.calc_id } }, [['id', 'desc']]);
 		if (calcList.length === 0) throw new ErrorMessage('ID 不正确');
 

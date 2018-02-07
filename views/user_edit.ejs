@@ -29,7 +29,7 @@
         <label class="ui header">公开 Email</label>
         <div class="ui toggle checkbox">
           <input id="public_email" name="public_email" type="checkbox" <% if (edited_user.public_email) { %> checked<% } %>>
-          <label>　</label>
+          <label></label>
         </div>
 	    </div>
 	    <div class="field">
@@ -54,7 +54,14 @@
       <% if(allowedManagePrivilege && edited_user.id !== user.id){ %>
       <div class="inline field">
         <label class="ui header">权限</label>
-        <input type="range" id="admin" name="admin" min="0" max="<%= user.admin - 1 %>" value="<%= edited_user.admin %>"<% if (!user.allowedManage || edited_user.id == user.id) { %> disabled<% } %>>
+        <input type="range" id="admin" name="admin" min="0" max="<%= user.admin - 1 %>" value="<%= edited_user.admin %>">
+      </div>
+      <div class="inline field">
+        <label class="ui header">封禁</label>
+        <div class="ui toggle checkbox">
+          <input id="is_show" name="is_show" type="checkbox" <% if (!edited_user.is_show) { %> checked<% } %>>
+          <label></label>
+        </div>
       </div>
       <% } %>
       <div style="text-align: center; ">
@@ -86,21 +93,6 @@ function check() {
 	make_md5(old_password);
 	make_md5(password1);
 	make_md5(password2);
-
-<% if (allowedManagePrivilege) { %>
-  $('.checkbox_privilege').each(function () {
-    if ($(this).checkbox('is checked')) {
-      var name = $(this).data('name');
-
-      var elem = document.createElement('input');
-      elem.type = 'hidden';
-      elem.value = name;
-      elem.name = 'privileges';
-      document.getElementById('form').appendChild(elem);
-    }
-  });
-<% } %>
-
 	return true;
 }
 </script>
