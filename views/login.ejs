@@ -51,7 +51,7 @@ function success(session_id) {
     window.location.href = <%- JSON.stringify(req.query.url || '/') %>;
 }
 function login() {
-    password = md5($("#password").val() + "syzoj2_xxx");
+    password = md5($("#password").val());
     $("#login").addClass("loading");
     $.ajax({
         url: "/api/login",

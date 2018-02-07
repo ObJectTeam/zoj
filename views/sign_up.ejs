@@ -52,7 +52,11 @@ function submit() {
         show_error("两次输入的密码不一致");
         return;
     }
-    password = md5($("#password1").val() + "syzoj2_xxx")
+    if($("#password1").val().length < 6){
+        show_error("Your password is too short!");
+        return;
+    }
+    password = md5($("#password1").val())
     $("#sign_up").addClass("loading");
     $.ajax({
         url: '/api/sign_up',

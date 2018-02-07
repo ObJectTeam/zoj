@@ -44,10 +44,6 @@ app.post('/api/sign_up', async (req, res) => {
 		if (user) throw 2009;
 
 
-		// Because the salt is "syzoj2_xxx" and the "syzoj2_xxx" 's md5 is"59cb..."
-		// the empty password 's md5 will equal "59cb.."
-		let syzoj2_xxx_md5 = '59cb65ba6f9ad18de0dcd12d5ae11bd2';
-		if (req.body.password === syzoj2_xxx_md5) throw 2007;
 		if (!(req.body.email = req.body.email.trim())) throw 2006;
 		if (!zoj.utils.isValidUsername(req.body.username)) throw 2002;
 
@@ -113,10 +109,6 @@ app.get('/api/sign_up/:token', async (req, res) => {
 		user = await User.findOne({ where: { email: obj.email } });
 		if (user) throw new ErrorMessage('邮件地址已被占用。');
 
-		// Because the salt is "syzoj2_xxx" and the "syzoj2_xxx" 's md5 is"59cb..."
-		// the empty password 's md5 will equal "59cb.."
-		let syzoj2_xxx_md5 = '59cb65ba6f9ad18de0dcd12d5ae11bd2';
-		if (obj.password === syzoj2_xxx_md5) throw new ErrorMessage('密码不能为空。');
 		if (!(obj.email = obj.email.trim())) throw new ErrorMessage('邮件地址不能为空。');
 		if (!zoj.utils.isValidUsername(obj.username)) throw new ErrorMessage('用户名不合法。');
 
