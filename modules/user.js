@@ -11,11 +11,13 @@ app.get('/ranklist', async (req, res) => {
 	try {
 		const sort = req.query.sort || zoj.config.sorting.ranklist.field;
 		const order = req.query.order || zoj.config.sorting.ranklist.order;
-		if (!['ac_num', 'rating', 'id', 'username', 'admin'].includes(sort) || !['asc', 'desc'].includes(order)) {
+		if (!['ac_num', 'rating', 'id', 'username', 'admin', 'is_show'].includes(sort) || !['asc', 'desc'].includes(order)) {
 			throw new ErrorMessage('错误的排序参数。');
 		}
 		let paginate = zoj.utils.paginate(await User.count({ is_show: true }), req.query.page, zoj.config.page.ranklist);
 		let ranklist = await User.query(paginate, { is_show: true }, [[sort, order]]);
+		if (res.locals.user && res.locals.user.admin >= 4)
+			ranklist = await User.query(paginate, {}, [[sort, order]]);
 
 		res.render('ranklist', {
 			privilege: res.locals.user && res.locals.user.admin >= 4,
@@ -157,10 +159,10 @@ app.post('/user/:id/edit', async (req, res) => {
 
 		if (req.body.admin && res.locals.user.id == user.id)
 			throw new ErrorMessage('You cannot change your privilege.');
-		
+
 		let is_show = req.body.is_show ? 0 : 1;
 
-		if(is_show != user.is_show  && res.locals.user.id == user.id)
+		if (is_show != user.is_show && res.locals.user.id == user.id)
 			throw new ErrorMessage('You cannot ban yourself.');
 
 		if (req.body.admin && (await res.locals.user.admin < 3 || res.locals.user.admin <= user.admin))
@@ -177,8 +179,8 @@ app.post('/user/:id/edit', async (req, res) => {
 			user.email = req.body.email;
 		}
 
-		if(await res.locals.user.admin >= 3 && res.locals.user.admin > user.admin){
-			if(req.body.admin)user.admin = req.body.admin;
+		if (await res.locals.user.admin >= 3 && res.locals.user.admin > user.admin) {
+			if (req.body.admin) user.admin = req.body.admin;
 			user.is_show = is_show;
 		}
 
