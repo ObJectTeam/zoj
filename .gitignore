@@ -44,4 +44,6 @@ uploads
 
 # Upload directories
 uploads
+
+#config
 config.json
