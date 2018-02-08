@@ -12,7 +12,7 @@ let Contest = zoj.model('contest');
 
 app.get('/', async (req, res) => {
 	try {
-		let ranklist = await User.query([1, 10], { is_show: true }, [['ac_num', 'desc']]);
+		let ranklist = await User.query([1, 10], { is_show: true }, [['rating', 'desc']]);
 
 		let notices = (await Article.query(null, { is_notice: true }, [['public_time', 'desc']])).map(article => ({
 			title: article.title,

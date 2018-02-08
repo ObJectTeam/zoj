@@ -35,8 +35,7 @@ let model = db.define('judge_state', {
 	submit_time: { type: Sequelize.INTEGER },
 	/*
 	 * "type" indicate it's contest's submission(type = 1) or normal submission(type = 0)
-	 * if it's contest's submission (type = 1), the type_info is contest_id
-	 * use this way represent because it's easy to expand // Menci：这锅我不背，是 Chenyao 留下来的坑。
+	 * "type_id" will be the contest id if it's a contest's submission
 	 */
 	type: { type: Sequelize.INTEGER },
 	type_info: { type: Sequelize.INTEGER }
@@ -91,7 +90,11 @@ class JudgeState extends Model {
 		await this.loadRelationships();
 
 		if (user && user.id === this.problem.user_id) return true;
-		else if (this.type === 0) return this.problem.is_public || (user && (await user.admin >= 3));
+		else if (this.type === 0) {
+			if (!user || await user.admin < 1) return this.problem.is_public && !this.problem.is_protected;
+			else if (await user.admin < 3) return this.problem.is_public;
+			return true;
+		}
 		else if (this.type === 1) {
 			let contest = await Contest.fromID(this.type_info);
 			if (await contest.isRunning()) {

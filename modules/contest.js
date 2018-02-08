@@ -92,6 +92,7 @@ app.post('/contest/:id/edit', async (req, res) => {
 		contest.start_time = zoj.utils.parseDate(req.body.start_time);
 		contest.end_time = zoj.utils.parseDate(req.body.end_time);
 		contest.is_public = req.body.is_public === 'on';
+		contest.is_protected = req.body.is_protected == 'on';
 
 		await contest.save();
 
