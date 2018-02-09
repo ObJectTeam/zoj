@@ -76,6 +76,12 @@ app.post('/logout', async (req, res) => {
 	res.redirect(req.query.url || '/');
 });
 
+// Forget Password
+
+app.get('/forget', async (req, res) => {
+	res.render('forget');
+});
+
 // User page
 app.get('/user/:id', async (req, res) => {
 	try {

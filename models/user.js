@@ -93,9 +93,17 @@ class User extends Model {
 		}));
 	}
 
+	static async fromEmail(email) {
+		return User.fromRecord(User.model.findOne({
+			where: {
+				email: email
+			}
+		}));
+	}
+
 	async isAllowedEditBy(user) {
 		if (!user) return false;
-		if(this.id === user.id)return true;
+		if (this.id === user.id) return true;
 		return user.admin >= 3 && user.admin > this.admin;
 	}
 

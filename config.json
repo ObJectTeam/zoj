@@ -5,15 +5,18 @@
   "db": {
     "database": "zoj",
     "username": "zoj",
-    "password": "123456",
+    "password": "******",
     "host": null,
     "dialect": "mysql",
     "storage": null
   },
   "register_mail": {
-    "enabled": false,
-    "address": "test@test.domain",
-    "key": "test"
+    "enabled": true,
+    "host": "smtp-mail.outlook.com",
+    "port": 587,
+    "username": "zhangzisu@outlook.com",
+    "password": "******",
+    "allowUnauthorizedTls": false
   },
   "upload_dir": "uploads",
   "default": {

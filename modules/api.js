@@ -9,6 +9,8 @@
 let User = zoj.model('user');
 let Problem = zoj.model('problem');
 let File = zoj.model('file');
+const Email = require('../libs/email');
+const WebToken = require('jsonwebtoken');
 
 function setLoginCookie(username, password, res) {
 	res.cookie('login', JSON.stringify([username, password]));
@@ -34,6 +36,41 @@ app.post('/api/login', async (req, res) => {
 	}
 });
 
+app.post('/api/forget', async (req, res) => {
+	try {
+		res.setHeader('Content-Type', 'application/json');
+		let user = await User.fromEmail(req.body.email);
+		if (!user) throw 1001;
+		let sendObj = {
+			userId: user.id,
+		};
+
+		const token = WebToken.sign(sendObj, zoj.config.session_secret, {
+			subject: 'forget',
+			expiresIn: '1h'
+		});
+
+		const vurl = req.protocol + '://' + req.get('host') + zoj.utils.makeUrl(['api', 'forget_confirm'], { token: token });
+		try {
+			await Email.send(user.email,
+				`${user.username} 的 ${zoj.config.title} 密码重置邮件`,
+				`<p>请于1小时内点击该链接来重置密码：</p><p><a href="${vurl}">${vurl}</a></p><p>链接有效期为 12h。如果您不是 ${user.username}，请忽略此邮件。</p>`
+			);
+		} catch (e) {
+			return res.send({
+				error_code: 2010,
+				message: require('util').inspect(e)
+			});
+			return null;
+		}
+
+		res.send({ error_code: 1 });
+	} catch (e) {
+		zoj.log(e);
+		res.send(JSON.stringify({ error_code: e }));
+	}
+});
+
 // Sign up
 app.post('/api/sign_up', async (req, res) => {
 	try {
@@ -48,24 +85,23 @@ app.post('/api/sign_up', async (req, res) => {
 		if (!zoj.utils.isValidUsername(req.body.username)) throw 2002;
 
 		if (zoj.config.register_mail.enabled) {
-			let sendmail = Promise.promisify(require('sendmail')());
 			let sendObj = {
 				username: req.body.username,
 				password: req.body.password,
 				email: req.body.email,
-				prevUrl: req.body.prevUrl,
-				r: Math.random()
 			};
-			let encrypted = encodeURIComponent(zoj.utils.encrypt(JSON.stringify(sendObj), zoj.config.register_mail.key).toString('base64'));
-			let url = req.protocol + '://' + req.get('host') + zoj.utils.makeUrl(['api', 'sign_up', encrypted]);
+
+			const token = WebToken.sign(sendObj, zoj.config.session_secret, {
+				subject: 'register',
+				expiresIn: '1h'
+			});
+
+			const vurl = req.protocol + '://' + req.get('host') + zoj.utils.makeUrl(['api', 'sign_up_confirm'], { token: token });
 			try {
-				await sendmail({
-					from: `${zoj.config.title} <${zoj.config.register_mail.address}>`,
-					to: req.body.email,
-					type: 'text/html',
-					subject: `${req.body.username} 的 ${zoj.config.title} 注册验证邮件`,
-					html: `<p>请点击该链接完成您在 ${zoj.config.title} 的注册：</p><p><a href="${url}">${url}</a></p><p>如果您不是 ${req.body.username}，请忽略此邮件。</p>`
-				});
+				await Email.send(req.body.email,
+					`${req.body.username} 的 ${zoj.config.title} 注册验证邮件`,
+					`<p>请于1小时内点击该链接完成您在 ${zoj.config.title} 的注册：</p><p><a href="${vurl}">${vurl}</a></p><p>如果您不是 ${req.body.username}，请忽略此邮件。</p>`
+				);
 			} catch (e) {
 				return res.send({
 					error_code: 2010,
@@ -91,14 +127,56 @@ app.post('/api/sign_up', async (req, res) => {
 	}
 });
 
-app.get('/api/sign_up/:token', async (req, res) => {
+app.get('/api/forget_confirm', async (req, res) => {
+	try {
+		try {
+			WebToken.verify(req.query.token, zoj.config.session_secret, { subject: 'forget' });
+		} catch (e) {
+			throw new ErrorMessage("Token 不正确。");
+		}
+		res.render('forget_confirm', {
+			token: req.query.token
+		});
+	} catch (e) {
+		zoj.log(e);
+		res.render('error', {
+			err: e
+		});
+	}
+});
+
+app.post('/api/reset_password', async (req, res) => {
+	try {
+		res.setHeader('Content-Type', 'application/json');
+		let obj;
+		try {
+			obj = WebToken.verify(req.body.token, zoj.config.session_secret, { subject: 'forget' });
+		} catch (e) {
+			throw 3001;
+		}
+
+		const user = await User.fromID(obj.userId);
+		user.password = req.body.password;
+		await user.save();
+
+		res.send(JSON.stringify({ error_code: 1 }));
+	} catch (e) {
+		zoj.log(e);
+		if (typeof e === 'number') {
+			res.send(JSON.stringify({ error_code: e }));
+		} else {
+			res.send(JSON.stringify({ error_code: 1000 }));
+		}
+	}
+});
+
+app.get('/api/sign_up_confirm', async (req, res) => {
 	try {
 		let obj;
 		try {
-			let decrypted = zoj.utils.decrypt(Buffer.from(req.params.token, 'base64'), zoj.config.register_mail.key).toString();
-			obj = JSON.parse(decrypted);
+			obj = WebToken.verify(req.query.token, zoj.config.session_secret, { subject: 'register' });
 		} catch (e) {
-			throw new ErrorMessage('无效的注册验证链接。');
+			throw new ErrorMessage('无效的注册验证链接: ' + e.toString());
 		}
 
 		let user = await User.fromName(obj.username);
