@@ -54,7 +54,7 @@ app.post('/api/forget', async (req, res) => {
 		try {
 			await Email.send(user.email,
 				`${user.username} 的 ${zoj.config.title} 密码重置邮件`,
-				`<p>请于1小时内点击该链接来重置密码：</p><p><a href="${vurl}">${vurl}</a></p><p>链接有效期为 12h。如果您不是 ${user.username}，请忽略此邮件。</p>`
+				`<p>请于1小时内点击该链接来重置密码：</p><p><a href="${vurl}">${vurl}</a></p><p>。如果您不是 ${user.username}，请忽略此邮件。</p>`
 			);
 		} catch (e) {
 			return res.send({
