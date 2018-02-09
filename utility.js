@@ -68,9 +68,9 @@ module.exports = {
 		return path.resolve.apply(null, a);
 	},
 	markdown(obj, keys, noReplaceUI) {
-		obj = obj.replace(/</, "&lt;");
-		obj = obj.replace(/>/, "&gt;");
-		obj = obj.replace(/&/, "&amp;");
+		//obj = obj.replace(/</, "&lt;");
+		//obj = obj.replace(/>/, "&gt;");
+		//obj = obj.replace(/&/, "&amp;");
 		let XSS = require('xss');
 		let CSSFilter = require('cssfilter');
 		let whiteList = Object.assign({}, require('xss/lib/default').whiteList);
