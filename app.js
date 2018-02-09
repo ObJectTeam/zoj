@@ -26,8 +26,8 @@ global.zoj = {
 
 		zoj.production = app.get('env') === 'production';
 
-		app.listen(parseInt(zoj.config.port), zoj.config.hostname, () => {
-			this.log(`ZOJ is listening on ${zoj.config.hostname}:${parseInt(zoj.config.port)}...`);
+		app.listen(parseInt(zoj.config.port), zoj.config.listen, () => {
+			this.log(`ZOJ is listening on ${zoj.config.listen}:${parseInt(zoj.config.port)}...`);
 		});
 
 		// Set assets dir

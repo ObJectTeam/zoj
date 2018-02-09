@@ -50,7 +50,7 @@ app.post('/api/forget', async (req, res) => {
 			expiresIn: '1h'
 		});
 
-		const vurl = req.protocol + '://' + req.get('host') + zoj.utils.makeUrl(['api', 'forget_confirm'], { token: token });
+		const vurl = zoj.config.hostname + zoj.utils.makeUrl(['api', 'forget_confirm'], { token: token });
 		try {
 			await Email.send(user.email,
 				`${user.username} 的 ${zoj.config.title} 密码重置邮件`,
@@ -96,7 +96,7 @@ app.post('/api/sign_up', async (req, res) => {
 				expiresIn: '1h'
 			});
 
-			const vurl = req.protocol + '://' + req.get('host') + zoj.utils.makeUrl(['api', 'sign_up_confirm'], { token: token });
+			const vurl = zoj.config.hostname + zoj.utils.makeUrl(['api', 'sign_up_confirm'], { token: token });
 			try {
 				await Email.send(req.body.email,
 					`${req.body.username} 的 ${zoj.config.title} 注册验证邮件`,

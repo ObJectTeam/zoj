@@ -1,7 +1,8 @@
 {
   "title": "Zen Online Judge",
-  "hostname": "0.0.0.0",
+  "listen": "0.0.0.0",
   "port": "80",
+  "hostname": "0.0.0.0",
   "db": {
     "database": "zoj",
     "username": "zoj",
