@@ -245,7 +245,7 @@ module.exports = {
 
 				res.spj = list.some(s => s.startsWith('spj_'));
 			} else {
-				dataRuleText = await fs.readFileAsync(dir + '/data_rule.txt');
+				let dataRuleText = await fs.readFileAsync(dir + '/data_rule.txt');
 				dataRuleText = dataRuleText.toString();
 
 				let lines = dataRuleText.split('\r').join('').split('\n').filter(x => x.length !== 0);
