@@ -205,7 +205,7 @@ module.exports = {
 			let list = await (await fs.readdirAsync(dir)).filterAsync(async x => await zoj.utils.isFile(path.join(dir, x)));
 
 			let res = [];
-			if (!list.includes('data.yml')) {
+			if (!list.includes('data_rule.txt')) {
 				res[0] = {};
 				res[0].cases = [];
 				for (let file of list) {
@@ -216,7 +216,7 @@ module.exports = {
 								input: file,
 								output: `${parsedName.name}.out`
 							};
-							if (submitAnswer) o.answer = `${parsedName.name}.out`;
+							if (submitAnswer) o.answer = `${parsedName.name}.usr`;
 							res[0].cases.push(o);
 						}
 
@@ -225,7 +225,7 @@ module.exports = {
 								input: file,
 								output: `${parsedName.name}.ans`
 							};
-							if (submitAnswer) o.answer = `${parsedName.name}.out`;
+							if (submitAnswer) o.answer = `${parsedName.name}.usr`;
 							res[0].cases.push(o);
 						}
 					}
@@ -245,32 +245,47 @@ module.exports = {
 
 				res.spj = list.some(s => s.startsWith('spj_'));
 			} else {
-				let config = require('js-yaml').load((await fs.readFileAsync(dir + '/data.yml')));
+				dataRuleText = await fs.readFileAsync(dir + '/data_rule.txt');
+				dataRuleText = dataRuleText.toString();
 
-				let input = config.inputFile, output = config.outputFile, answer = config.userOutput;
+				let lines = dataRuleText.split('\r').join('').split('\n').filter(x => x.length !== 0);
 
-				res = config.subtasks.map(st => ({
-					score: st.score,
-					type: st.type,
-					cases: st.cases.map(c => {
-						function getFileName(template, id, mustExist) {
-							let s = template.split('#').join(String(id));
-							if (mustExist && !list.includes(s)) throw `找不到文件 ${s}`;
-							return s;
-						}
+				if (lines.length < 3) throw 'Invalid data_rule.txt';
 
-						let o = {};
-						if (input) o.input = getFileName(input, c, true);
-						if (output) o.output = getFileName(output, c, true);
-						if (answer) o.answer = getFileName(answer, c, false);
+				let input = lines[lines.length - 3];
+				let output = lines[lines.length - 2];
+				let answer = lines[lines.length - 1];
+				if (!submitAnswer) {
+					input = output;
+					output = answer;
+				}
 
-						return o;
-					})
-				}));
+				for (let s = 0; s < lines.length - (submitAnswer ? 3 : 2); ++s) {
+					res[s] = {};
+					res[s].cases = [];
+					let numbers = lines[s].split(' ').filter(x => x);
+					if (numbers[0].includes(':')) {
+						let tokens = numbers[0].split(':');
+						res[s].type = tokens[0] || 'sum';
+						res[s].score = parseFloat(tokens[1]) || (100 / (lines.length - 2));
+						numbers.shift();
+					} else {
+						res[s].type = 'sum';
+						res[s].score = 100;
+					}
+					for (let i of numbers) {
+						let testcase = {
+							input: path.join(dir.toString(), input.replace('#', i)),
+							output: path.join(dir.toString(), output.replace('#', i))
+						};
+						if (submitAnswer) testcase.answer = path.join(dir.toString(), answer.replace('#', i));
+						res[s].cases.push(testcase);
+					}
+				}
 
 				res = res.filter(x => x.cases && x.cases.length !== 0);
-
-				res.spj = !!config.specialJudge;
+				res.spj = list.some(s => s.startsWith('spj_'));
+				return res;
 			}
 
 			return res;
