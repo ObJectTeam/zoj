@@ -157,8 +157,7 @@ let configItems = {
 	'languages.cpp.version': { name: 'C++', type: String },
 	'languages.cpp11.version': { name: 'C++11', type: String },
 	'languages.c.version': { name: 'C', type: String },
-	'languages.java.version': { name: 'Java', type: String },
-	'languages.python3.version': { name: 'Python 3', type: String }
+	'languages.java.version': { name: 'Java', type: String }
 };
 
 app.get('/admin/config', async (req, res) => {
