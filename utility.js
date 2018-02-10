@@ -275,10 +275,10 @@ module.exports = {
 					}
 					for (let i of numbers) {
 						let testcase = {
-							input: path.join(dir.toString(), input.replace('#', i)),
-							output: path.join(dir.toString(), output.replace('#', i))
+							input: input.replace('#', i),
+							output: output.replace('#', i)
 						};
-						if (submitAnswer) testcase.answer = path.join(dir.toString(), answer.replace('#', i));
+						if (submitAnswer) testcase.answer = answer.replace('#', i);
 						res[s].cases.push(testcase);
 					}
 				}

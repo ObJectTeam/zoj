@@ -46,4 +46,4 @@ uploads
 uploads
 
 #config
-config.json
+*.json
