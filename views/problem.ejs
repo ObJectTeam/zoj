@@ -341,7 +341,7 @@ div[class*=ace_br] {
               </div>
               </div>
               <div class="ui center aligned vertical segment" style="padding-bottom: 0; ">
-                <button type="submit" class="ui button">提交</button>
+                <button id="submit" type="submit" class="ui button">提交</button>
               </div>
             <% } %>
           </form>
@@ -370,6 +370,7 @@ div[class*=ace_br] {
     $('#submit_code input[name=language]').val($('#languages-menu .item.active').data('value'));
     lastSubmitted = editor.getValue();
     $('#submit_code input[name=code]').val(editor.getValue());
+    $("#submit").addClass("loading");
     return true;
   }
 
@@ -388,35 +389,7 @@ div[class*=ace_br] {
     });
   });
   </script>
-
   <script src="https://cdn.staticfile.org/css-element-queries/0.4.0/ResizeSensor.min.js"></script>
-  <div class="ui modal" id="modal-custom-test">
-    <div class="header">
-      自定义测试
-    </div>
-    <div class="content" style="padding-bottom: 0; ">
-      <div class="ui form">
-        <form id="form-custom-test" action="<%= zoj.utils.makeUrl(['problem', problem.id, 'custom-test']) %>">
-          <input type="hidden" name="code">
-          <input type="hidden" name="language">
-          <div class="field">
-            <label>输入文件</label>
-            <textarea name="input_file_textarea" style="font-family: 'Roboto Mono', 'Bitstream Vera Sans Mono', 'Menlo', 'Consolas', 'Lucida Console', monospace; "></textarea>
-          </div>
-          <div class="inline fields" style="width: 100%; ">
-            <div class="field" style="margin: 0 auto; ">
-              <label for="answer">或者，上传输入文件</label>
-              <input type="file" name="input_file">
-            </div>
-          </div>
-        </form>
-      </div>
-      <div id="custom-test-result"></div>
-    </div>
-    <div class="actions" style="text-align: center; ">
-      <div class="ui green button" id="submit-custom-test">提交</div>
-    </div>
-  </div>
 <% } else { %>
   <script>
   function submit_code() {
