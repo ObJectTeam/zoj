@@ -12,17 +12,19 @@
     <link href="/libs/morris.js/morris.css" rel="stylesheet">
     <link href="/style.css?20170706" rel="stylesheet">
     <script src="/libs/jquery/jquery.min.js"></script>
+    <link rel="icon" href="https://zhangzisu.cn/wp-content/uploads/2017/08/cropped-site-icon-32x32.png" sizes="32x32">
+    <link rel="icon" href="https://zhangzisu.cn/wp-content/uploads/2017/08/cropped-site-icon-192x192.png" sizes="192x192">
 </head>
 <body>
     <div class="ui fixed borderless menu" style="position: fixed; ">
         <div class="ui container">
-            <a alt="首页" class="header item" href="/"><span style="font-family: Raleway; font-size: 1.5em; font-weight: 300; "><%= zoj.config.title %></span></a>
-            <a alt="题库" class="item<% if (active.startsWith('problem')) { %> active<% } %>" href="/problems"><i class="list icon"></i></a>
-            <a alt="比赛" class="item<% if (active.startsWith('contest')) { %> active<% } %>" href="/contests"><i class="calendar icon"></i></a>
-            <a alt="记录" class="item<% if (active.startsWith('submission')) { %> active<% } %>" href="/submissions"><i class="tasks icon"></i></a>
-            <a alt="排名" class="item<% if (active.startsWith('ranklist')) { %> active<% } %>" href="/ranklist"><i class="signal icon"></i></a>
-            <a alt="讨论" class="item<% if (active.startsWith('discussion') || active.startsWith('article')) { %> active<% } %>" href="/discussion"><i class="comments icon"></i></a>
-            <a alt="帮助" class="item<% if (active.startsWith('help')) { %> active<% } %>" href="/help"><i class="help circle icon"></i></a>
+            <a title="首页" class="header item" href="/"><span style="font-family: Raleway; font-size: 1.5em; font-weight: 300; "><%= zoj.config.title %></span></a>
+            <a title="题库" class="item<% if (active.startsWith('problem')) { %> active<% } %>" href="/problems"><i class="list icon"></i></a>
+            <a title="比赛" class="item<% if (active.startsWith('contest')) { %> active<% } %>" href="/contests"><i class="calendar icon"></i></a>
+            <a title="记录" class="item<% if (active.startsWith('submission')) { %> active<% } %>" href="/submissions"><i class="tasks icon"></i></a>
+            <a title="排名" class="item<% if (active.startsWith('ranklist')) { %> active<% } %>" href="/ranklist"><i class="signal icon"></i></a>
+            <a title="讨论" class="item<% if (active.startsWith('discussion') || active.startsWith('article')) { %> active<% } %>" href="/discussion"><i class="comments icon"></i></a>
+            <a title="帮助" class="item<% if (active.startsWith('help')) { %> active<% } %>" href="/help"><i class="help circle icon"></i></a>
             <% if (typeof contest !== 'undefined' && contest && contest.id) { %>
               <a id="back_to_contest" class="item" href="<%= zoj.utils.makeUrl(['contest', contest.id]) %>"><i class="arrow left icon"></i></a>
             <% } %>
