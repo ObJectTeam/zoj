@@ -23,7 +23,8 @@ this.isPending = (status) => {
   let pending = [
     'Waiting',
     'Compiling',
-    'Running'
+    'Running',
+    'Fetched'
   ];
   return pending.includes(this.getStatusMeta(status));
 };
@@ -45,6 +46,7 @@ this.icon = {
   'Waiting': 'hourglass half',
   'Running': 'spinner',
   'Compiling': 'spinner',
+  'Fetched': 'spinner',
   'Compile Error': 'code',
   'Submitted': 'checkmark', // NOI contests
   'System Error': 'server',

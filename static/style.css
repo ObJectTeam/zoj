@@ -427,8 +427,11 @@ body > .ui.page.dimmer {
 }
 
 :not(.status_detail).status.judgement_failed,
+:not(.status_detail).status.fetched,
 .title:hover .status_detail.status.judgement_failed,
-.title.active .status_detail.status.judgement_failed {
+.title:hover .status_detail.status.fetched,
+.title.active .status_detail.status.judgement_failed,
+.title.active .status_detail.status.fetched {
   color: #78909C;
 }
 
