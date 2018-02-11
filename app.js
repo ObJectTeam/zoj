@@ -11,6 +11,7 @@ let fs = require('fs'),
 global.zoj = {
 	rootDir: __dirname,
 	config: require('./config.json'),
+	version: require('./package.json').version,
 	models: [],
 	modules: [],
 	db: null,

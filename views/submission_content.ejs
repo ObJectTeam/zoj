@@ -50,6 +50,7 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
         <% } %>
         <th>提交者</th>
         <th>提交时间</th>
+        <th>评测机</th>
         <% if (judge.allowedRejudge) { %>
           <th>重新评测</th>
         <% } %>
@@ -81,6 +82,7 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
         <% } %>
         <td><a href="<%= zoj.utils.makeUrl(['user', judge.user_id]) %>"><%= judge.user.username %></a><% if (judge.user.nameplate) { %><%- judge.user.nameplate %><% } %></td>
         <td><%= zoj.utils.formatDate(judge.submit_time) %></td>
+        <td><%= judge.result.judger %></td>
         <% if (judge.allowedRejudge) { %>
           <td>
             <a id="rejudge-button" onclick="check_rejudge()" style="color: #000; " href="#"><i class="repeat icon"></i></a>

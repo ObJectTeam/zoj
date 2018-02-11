@@ -34,3 +34,4 @@ textFit(e, { maxFontSize: 14 });
 <td><a href="<%= zoj.utils.makeUrl(['user', judge.user_id]) %>"><%= judge.user.username %></a><% if (judge.user.nameplate) { %><%- judge.user.nameplate %><% } %></td>
 <td><%= zoj.utils.formatDate(judge.submit_time) %>
 </td>
+<td><%= judge.result.judger %></td>

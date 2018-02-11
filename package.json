@@ -1,6 +1,6 @@
 {
 	"name": "zoj",
-	"version": "2.0.0",
+	"version": "3.0.0",
 	"description": "A powerfull manage system for OI",
 	"main": "app.js",
 	"scripts": {
@@ -9,11 +9,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/zoj/zoj.git"
+		"url": "git+https://github.com/sky-develop-team/zoj.git"
 	},
 	"author": "ZhangZisu",
 	"bugs": {
-		"url": "https://github.com/zoj/zoj/issues"
+		"url": "https://github.com/sky-develop-team/zoj/issues"
 	},
 	"homepage": "https://zhangzisu.cn",
 	"dependencies": {
