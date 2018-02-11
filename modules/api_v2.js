@@ -174,7 +174,7 @@ app.apiRouter.get('/api/v2/answer/:id/:token', async (req, res) => {
 		if (token !== zoj.config.judge_token) return res.status(404).send({ err: 'Permission denied' });
 
 		let id = req.params.id;
-		let filename = zoj.utils.resolvePath(zoj.config.upload_dir, 'answer') + id;
+		let filename = zoj.utils.resolvePath(zoj.config.upload_dir, 'answer', id);
 		if (!await zoj.utils.isFile(filename))
 			return res.status(404).send({ err: 'Permission denied' });
 		let path = require('path');
