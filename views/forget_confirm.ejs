@@ -49,7 +49,8 @@
                         return;
                     }
                     password = md5($("#password1").val());
-                    $("#resetPassword").addClass("loading");
+                    $("#resetPassword").fadeOut(0);
+                    showMessage("positive", "系统正在处理，请稍候");
                     $.ajax({
                         url: "/api/reset_password",
                         type: 'POST',
@@ -69,7 +70,7 @@
                                     showMessage("error", "未知错误 " + error_code);
                                     break;
                             }
-                            $("#resetPassword").removeClass("loading");
+                            $("#resetPassword").fadeIn(0);
                         },
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                             alert(XMLHttpRequest.responseText);

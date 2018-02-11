@@ -57,7 +57,8 @@ function submit() {
         return;
     }
     password = md5($("#password1").val())
-    $("#sign_up").addClass("loading");
+    $("#sign_up").fadeOut(0);
+    show_error("正在提交请求，请等待");
     $.ajax({
         url: '/api/sign_up',
         type: 'POST',
@@ -106,12 +107,12 @@ function submit() {
                     show_error("未知错误：" + JSON.stringify(data));
                     break;
             }
-            $("#sign_up").removeClass("loading");
+            $("#sign_up").fadeIn(0);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             alert(XMLHttpRequest.responseText);
             show_error("未知错误");
-            $("#sign_up").removeClass("loading");
+            $("#sign_up").fadeIn(0);
         }
     });
 }

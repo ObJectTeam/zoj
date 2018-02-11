@@ -613,16 +613,10 @@ app.post('/problem/:id/submit', app.multer.fields([{ name: 'answer', maxCount: 1
 		let judge_state;
 		if (problem.type === 'submit-answer') {
 			let File = zoj.model('file'), path;
-			if (!req.files['answer']) {
-				// Submited by editor
-				try {
-					path = await File.zipFiles(JSON.parse(req.body.answer_by_editor));
-				} catch (e) {
-					throw new ErrorMessage('无法解析提交数据。');
-				}
-			} else {
-				if (req.files['answer'][0].size > zoj.config.limit.submit_answer) throw new ErrorMessage('答案文件太大。');
-				path = req.files['answer'][0].path;
+			try {
+				path = await File.zipFiles(JSON.parse(req.body.answer_by_editor));
+			} catch (e) {
+				throw new ErrorMessage('无法解析提交数据。');
 			}
 
 			let file = await File.upload(path, 'answer');
@@ -640,14 +634,8 @@ app.post('/problem/:id/submit', app.multer.fields([{ name: 'answer', maxCount: 1
 			});
 		} else {
 			let code;
-			if (req.files['answer']) {
-				if (req.files['answer'][0].size > zoj.config.limit.submit_code) throw new ErrorMessage('代码文件太大。');
-				let fs = Promise.promisifyAll(require('fs'));
-				code = (await fs.readFileAsync(req.files['answer'][0].path)).toString();
-			} else {
-				if (req.body.code.length > zoj.config.limit.submit_code) throw new ErrorMessage('代码太长。');
-				code = req.body.code;
-			}
+			if (req.body.code.length > zoj.config.limit.submit_code) throw new ErrorMessage('代码太长。');
+			code = req.body.code;
 
 			judge_state = await JudgeState.create({
 				code: code,
