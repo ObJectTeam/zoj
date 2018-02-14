@@ -293,9 +293,10 @@ class Problem extends Model {
 	async isAllowedUseBy(user) {
 		if (this.is_public && !this.is_protected) return true;
 		if (!user) return false;
+		if (this.user_id === user.id) return true;
 		if (this.is_public && this.is_protected) return user.admin >= 1;
 		if (await user.admin >= 3) return true;
-		return this.user_id === user.id;
+		return false;
 	}
 
 	async isAllowedManageBy(user) {

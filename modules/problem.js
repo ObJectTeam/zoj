@@ -23,8 +23,8 @@ app.get('/problems', async (req, res) => {
 					is_public: 1,
 					is_protected: 0
 				}
-			}
-		} else if (!await res.locals.user.admin >= 1) {
+			};
+		} else if (res.locals.user.admin < 1) {
 			where = {
 				$or: {
 					$and: {
@@ -33,8 +33,8 @@ app.get('/problems', async (req, res) => {
 					},
 					user_id: res.locals.user.id
 				}
-			}
-		} else if (!await res.locals.user.admin >= 3) {
+			};
+		} else if (res.locals.user.admin < 3) {
 			where = {
 				$or: {
 					is_public: 1,
@@ -88,7 +88,7 @@ app.get('/problems/search', async (req, res) => {
 					}
 				]
 			};
-		} else if (!await res.locals.user.admin >= 1) {
+		} else if (res.locals.user.admin < 1) {
 			where = {
 				$and: [
 					where,
@@ -103,7 +103,7 @@ app.get('/problems/search', async (req, res) => {
 					}
 				]
 			};
-		} else if (!await res.locals.user.admin >= 3) {
+		} else if (res.locals.user.admin < 3) {
 			where = {
 				$and: [
 					where,
