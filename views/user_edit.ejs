@@ -55,6 +55,7 @@
       <div class="inline field">
         <label class="ui header">权限</label>
         <input type="range" id="admin" name="admin" min="0" max="<%= user.admin - 1 %>" value="<%= edited_user.admin %>">
+        <label class="ui header" id="admintip"></label>
       </div>
       <div class="inline field">
         <label class="ui header">封禁</label>
@@ -101,4 +102,22 @@ $(function () {
 	$('.ui.dropdown').dropdown();
 });
 </script>
+<% if(allowedManagePrivilege && edited_user.id !== user.id){ %>
+<script>
+function updateInfo(){
+  var value = $('#admin').val();
+  var tip = "What the fuck is???";
+  switch(value){
+    case "0":tip = "Common user, no any privileges.";break;
+    case "1":tip = "Privileged user, can access privileged problems.";break;
+    case "2":tip = "Student administrator, can manage tags.";break;
+    case "3":tip = "Teacher administrator, can manage problems, contests and users.";break;
+    case "4":tip = "Super administrator.";break;
+  }
+  $('#admintip').text(tip);
+}
+updateInfo();
+$('#admin').bind('input propertychange', function() {updateInfo();});
+</script>
+<% } %>
 <% include footer %>

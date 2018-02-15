@@ -1,6 +1,6 @@
 {
 	"name": "zoj",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "A powerfull manage system for OI",
 	"main": "app.js",
 	"scripts": {
@@ -41,10 +41,14 @@
 		"pygmentize-bundled-cached": "^1.1.0",
 		"request": "^2.74.0",
 		"request-promise": "^4.1.1",
+		"semantic-ui": "^2.2.14",
 		"sequelize": "^3.24.3",
 		"session-file-store": "^1.0.0",
 		"sqlite3": "^3.1.4",
 		"tmp-promise": "^1.0.3",
 		"xss": "^0.3.3"
+	},
+	"devDependencies": {
+		"gulp": "^3.9.1"
 	}
 }

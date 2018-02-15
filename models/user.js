@@ -36,18 +36,14 @@ let model = db.define('user', {
 	username: { type: Sequelize.STRING(80), unique: true },
 	email: { type: Sequelize.STRING(120) },
 	password: { type: Sequelize.STRING(120) },
-
 	nickname: { type: Sequelize.STRING(80) },
 	nameplate: { type: Sequelize.TEXT },
 	information: { type: Sequelize.TEXT },
-
 	ac_num: { type: Sequelize.INTEGER },
 	submit_num: { type: Sequelize.INTEGER },
-
 	admin: { type: Sequelize.INTEGER },
 	is_show: { type: Sequelize.BOOLEAN },
 	public_email: { type: Sequelize.BOOLEAN },
-
 	sex: { type: Sequelize.INTEGER },
 	rating: { type: Sequelize.INTEGER }
 }, {
@@ -74,7 +70,6 @@ class User extends Model {
 			username: '',
 			password: '',
 			email: '',
-
 			nickname: '',
 			admin: 0,
 			ac_num: 0,
@@ -199,52 +194,6 @@ class User extends Model {
 		return res;
 	}
 
-	async getPrivileges() {
-		let UserPrivilege = zoj.model('user_privilege');
-		let privileges = await UserPrivilege.query(null, {
-			user_id: this.id
-		});
-
-		return privileges.map(x => x.privilege);
-	}
-
-	async setPrivileges(newPrivileges) {
-		let UserPrivilege = zoj.model('user_privilege');
-
-		let oldPrivileges = await this.getPrivileges();
-
-		let delPrivileges = oldPrivileges.filter(x => !newPrivileges.includes(x));
-		let addPrivileges = newPrivileges.filter(x => !oldPrivileges.includes(x));
-
-		for (let privilege of delPrivileges) {
-			let obj = await UserPrivilege.findOne({
-				where: {
-					user_id: this.id,
-					privilege: privilege
-				}
-			});
-
-			await obj.destroy();
-		}
-
-		for (let privilege of addPrivileges) {
-			let obj = await UserPrivilege.create({
-				user_id: this.id,
-				privilege: privilege
-			});
-
-			await obj.save();
-		}
-	}
-
-	// async hasPrivilege(privilege) {
-	// 	if (this.is_admin) return true;
-
-	// 	let UserPrivilege = zoj.model('user_privilege');
-	// 	let x = await UserPrivilege.findOne({ where: { user_id: this.id, privilege: privilege } });
-	// 	return !(!x);
-	// }
-
 	async getLastSubmitLanguage() {
 		let JudgeState = zoj.model('judge_state');
 
@@ -258,5 +207,4 @@ class User extends Model {
 }
 
 User.model = model;
-
 module.exports = User;

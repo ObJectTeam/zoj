@@ -1,18 +1,18 @@
 {
   "title": "Zen Online Judge",
   "listen": "0.0.0.0",
-  "port": "80",
+  "port": "8080",
   "hostname": "0.0.0.0",
   "db": {
     "database": "zoj",
-    "username": "zoj",
-    "password": "******",
+    "username": "root",
+    "password": "1415926535897932",
     "host": null,
     "dialect": "mysql",
     "storage": null
   },
   "register_mail": {
-    "enabled": true,
+    "enabled": false,
     "host": "smtp-mail.outlook.com",
     "port": 587,
     "username": "zhangzisu@outlook.com",
