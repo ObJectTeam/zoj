@@ -195,9 +195,6 @@ app.get('/api/sign_up_confirm', async (req, res) => {
 		});
 		await user.save();
 
-		req.session.user_id = user.id;
-		setLoginCookie(user.username, user.password, res);
-
 		res.redirect(obj.prevUrl || '/');
 	} catch (e) {
 		zoj.log(e);
