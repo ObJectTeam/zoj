@@ -41,7 +41,6 @@
 		"pygmentize-bundled-cached": "^1.1.0",
 		"request": "^2.74.0",
 		"request-promise": "^4.1.1",
-		"semantic-ui": "^2.2.14",
 		"sequelize": "^3.24.3",
 		"session-file-store": "^1.0.0",
 		"sqlite3": "^3.1.4",
@@ -49,6 +48,7 @@
 		"xss": "^0.3.3"
 	},
 	"devDependencies": {
-		"gulp": "^3.9.1"
+		"gulp": "^3.9.1",
+		"semantic-ui": "^2.2.14"
 	}
 }
