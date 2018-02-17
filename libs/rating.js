@@ -1,4 +1,8 @@
-// Code by Dicint
+/*
+ *  Package  : libs
+ *  Filename : rating.js
+ *  Create   : 2018-02-17
+ */
 
 const util = require('util');
 const _ = require('lodash');
@@ -7,7 +11,6 @@ function getEloWinProbability(ra, rb) {
     return 1.0 / (1 + Math.pow(10, (rb - ra) / 400.0));
 }
 
-// 传入具体某个人的情况
 function getContestantSeed(contestantIndex, allContestants) {
     let seed = 1;
     let rating = allContestants[contestantIndex].currentRating;
