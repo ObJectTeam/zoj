@@ -14,11 +14,10 @@
 
         <h2 class="ui header">个人资料<br></h2>
         <p>本站不提供头像存储服务，而是使用 Gravatar 进行头像显示。请使用邮箱注册 <a href="https://zh-cn.wordpress.com/">WordPress.com</a>，登录 <a href="https://cn.gravatar.com/">Gravatar</a> 并上传头像。同样使用 Gravatar 的 OJ 有 Vijos、COGS、UOJ 等。</p>
-        <p>个性签名用不了markdown，别试了。</p>
         <h2 class="ui header">添加题目</h2>
         <h3 class="ui header">题面</h3>
         <div>
-            <p>在<a href="/problem/0/edit">添加题目页面</a>填写题面，题目内容使用 Markdown 与 TeX 公式。</p>
+            <p>在<a href="/problem/0/edit">添加题目页面</a>填写题面，题目内容可以使用 TeX 公式（请用$包围）。</p>
             <h3 class="ui header">测试数据</h3>
             <p>在添加好的题目页面选择“管理”，可以调整时间和内存限制。数据包是一个 <code>zip</code> 压缩包：</p>
             <div class="ui existing segment" style="border-radius: 0.285714rem; font-size: 14px;"><pre style="margin-top: 0px; margin-bottom: 0px;"><code>xxx.zip
@@ -72,6 +71,8 @@ submit#.out
             <p>如果需要使用 Special Judge 评分，请在数据包中添加 <code>spj_LANG.xxx</code>，其中 <code>xxx</code> 为任意后缀名，<code>LANG</code> 为所用语言的简称，可为 <code>c</code>、<code>cpp</code>、<code>cpp11</code>、<code>java</code>、<code>nodejs</code>。</p>
             <p>Special Judge 程序运行时，其目录下会有四个文件 <code>input</code>、<code>user_out</code>、<code>answer</code>、<code>code</code>，分别对应该测试点的输入文件、用户输出、该测试点的输出文件、用户的代码（对于非提交答案题目）。</p>
             <p>Special Judge 程序运行完成后，应将该测试点的得分输出到<strong>标准输出</strong>（<code>stdout</code>）中（范围为 0 到 100，将自动折合为测试点分数），并将提供给用户的额外信息输出到<strong>标准错误输出</strong>（<code>stderr</code>）中。</p>
+            <h2 class="ui header">Markdown</h2>
+            <p>凡是出现<i class="mega-octicon octicon-markdown"></i>图标的地方，均可以使用Markdown语法。</p>
         </div>
     </div>
 </div>

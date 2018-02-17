@@ -15,7 +15,7 @@
       <div class="field">
         <label for="title">标题</label>
         <input type="text" id="title" name="title" value="<%= article.title %>">
-        <label for="content">内容</label>
+        <label for="content">内容<i class="mega-octicon octicon-markdown"></i></label>
         <textarea rows="15" id="content" name="content" class="font-content"><%= article.content %></textarea>
         <% if (user && user.admin >= 2) { %>
           <div class="ui <% if (article.is_notice) { %>checked <% } %>checkbox" style="margin-top: 15px; ">
