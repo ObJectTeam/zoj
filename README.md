@@ -18,10 +18,12 @@ Zen Online Judge is written by [node.js](https://nodejs.org).It's frontend is po
   1. Execute ```git clone https://github.com/sky-develop-team/zoj.git```.
   2. Execute ```cd zoj```.
   3. Execute ```npm install --production```.
-  4. In the upload floder, execute ```mkdir additional_file answer testdata tmp```.
-  5. Wait until npm finished.
+  4. In the upload floder, execute ```mkdir additional_file answer testdata tmp```.
+  5. Wait until npm finished.
 ### Depoly
   1. Use a editor to open ```config.json```.
   2. Edit as you wish.
 ### Start
   1. Execute ```npm start``` or ```node app.js```.
+### Update
+  1. Execute ```git fetch --all && git reset --hard origin/master```
