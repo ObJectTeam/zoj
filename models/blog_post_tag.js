@@ -9,13 +9,13 @@
 let Sequelize = require('sequelize');
 let db = zoj.db;
 
-let model = db.define('problem_tag', {
+let model = db.define('blog_post_tag', {
 	id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
 	name: { type: Sequelize.STRING },
 	color: { type: Sequelize.STRING },
 }, {
 		timestamps: false,
-		tableName: 'problem_tag',
+		tableName: 'blog_post_tag',
 		indexes: [
 			{
 				unique: true,

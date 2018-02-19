@@ -37,7 +37,7 @@ let model = db.define('blog_post', {
 let Model = require('./common');
 class BlogPost extends Model {
 	static async create(val) {
-		return blog_post.fromRecord(blog_post.model.build(Object.assign({
+		return BlogPost.fromRecord(BlogPost.model.build(Object.assign({
             user_id: '',
             problem_id: '',
 			title: '',
@@ -67,7 +67,7 @@ class BlogPost extends Model {
 	async getTags() {
 		let blogPostTagMap = zoj.model('blog_post_tag_map');
 		let maps = await blogPostTagMap.query(null, {
-			id: this.id
+			post_id: this.id
 		});
 
 		let blogPostTag = zoj.model('blog_post_tag');
@@ -129,6 +129,6 @@ class BlogPost extends Model {
 	getModel() { return model; }
 }
 
-blog_post.model = model;
+BlogPost.model = model;
 
-module.exports = blog_post;
+module.exports = BlogPost;

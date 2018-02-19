@@ -25,6 +25,7 @@
             <a title="记录" class="item<% if (active.startsWith('submission')) { %> active<% } %>" href="/submissions"><i class="tasks icon"></i></a>
             <a title="排名" class="item<% if (active.startsWith('ranklist')) { %> active<% } %>" href="/ranklist"><i class="signal icon"></i></a>
             <a title="讨论" class="item<% if (active.startsWith('discussion') || active.startsWith('article')) { %> active<% } %>" href="/discussion"><i class="comments icon"></i></a>
+            <a title="博客" class="item<% if (active.startsWith('blog') || active.startsWith('post')) { %> active<% } %>" href="/blogs"><i class="marker icon"></i></a>
             <a title="帮助" class="item<% if (active.startsWith('help')) { %> active<% } %>" href="/help"><i class="help circle icon"></i></a>
             <% if (typeof contest !== 'undefined' && contest && contest.id) { %>
               <a id="back_to_contest" class="item" href="<%= zoj.utils.makeUrl(['contest', contest.id]) %>"><i class="arrow left icon"></i></a>
