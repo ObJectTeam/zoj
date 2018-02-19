@@ -111,16 +111,6 @@ class BlogPost extends Model {
 		}
 	}
 
-	async changeID(id) {
-		id = parseInt(id);
-		await db.query('UPDATE `blog_post`         SET `id`      = ' + id + ' WHERE `id`         = ' + this.id);
-		await db.query('UPDATE `blog_post_tag_map` SET `post_id` = ' + id + ' WHERE `post_id` = ' + this.id);
-
-		this.id = id;
-
-		await this.save();
-	}
-
 	async delete() {
 		await db.query('DELETE FROM `blog_post`         WHERE `id`      = ' + this.id);
 		await db.query('DELETE FROM `blog_post_tag_map` WHERE `post_id` = ' + this.id);

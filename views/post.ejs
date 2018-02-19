@@ -3,48 +3,80 @@
   this.title = post.title;
 %>
 <% include header %>
-<div class="row">
+<div class="ui center aligned grid">
+    <div class="row">
+      <h1 class="ui header">
+          #<%= post.problem_id %>. <%= post.title %><% if (post.allowedEdit) { if (!post.is_public) {%><span class="ui tiny red label">未公开</span><% }} %>
+      </h1>
+    </div>
+    <div class="row" style="margin-top: -23px">
+        <span class="ui label">作者：
+            <a href="<%= zoj.utils.makeUrl(['user', post.user_id]) %>"><%= post.user.username %></a>
+        </span>
+    </div>
+</div>
+<div class="ui grid">
+  <div class="row">
     <div class="column">
-      <div class="ui buttons">
         <div class="ui buttons right floated">
           <% if (post.allowedEdit) { %>
             <a class="small ui button" href="<%= zoj.utils.makeUrl(['blog', post.id, 'edit']) %>">编辑</a>
             <% if (post.is_public) {  %>
-              <a class="small ui button" id="dis_public" href="<%= zoj.utils.makeUrl(['blog', post.id, 'dis_public']) %>">取消公开</a>
+                <a class="small ui button" id="dis_public" href-post="<%= zoj.utils.makeUrl(['blog', post.id, 'dis_public']) %>">取消公开</a>
             <% } else { %>
-              <a class="small ui button" id="public" href="<%= zoj.utils.makeUrl(['blog', post.id, 'public']) %>">公开</a>
+                <a class="small ui button" id="public" href-post="<%= zoj.utils.makeUrl(['blog', post.id, 'public']) %>">公开</a>
             <% } %>
             <div class="ui basic modal" id="modal-delete">
-              <div class="ui icon header">
-                <i class="trash icon"></i>
-                <p style="margin-top: 15px; ">删除题目</p>
-              </div>
-              <div class="content" style="text-align: center; ">
-                <p>确认删除此题目吗？提交记录、讨论以及测试数据将一并删除。<br>
-                删除题目导致的修改用户提交、通过数量可能会耗费一些时间。</p>
-                <b>警告：删除比赛中的题目会导致系统错乱！请确认没有比赛使用此题目。</b>
-              </div>
-              <div class="actions">
-                <div class="ui red basic cancel inverted button">
-                  <i class="remove icon"></i>
-                  否
+                <div class="ui icon header">
+                  <i class="trash icon"></i>
+                  <p style="margin-top: 15px; ">删除文章</p>
                 </div>
-                <a class="ui green ok inverted button" href="<%= zoj.utils.makeUrl(['post', post.id, 'delete']) %>">
-                  <i class="checkmark icon"></i>
-                  是
-                </a>
-              </div>
+                <div class="content" style="text-align: center; ">
+                    <p>确认删除？</p>
+                </div>
+                <div class="actions">
+                    <div class="ui red basic cancel inverted button">
+                    <i class="remove icon"></i>否</div>
+                    <a class="ui green ok inverted button" href-post="<%= zoj.utils.makeUrl(['blog', post.id, 'delete']) %>">
+                    <i class="checkmark icon"></i>是</a>
+                </div>
             </div>
             <div class="small ui red button" onclick="$('#modal-delete').modal('show')">删除</div>
           <% } %>
         </div>
     </div>
   </div>
+  <% if (post.content) { %>
   <div class="row">
     <div class="column">
       <div class="ui bottom attached segment font-content"><%- post.content %></div>
     </div>
   </div>
+  <% } %>
+  <% if (post.tags && post.tags.length) { %>
+    <div class="row">
+      <div class="column">
+        <h4 class="ui block header" id="show_tag_title_div" style="margin-bottom: 0; margin-left: -1px; margin-right: -1px; "><a href="#" id="show_tag_button" style="color: #000; ">显示分类标签</a></h4>
+        <div class="ui bottom attached segment" style="display: none; " id="show_tag_div">
+          <% for (let tag of post.tags) { %>
+            <a href="<%= zoj.utils.makeUrl(['blogs', 'tag', tag.id]) %>" class="ui medium <%= tag.color %> label">
+              <%= tag.name %>
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <script>
+    $(function () {
+      $('#show_tag_button').click(function (e) {
+        e.preventDefault();
+        $('#show_tag_title_div').addClass('top');
+        $('#show_tag_title_div').addClass('top attached');
+        $('#show_tag_title_div').text('分类标签');
+        $('#show_tag_div').css('display', '');
+      })
+    });
+    </script>
+  <% } %>
 </div>
-
 <% include footer %>

@@ -26,7 +26,7 @@ app.get('/blogs', async (req, res) => {
         }
 
         let paginate = zoj.utils.paginate(await BlogPost.count(where), req.query.page, zoj.config.page.post);
-        let posts = await BlogPost.query(paginate, where);
+        let posts = await BlogPost.query(paginate, where, [["id", "desc"]]);
 
         await posts.forEachAsync(async post => {
             await post.loadRelationships();
@@ -81,7 +81,7 @@ app.get('/blogs/search', async (req, res) => {
             };
         }
 
-        let order = [zoj.db.literal('`id` = ' + id + ' DESC'), ['id', 'ASC']];
+        let order = [zoj.db.literal('`id` = ' + id + ' DESC'), ['id', 'DESC']];
 
         let paginate = zoj.utils.paginate(await BlogPost.count(where), req.query.page, zoj.config.page.post);
         let posts = await BlogPost.query(paginate, where, order);
@@ -135,7 +135,7 @@ app.get('/blogs/tag/:tagIDs', async (req, res) => {
         }
 
         let paginate = zoj.utils.paginate(await BlogPost.count(sql), req.query.page, zoj.config.page.post);
-        let posts = await BlogPost.query(sql + paginate.toSQL());
+        let posts = await BlogPost.query(sql + paginate.toSQL(), {}, [["id", "desc"]]);
 
         await posts.forEachAsync(async post => {
             await post.loadRelationships();
@@ -236,7 +236,7 @@ app.post('/blog/:id/edit', async (req, res) => {
         post.title = req.body.title;
         post.content = req.body.content;
         post.problem_id = parseInt(req.body.problem_id);
-        if (post.problem_id == NaN) post.problem_id = 0;
+        if (isNaN(post.problem_id)) post.problem_id = 0;
 
         // Save the post first, to have the `id` allocated
         await post.save();
@@ -250,7 +250,7 @@ app.post('/blog/:id/edit', async (req, res) => {
         let newTagIDs = await req.body.tags.map(x => parseInt(x)).filterAsync(async x => BlogPostTag.fromID(x));
         await post.setTags(newTagIDs);
 
-        res.redirect(zoj.utils.makeUrl(['post', post.id]));
+        res.redirect(zoj.utils.makeUrl(['blog', post.id]));
     } catch (e) {
         zoj.log(e);
         res.render('error', {
@@ -273,7 +273,7 @@ async function setPublic(req, res, is_public) {
         post.is_public = is_public;
         await post.save();
 
-        res.redirect(zoj.utils.makeUrl(['post', id]));
+        res.redirect(zoj.utils.makeUrl(['blog', id]));
     } catch (e) {
         zoj.log(e);
         res.render('error', {
@@ -288,4 +288,23 @@ app.post('/blog/:id/public', async (req, res) => {
 
 app.post('/blog/:id/dis_public', async (req, res) => {
     await setPublic(req, res, false);
+});
+
+app.post('/blog/:id/delete', async (req, res) => {
+	try {
+		let id = parseInt(req.params.id);
+		let post = await BlogPost.fromID(id);
+		if (!post) throw new ErrorMessage('无此博客。');
+
+		if (!post.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+
+		await post.delete();
+
+		res.redirect(zoj.utils.makeUrl(['blogs']));
+	} catch (e) {
+		zoj.log(e);
+		res.render('error', {
+			err: e
+		});
+	}
 });

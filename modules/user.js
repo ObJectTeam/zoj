@@ -15,9 +15,11 @@ app.get('/ranklist', async (req, res) => {
 			throw new ErrorMessage('错误的排序参数。');
 		}
 		let paginate = zoj.utils.paginate(await User.count({ is_show: true }), req.query.page, zoj.config.page.ranklist);
-		let ranklist = await User.query(paginate, { is_show: true }, [[sort, order]]);
+		let ranklist;
 		if (res.locals.user && res.locals.user.admin >= 4)
 			ranklist = await User.query(paginate, {}, [[sort, order]]);
+		else
+			ranklist = await User.query(paginate, { is_show: true }, [[sort, order]]);
 
 		res.render('ranklist', {
 			privilege: res.locals.user && res.locals.user.admin >= 4,

@@ -1,7 +1,7 @@
 <% this.title = '编辑标签' %>
 <% include header %>
 <div class="padding">
-  <form class="ui form" action="<%= zoj.utils.makeUrl(['post', 'tag', tag.id, 'edit']) %>" method="post">
+  <form class="ui form" action="<%= zoj.utils.makeUrl(['blog', 'tag', tag.id, 'edit']) %>" method="post">
       <div class="field">
           <label>标签名称</label>
           <input type="text" name="name" value="<%= tag.name %>">

@@ -38,6 +38,38 @@ app.get('/api/v2/search/problems/:keyword*?', async (req, res) => {
 	}
 });
 
+app.get('/api/v2/search/blogs/:keyword*?', async (req, res) => {
+	try {
+		let BlogPost = zoj.model('blog_post');
+
+		let keyword = req.params.keyword || '';
+		let posts = await BlogPost.query(null, {
+			title: { like: `%${req.params.keyword}%` }
+		}, [['id', 'desc']]);
+
+		let result = [];
+
+		let id = parseInt(keyword);
+		if (id) {
+			let postByID = await BlogPost.fromID(parseInt(keyword));
+			if (postByID && await postByID.isAllowedSeeBy(res.locals.user)) {
+				result.push(postByID);
+			}
+		}
+		await posts.forEachAsync(async post => {
+			if (await post.isAllowedSeeBy(res.locals.user) && result.length < zoj.config.page.edit_contest_problem_list && post.id !== id) {
+				result.push(post);
+			}
+		});
+
+		result = result.map(x => ({ name: `#${x.id}. ${x.title}`, value: x.id, url: zoj.utils.makeUrl(['blog', x.id]) }));
+		res.send({ success: true, results: result });
+	} catch (e) {
+		zoj.log(e);
+		res.send({ success: false });
+	}
+});
+
 app.get('/api/v2/search/tags/:keyword*?', async (req, res) => {
 	try {
 		let Problem = zoj.model('problem');
