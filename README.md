@@ -1,4 +1,5 @@
 # Zen Online Judge
+![zen-icon](https://user-images.githubusercontent.com/21094314/36365696-a411c294-1585-11e8-94bd-cbf19127425c.png)
 A powerful, scalable, intelligent online judge system for Olympics in Informaics
 ## Introduce
 Zen Online Judge is written by [node.js](https://nodejs.org).It's frontend is powered by [Semantic UI](https://semantic-ui.com/).
