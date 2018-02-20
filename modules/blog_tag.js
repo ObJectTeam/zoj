@@ -10,7 +10,7 @@ let PostTag = zoj.model('blog_post_tag');
 
 app.get('/blogs/tag/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || res.locals.user.admin < 2) throw new ErrorMessage('您没有权限进行此操作。');
 
 		let id = parseInt(req.params.id) || 0;
 		let tag = await PostTag.fromID(id);
@@ -33,7 +33,7 @@ app.get('/blogs/tag/:id/edit', async (req, res) => {
 
 app.post('/blogs/tag/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || res.locals.user.admin < 2) throw new ErrorMessage('您没有权限进行此操作。');
 
 		let id = parseInt(req.params.id) || 0;
 		let tag = await PostTag.fromID(id);

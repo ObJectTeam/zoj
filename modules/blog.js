@@ -35,7 +35,7 @@ app.get('/blogs', async (req, res) => {
         });
 
         res.render('blog', {
-            allowedManageTag: !!res.locals.user,
+            allowedManageTag: res.locals.user && res.locals.user.admin >= 2,
             posts: posts,
             paginate: paginate
         });
@@ -93,7 +93,7 @@ app.get('/blogs/search', async (req, res) => {
         });
 
         res.render('blog', {
-            allowedManageTag: !!res.locals.user,
+            allowedManageTag: res.locals.user && res.locals.user.admin >= 2,
             posts: posts,
             paginate: paginate
         });
@@ -144,7 +144,7 @@ app.get('/blogs/tag/:tagIDs', async (req, res) => {
         });
 
         res.render('blog', {
-            allowedManageTag: !!res.locals.user,
+            allowedManageTag: res.locals.user && res.locals.user.admin >= 2,
             posts: posts,
             tags: tags,
             paginate: paginate
