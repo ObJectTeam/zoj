@@ -10,9 +10,9 @@
       <label style="font-size: 1.2em; margin-right: 1px; ">Submitted By：</label>
       <div class="field"><input name="submitter" style="width: 100px; " type="text" value="<%= form.submitter %>"></div>
       <label style="font-size: 1.2em; margin-right: 1px; ">Score：</label>
-      <div class="field" style="padding-right: 6px; "><input name="min_score" style="width: 45px; " type="text" value="<%= form.min_score || 0 %>"></div>
+      <div class="field" style="padding-right: 6px; "><input name="min_score" style="width: 50px; " type="text" value="<%= form.min_score || 0 %>"></div>
       <label style="font-size: 1.2em; margin-right: 7px; ">～</label>
-      <div class="field"><input name="max_score" style="width: 45px; " type="text" value="<%= form.max_score || 100 %>"></div>
+      <div class="field"><input name="max_score" style="width: 50px; " type="text" value="<%= form.max_score || 100 %>"></div>
       <label style="font-size: 1.2em; margin-right: 1px; ">Language：</label>
       <div class="field">
         <div class="ui fluid selection dropdown" id="select_language" style="width: 110px; ">
@@ -20,8 +20,8 @@
           <i class="dropdown icon"></i>
           <div class="default text"></div>
           <div class="menu">
-            <div class="item" data-value="">Not Limited</div>
-            <div class="item" data-value="submit-answer">Submit Answer</div>
+            <div class="item" data-value="">No Limit</div>
+            <div class="item" data-value="submit-answer">Submit_Ans</div>
             <% for (let lang in zoj.config.languages) { %>
               <div class="item" data-value="<%= lang %>"><%= zoj.config.languages[lang].show %></div>
             <% } %>
@@ -35,7 +35,7 @@
           <i class="dropdown icon"></i>
           <div class="default text"></div>
           <div class="menu">
-            <div class="item" data-value="">Not Limited<i class="dropdown icon" style="visibility: hidden; "></i></div>
+            <div class="item" data-value="">No Limit<i class="dropdown icon" style="visibility: hidden; "></i></div>
             <% for (let status in this.icon) { %>
               <% if (this.iconHidden.includes(status)) continue; %>
               <div class="item" data-value="<%= status %>"><span class="status <%= status.toLowerCase().split(' ').join('_') %>"><i class="<%= this.icon[status] %> icon"></i> <%= status %></div>
@@ -43,14 +43,13 @@
           </div>
         </div>
       </div>
-      <button class="ui labeled icon mini button" type="submit">
+    
+      <button class="ui icon mini button" style="margin-left: auto; "type="submit" title="Search">
         <i class="search icon"></i>
-        Search
       </button>
       <% if (user) { %>
-      <a class="ui mini labeled icon blue button" style="margin-left: auto; " id="my_submit">
+      <a class="ui mini icon blue button" style="margin-left: auto; " id="my_submit" title="My Submissions">
         <i class="user icon"></i>
-        My Submissions
       </a>
       <script>
       $(function () {
