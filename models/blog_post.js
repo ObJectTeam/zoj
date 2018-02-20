@@ -16,10 +16,11 @@ let model = db.define('blog_post', {
     id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
     
 	user_id: { type: Sequelize.INTEGER },
-
+	// The id of the user who whote this post
 	from: {type: Sequelize.STRING(50) },
+	// The source of the problem
 	problem_id: { type: Sequelize.INTEGER  },
-	
+	// The id of the problem
 	
     title: { type: Sequelize.STRING(80) },
 	content: { type: Sequelize.TEXT },
@@ -59,6 +60,8 @@ class BlogPost extends Model {
 		if (!user) return false;
 		if (await user.admin >= 3) return true;
 		return this.user_id === user.id;
+		// 1.The user is teacher/system admin
+		// 2.The user is the owner of this post
 	}
 
 	async isAllowedSeeBy(user) {
@@ -66,6 +69,9 @@ class BlogPost extends Model {
         if (!user) return false;
         if (await user.admin >= 3) return true;
 		return this.user_id === user.id;
+		// 1.The post is public
+		// 2.The user is teacher/system admin
+		// 3.The user is the owner of this post
 	}
 
 	async getTags() {

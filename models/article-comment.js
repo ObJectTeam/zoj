@@ -20,8 +20,10 @@ let model = db.define('comment', {
 	article_id: { type: Sequelize.INTEGER },
 
 	user_id: { type: Sequelize.INTEGER },
+	// The id of the user who whote this comment
 
 	public_time: { type: Sequelize.INTEGER }
+	// The time of making this comment public
 }, {
 		timestamps: false,
 		tableName: 'comment',
@@ -54,6 +56,8 @@ class ArticleComment extends Model {
 	async isAllowedEditBy(user) {
 		await this.loadRelationships();
 		return user && (user.admin >= 2 || this.user_id === user.id || user.id === this.article.user_id);
+		// 1.The user is student/teacher/system admin
+		// 2.The user is the owner of this article/comment
 	}
 
 	getModel() { return model; }
