@@ -126,7 +126,7 @@ app.get('/submission/:id', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let judge = await JudgeState.fromID(id);
-		if (!judge || !await judge.isAllowedVisitBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!judge || !await judge.isAllowedVisitBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		let contest;
 		if (judge.type === 1) {
@@ -178,7 +178,7 @@ app.get('/submission/:id/ajax', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let judge = await JudgeState.fromID(id);
-		if (!judge || !await judge.isAllowedVisitBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!judge || !await judge.isAllowedVisitBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		let contest;
 		if (judge.type === 1) {
@@ -236,7 +236,7 @@ app.post('/submission/:id/rejudge', async (req, res) => {
 		await judge.loadRelationships();
 
 		let allowedRejudge = await judge.problem.isAllowedEditBy(res.locals.user);
-		if (!allowedRejudge) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!allowedRejudge) throw new ErrorMessage('You do not have permission to do this.');
 
 		await judge.rejudge();
 

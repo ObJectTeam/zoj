@@ -18,8 +18,11 @@ let model = db.define('contest_player', {
 	user_id: { type: Sequelize.INTEGER },
 
 	score: { type: Sequelize.INTEGER },
+	// Sum score
 	score_details: { type: Sequelize.TEXT, json: true },
+	// Score of every problem
 	time_spent: { type: Sequelize.INTEGER }
+	// Total time
 }, {
 		timestamps: false,
 		tableName: 'contest_player',
@@ -62,6 +65,7 @@ class ContestPlayer extends Model {
 				if (!this.score_details[judge_state.problem_id]) {
 					this.score_details[judge_state.problem_id] = {
 						score: judge_state.score,
+						// Score of this problem
 						judge_id: judge_state.id,
 						submissions: {}
 					};
@@ -71,6 +75,7 @@ class ContestPlayer extends Model {
 					judge_id: judge_state.id,
 					score: judge_state.score,
 					time: judge_state.submit_time
+					// Running time of the judge
 				};
 
 				let arr = Object.values(this.score_details[judge_state.problem_id].submissions);
@@ -82,7 +87,7 @@ class ContestPlayer extends Model {
 						maxScoreSubmission = x;
 					}
 				}
-
+				// Let the score of this problem be the MAX score of all submissions
 				this.score_details[judge_state.problem_id].judge_id = maxScoreSubmission.judge_id;
 				this.score_details[judge_state.problem_id].score = maxScoreSubmission.score;
 				this.score_details[judge_state.problem_id].time = maxScoreSubmission.time;
@@ -97,6 +102,7 @@ class ContestPlayer extends Model {
 
 			this.score_details[judge_state.problem_id] = {
 				score: judge_state.score,
+				// Score of this problem
 				judge_id: judge_state.id
 			};
 
@@ -110,7 +116,9 @@ class ContestPlayer extends Model {
 					this.score_details[judge_state.problem_id] = {
 						accepted: false,
 						unacceptedCount: 0,
+						// The number of unaccepted times of this problem
 						acceptedTime: 0,
+						// The time from the contest began to the user accepted this problem
 						judge_id: 0,
 						submissions: {}
 					};
@@ -121,6 +129,7 @@ class ContestPlayer extends Model {
 					accepted: judge_state.status === 'Accepted',
 					compiled: judge_state.status !== 'Compile Error',
 					time: judge_state.submit_time
+					// The time from the the contest began to the user submitted
 				};
 
 				let arr = Object.values(this.score_details[judge_state.problem_id].submissions);

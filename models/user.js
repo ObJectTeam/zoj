@@ -20,7 +20,7 @@
  *      3 : Teacher administrators
  *          Have permission to edit contests and peoples
  *          Cannot access system core
- *      4 : Super administrator (ME)
+ *      4 : Super administrator (ME) 
  *          I can do anything I want,
  *            edit anything I dislike,
  *            and access mysql.
@@ -43,6 +43,7 @@ let model = db.define('user', {
 	submit_num: { type: Sequelize.INTEGER },
 	admin: { type: Sequelize.INTEGER },
 	is_show: { type: Sequelize.BOOLEAN },
+	// is_show : Whether the user is banned
 	public_email: { type: Sequelize.BOOLEAN },
 	sex: { type: Sequelize.INTEGER },
 	rating: { type: Sequelize.INTEGER }
@@ -140,7 +141,7 @@ class User extends Model {
 				user_id: this.id,
 				status: 'Accepted',
 				type: {
-					$ne: 1 // Not a contest submissio
+					$ne: 1 // Not a contest submission
 				}
 			}
 		});

@@ -10,7 +10,7 @@ let PostTag = zoj.model('blog_post_tag');
 
 app.get('/blogs/tag/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user || res.locals.user.admin < 2) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || res.locals.user.admin < 2) throw new ErrorMessage('You do not have permission to do this.');
 
 		let id = parseInt(req.params.id) || 0;
 		let tag = await PostTag.fromID(id);
@@ -33,7 +33,7 @@ app.get('/blogs/tag/:id/edit', async (req, res) => {
 
 app.post('/blogs/tag/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user || res.locals.user.admin < 2) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || res.locals.user.admin < 2) throw new ErrorMessage('You do not have permission to do this.');
 
 		let id = parseInt(req.params.id) || 0;
 		let tag = await PostTag.fromID(id);
@@ -46,7 +46,7 @@ app.post('/blogs/tag/:id/edit', async (req, res) => {
 		req.body.name = req.body.name.trim();
 		if (tag.name !== req.body.name) {
 			if (await PostTag.findOne({ where: { name: req.body.name } })) {
-				throw new ErrorMessage('标签名称已被使用。');
+				throw new ErrorMessage('The label name is already used.');
 			}
 		}
 

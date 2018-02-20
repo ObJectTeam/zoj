@@ -1,5 +1,5 @@
 <%
-this.title = '测试数据';
+this.title = 'Testdata';
 function getIcon(filename) {
   let a = {
     '.cpp': 'file code outline',
@@ -38,27 +38,27 @@ function getIcon(filename) {
 <div class="padding">
   <div class="ui grid">
     <div class="seven wide column">
-      <h3 style="text-align: center; ">测试点信息</h3>
+      <h3 style="text-align: center; ">Testdata Information</h3>
       <% include problem_testcases %>
     </div>
     <div class="nine wide column">
-      <h3 style="text-align: center; ">文件列表</h3>
+      <h3 style="text-align: center; ">File List</h3>
       <% if (testdata) { %>
         <table class="ui very basic center aligned table">
           <thead>
             <tr>
-              <th class="left aligned">文件名</th>
-              <th style="width: 100px">文件大小</th>
-              <th style="width: 35px">下载</th>
+              <th class="left aligned">File Name</th>
+              <th style="width: 100px">File Size</th>
+              <th style="width: 35px">Download</th>
               <% if (problem.allowedEdit) { %>
-                <th style="width: 35px">删除</th>
+                <th style="width: 35px">Delete</th>
               <% } %>
             </tr>
           </thead>
           <tbody>
             <% if (testdata.zip) { %>
             <tr>
-              <td class="left aligned"><i class="file archive outline icon"></i> 完整数据包</td>
+              <td class="left aligned"><i class="file archive outline icon"></i> Complete Data Package</td>
               <td><%- !testdata.zip.size ? '<i class="minus icon"></i>' : zoj.utils.formatSize(testdata.zip.size) %></td>
               <td><a style="color: #000; " href="<%= zoj.utils.makeUrl(['problem', problem.id, 'testdata', 'download']) %>"><i class="download icon"></i></td>
               <% if (problem.allowedEdit) { %>
@@ -85,19 +85,19 @@ function getIcon(filename) {
                   <div class="ui basic modal" id="modal-delete-<%= i %>">
                     <div class="ui icon header">
                       <i class="trash icon"></i>
-                      <p style="margin-top: 15px; ">删除文件</p>
+                      <p style="margin-top: 15px; ">Delete this File</p>
                     </div>
                     <div class="content" style="text-align: center; ">
-                      <p>确认删除「 <samp><%= file.filename %></samp> 」吗？</p>
+                      <p>Are you sure to delte「 <samp><%= file.filename %></samp> 」?</p>
                     </div>
                     <div class="actions">
                       <div class="ui red basic cancel inverted button">
                         <i class="remove icon"></i>
-                        否
+                        No
                       </div>
                       <a class="ui green ok inverted button" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'testdata', 'delete', file.filename]) %>">
                         <i class="checkmark icon"></i>
-                        是
+                        Yes
                       </a>
                     </div>
                   </div>
@@ -108,17 +108,17 @@ function getIcon(filename) {
           </tbody>
         </table>
       <% } else { %>
-        <h4 style="text-align: center; ">无测试数据</h4>
+        <h4 style="text-align: center; ">No Testdata</h4>
       <% } %>
       <% if (problem.allowedEdit) { %>
         <form id="form_upload" class="ui form" action="<%= zoj.utils.makeUrl(['problem', problem.id, 'testdata', 'upload']) %>" method="post" enctype="multipart/form-data">
           <div class="inline fields">
             <div class="field" style="margin: 0 auto; ">
-              <label for="answer">上传文件（可一次性上传多个）</label>
+              <label for="answer">Upload Files(Can upload more than one)</label>
               <input type="file" name="file" multiple id="upload_file">
               <div class="ui center aligned vertical segment" style="padding-bottom: 0; ">
-                <div class="ui button" onclick="check_replace()">提交</div>
-                <a href="<%= zoj.utils.makeUrl(['problem', problem.id]) %>" class="ui blue button">返回题目</a>
+                <div class="ui button" onclick="check_replace()">Submit</div>
+                <a href="<%= zoj.utils.makeUrl(['problem', problem.id]) %>" class="ui blue button">Return to the Problem</a>
               </div>
             </div>
           </div>
@@ -126,20 +126,20 @@ function getIcon(filename) {
         <div class="ui basic modal" id="modal-replace">
           <div class="ui icon header">
             <i class="refresh icon"></i>
-            <p style="margin-top: 15px; ">替换文件</p>
+            <p style="margin-top: 15px; ">Replace these Files</p>
           </div>
           <div class="content" style="text-align: center; ">
-            <p>确认替换以下文件吗？</p>
+            <p>Are you sure to replace these files?</p>
             <div style="display: inline-block; text-align: left; " id="replaced_files"></div>
           </div>
           <div class="actions">
             <div class="ui red basic cancel inverted button">
               <i class="remove icon"></i>
-              否
+              No
             </div>
             <a class="ui green ok inverted button" onclick="$('#form_upload').submit()">
               <i class="checkmark icon"></i>
-              是
+              Yes
             </a>
           </div>
         </div>

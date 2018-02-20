@@ -1,4 +1,4 @@
-<% this.title = '管理题目'; %>
+<% this.title = 'Manage Problem'; %>
 <% include header %>
 <div class="padding">
     <div class="ui grid">
@@ -10,71 +10,71 @@
         <form class="ui form" method="post" enctype="multipart/form-data" onsubmit="return checkSubmit()">
           <input type="hidden" name="type" value="<%= problem.type %>">
           <div class="ui pointing secondary menu" id="problem-type-tab" style="margin-top: -10px; ">
-            <a class="<%= problem.type === 'traditional' ? 'active ' : '' %>item" data-tab="traditional">传统</a>
-            <a class="<%= problem.type === 'interaction' ? 'active ' : '' %>item" data-tab="interaction">交互</a>
-            <a class="<%= problem.type === 'submit-answer' ? 'active ' : '' %>item" data-tab="submit-answer">提交答案</a>
+            <a class="<%= problem.type === 'traditional' ? 'active ' : '' %>item" data-tab="traditional">Traditional</a>
+            <a class="<%= problem.type === 'interaction' ? 'active ' : '' %>item" data-tab="interaction">Interaction</a>
+            <a class="<%= problem.type === 'submit-answer' ? 'active ' : '' %>item" data-tab="submit-answer">Submit Answer</a>
           </div>
           <div class="ui <%= problem.type !== 'submit-answer' ? 'active ' : '' %>tab" data-tab="traditional" data-tab="interaction">
             <div class="two fields">
               <div class="field">
-                <label for="doc-ds-ipt-1">时间限制（单位: ms）</label>
+                <label for="doc-ds-ipt-1">Time Limit(ms)</label>
                 <input type="number" name="time_limit" value="<%= problem.time_limit %>">
               </div>
               <div class="field">
-                <label for="doc-ds-ipt-1">内存限制（单位: MiB）</label>
+                <label for="doc-ds-ipt-1">Memory Limit(MiB)</label>
                 <input type="number" name="memory_limit" value="<%= problem.memory_limit %>">
               </div>
             </div>
             <div id="io-type"<% if (problem.type === 'interaction') { %> style="display: none; "<% } %>>
               <% if (!problem.file_io) { %>
               <div class="inline fields">
-                <label>IO 方式</label>
+                <label>IO Mode</label>
                 <div class="field">
                   <div class="ui radio checkbox">
                     <input name="io_method" value="std-io" id="std-io" type="radio" onclick="goDisable()" checked>
-                    <label for="std-io">标准 IO</label>
+                    <label for="std-io">Standard IO</label>
                   </div>
                 </div>
                 <div class="field">
                   <div class="ui radio checkbox">
                     <input name="io_method" value="file-io" id="file-io" type="radio" onclick="goEnable()">
-                    <label for="file-io">文件 IO</label>
+                    <label for="file-io">File IO</label>
                   </div>
                 </div>
               </div>
               <div class="two fields">
                 <div class="field">
-                  <label for="file_io_input_name">输入文件名</label>
+                  <label for="file_io_input_name">Input File Name</label>
                   <input type="text" id="file-io-input-name" name="file_io_input_name" value="<%= problem.file_io_input_name %>" disabled>
                 </div>
                 <div class="field">
-                  <label for="file_io_output_name">输出文件名</label>
+                  <label for="file_io_output_name">Output File Name</label>
                   <input type="text" id="file-io-output-name" name="file_io_output_name" value="<%= problem.file_io_output_name %>" disabled>
                 </div>
               </div>
               <% } else { %>
               <div class="inline fields">
-                <label>IO 方式</label>
+                <label>IO Mode</label>
                 <div class="field">
                   <div class="ui radio checkbox" id="std-io-div">
                     <input name="io_method" value="std-io" id="std-io" type="radio" onclick="goDisable()">
-                    <label for="std-io">标准 IO</label>
+                    <label for="std-io">Standard IO</label>
                   </div>
                 </div>
                 <div class="field">
                   <div class="ui radio checkbox">
                     <input name="io_method" value="file-io" id="file-io" type="radio" onclick="goEnable()" checked>
-                    <label for="file-io">文件 IO</label>
+                    <label for="file-io">File IO</label>
                   </div>
                 </div>
               </div>
               <div class="two fields">
                 <div class="field">
-                  <label for="file_io_input_name">输入文件名</label>
+                  <label for="file_io_input_name">Input File Name</label>
                   <input type="text" id="file-io-input-name" name="file_io_input_name" value="<%= problem.file_io_input_name %>">
                 </div>
                 <div class="field">
-                  <label for="file_io_output_name">输出文件名</label>
+                  <label for="file_io_output_name">Ouput File Name</label>
                   <input type="text" id="file-io-output-name" name="file_io_output_name" value="<%= problem.file_io_output_name %>">
                 </div>
               </div>
@@ -82,20 +82,20 @@
             </div>
           </div>
           <div class="ui <%= problem.type === 'submit-answer' ? 'active ' : '' %>tab" data-tab="submit-answer" style="margin-bottom: 10px; ">
-            <b>为了避免系统出错，已有提交的题目不允许在提交答案和非提交答案之间更改。</b><br>
-            提交答案题目不需要设置时间限制、空间限制以及 IO 方式。<br>
-            左侧表格中第三列为选手提交时应使用的文件名。
+            <b>In order to avoid system errors, existing submissions are not allowed to change between submit-answer and not submit-answer.</b><br>
+            Submit-answer problems don't need to set the time limit,memory limit and IO mode.<br>
+            The third column in the table on the left shows the name of the file the player should submit.
           </div>
           <div class="field">
-            <label for="testdata">上传测试数据（请使用 ZIP 格式）</label>
+            <label for="testdata">Upload Testdata(Please use ZIP)</label>
             <input type="file" id="testdata" name="testdata">
           </div>
           <div class="field">
-            <label for="additional_file">上传附加文件（请使用 ZIP 格式）</label>
+            <label for="additional_file">Upload Additional Files(Please use ZIP)</label>
             <input type="file" id="additional_file" name="additional_file">
           </div>
-          <button type="submit" class="ui button">提交</button>
-          <a href="<%= zoj.utils.makeUrl(['problem', problem.id]) %>" class="ui blue button">返回题目</a>
+          <button type="submit" class="ui button">Submit</button>
+          <a href="<%= zoj.utils.makeUrl(['problem', problem.id]) %>" class="ui blue button">Return to the Problem</a>
         </form>
       </div>
   </div>

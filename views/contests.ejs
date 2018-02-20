@@ -1,11 +1,11 @@
-<% this.title = '比赛' %>
+<% this.title = 'Contest' %>
 <% include header %>
 <div class="padding">
     <% if (user && user.admin >= 3) { %>
     <div class="ui grid">
       <div class="row">
         <div class="column">
-          <a href="<%= zoj.utils.makeUrl(['contest', 0, 'edit']) %>" class="ui mini right floated button">添加比赛</a>
+          <a href="<%= zoj.utils.makeUrl(['contest', 0, 'edit']) %>" class="ui mini right floated button">Add Contests</a>
         </div>
       </div>
     </div>
@@ -13,10 +13,10 @@
     <table class="ui very basic center aligned table">
       <thead>
         <tr>
-          <th>比赛名称</th>
-          <th>开始时间</th>
-          <th>结束时间</th>
-          <th>描述</th>
+          <th>Contest Name</th>
+          <th>Begin</th>
+          <th>End</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
@@ -27,11 +27,11 @@
         %>
         <tr>
           <% if (now < contest.start_time) { %>
-            <% tag = '<span class="ui header"><div class="ui mini red label">未开始</div></span>' %>
+            <% tag = '<span class="ui header"><div class="ui mini red label">Upcoming</div></span>' %>
           <% } else if (now >= contest.start_time && now < contest.end_time) { %>
-            <% tag = '<span class="ui header"><div class="ui mini green label">进行中</div></span>' %>
+            <% tag = '<span class="ui header"><div class="ui mini green label">Ongoing</div></span>' %>
           <% } else { %>
-            <% tag = '<span class="ui header"><div class="ui mini grey label">已结束</div></span>' %>
+            <% tag = '<span class="ui header"><div class="ui mini grey label">Finished</div></span>' %>
           <% } %>
 
           <td><a href="<%= zoj.utils.makeUrl(['contest', contest.id]) %>"><%= contest.title %> <%- tag %></a></td>

@@ -39,7 +39,7 @@ app.get('/contests', async (req, res) => {
 
 app.get('/contest/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('You do not have permission to do this.');
 
 		let contest_id = parseInt(req.params.id);
 		let contest = await Contest.fromID(contest_id);
@@ -65,7 +65,7 @@ app.get('/contest/:id/edit', async (req, res) => {
 
 app.post('/contest/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('You do not have permission to do this.');
 
 		let contest_id = parseInt(req.params.id);
 		let contest = await Contest.fromID(contest_id);
@@ -79,11 +79,11 @@ app.post('/contest/:id/edit', async (req, res) => {
 			contest.ranklist_id = ranklist.id;
 
 			// Only new contest can be set type
-			if (!['noi', 'ioi', 'acm'].includes(req.body.type)) throw new ErrorMessage('无效的赛制。');
+			if (!['noi', 'ioi', 'acm'].includes(req.body.type)) throw new ErrorMessage('Invalid contest type.');
 			contest.type = req.body.type;
 		}
 
-		if (!req.body.title.trim()) throw new ErrorMessage('比赛名不能为空。');
+		if (!req.body.title.trim()) throw new ErrorMessage('Title cannot be empty.');
 		contest.title = req.body.title;
 		contest.subtitle = req.body.subtitle;
 		if (!Array.isArray(req.body.problems)) req.body.problems = [req.body.problems];
@@ -110,8 +110,8 @@ app.get('/contest/:id', async (req, res) => {
 		let contest_id = parseInt(req.params.id);
 
 		let contest = await Contest.fromID(contest_id);
-		if (!contest) throw new ErrorMessage('无此比赛。');
-		if (!contest.is_public && (!res.locals.user || !res.locals.user.admin >= 3)) throw new ErrorMessage('无此比赛。');
+		if (!contest) throw new ErrorMessage('No such contest.');
+		if (!contest.is_public && (!res.locals.user || !res.locals.user.admin >= 3)) throw new ErrorMessage('No such contest.');
 
 		contest.allowedEdit = await contest.isAllowedEditBy(res.locals.user);
 		contest.running = await contest.isRunning();
@@ -209,8 +209,8 @@ app.get('/contest/:id/ranklist', async (req, res) => {
 		let contest_id = parseInt(req.params.id);
 		let contest = await Contest.fromID(contest_id);
 
-		if (!contest) throw new ErrorMessage('无此比赛。');
-		if (!await contest.isAllowedSeeResultBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!contest) throw new ErrorMessage('No such contest.');
+		if (!await contest.isAllowedSeeResultBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await contest.loadRelationships();
 
@@ -252,8 +252,8 @@ app.get('/contest/:id/submissions', async (req, res) => {
 		let contest_id = parseInt(req.params.id);
 		let contest = await Contest.fromID(contest_id);
 
-		if (!contest) throw new ErrorMessage('无此比赛。');
-		if (!await contest.isAllowedSeeResultBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!contest) throw new ErrorMessage('No such contest.');
+		if (!await contest.isAllowedSeeResultBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		contest.ended = await contest.isEnded();
 
@@ -319,12 +319,12 @@ app.get('/contest/:id/:pid', async (req, res) => {
 	try {
 		let contest_id = parseInt(req.params.id);
 		let contest = await Contest.fromID(contest_id);
-		if (!contest) throw new ErrorMessage('无此比赛。');
+		if (!contest) throw new ErrorMessage('No such contest.');
 
 		let problems_id = await contest.getProblems();
 
 		let pid = parseInt(req.params.pid);
-		if (!pid || pid < 1 || pid > problems_id.length) throw new ErrorMessage('无此题目。');
+		if (!pid || pid < 1 || pid > problems_id.length) throw new ErrorMessage('No such problem.');
 
 		let problem_id = problems_id[pid - 1];
 		let problem = await Problem.fromID(problem_id);
@@ -335,7 +335,7 @@ app.get('/contest/:id/:pid', async (req, res) => {
 			if (await problem.isAllowedUseBy(res.locals.user)) {
 				return res.redirect(zoj.utils.makeUrl(['problem', problem_id]));
 			}
-			throw new ErrorMessage('比赛尚未开始。');
+			throw new ErrorMessage('Contest has not started yet.');
 		}
 
 		problem.specialJudge = await problem.hasSpecialJudge();
@@ -367,12 +367,12 @@ app.get('/contest/:id/:pid/download/additional_file', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let contest = await Contest.fromID(id);
-		if (!contest) throw new ErrorMessage('无此比赛。');
+		if (!contest) throw new ErrorMessage('No such contest.');
 
 		let problems_id = await contest.getProblems();
 
 		let pid = parseInt(req.params.pid);
-		if (!pid || pid < 1 || pid > problems_id.length) throw new ErrorMessage('无此题目。');
+		if (!pid || pid < 1 || pid > problems_id.length) throw new ErrorMessage('No such problem.');
 
 		let problem_id = problems_id[pid - 1];
 		let problem = await Problem.fromID(problem_id);
@@ -382,12 +382,12 @@ app.get('/contest/:id/:pid/download/additional_file', async (req, res) => {
 			if (await problem.isAllowedUseBy(res.locals.user)) {
 				return res.redirect(zoj.utils.makeUrl(['problem', problem_id, 'download', 'additional_file']));
 			}
-			throw new ErrorMessage('比赛尚未开始。');
+			throw new ErrorMessage('Contest has not started yet.');
 		}
 
 		await problem.loadRelationships();
 
-		if (!problem.additional_file) throw new ErrorMessage('无附加文件。');
+		if (!problem.additional_file) throw new ErrorMessage('No such file.');
 
 		console.log(`additional_file_${id}_${pid}.zip`);
 		res.download(problem.additional_file.getPath(), `additional_file_${id}_${pid}.zip`);

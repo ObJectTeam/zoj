@@ -211,10 +211,10 @@ app.get('/blog/:id', async (req, res) => {
     try {
         let id = parseInt(req.params.id);
         let post = await BlogPost.fromID(id);
-        if (!post) throw new ErrorMessage('无此博客。');
+        if (!post) throw new ErrorMessage('No such post.');
 
         if (!await post.isAllowedSeeBy(res.locals.user)) {
-            throw new ErrorMessage('您没有权限进行此操作。');
+            throw new ErrorMessage('You do not have permission to do this.');
         }
 
         post.allowedEdit = await post.isAllowedEditBy(res.locals.user);
@@ -222,7 +222,7 @@ app.get('/blog/:id', async (req, res) => {
         if (post.is_public || post.allowedEdit) {
             post.content = await zoj.utils.markdown(post.content);
         } else {
-            throw new ErrorMessage('您没有权限进行此操作。');
+            throw new ErrorMessage('You do not have permission to do this.');
         }
 
         post.tags = await post.getTags();
@@ -245,14 +245,14 @@ app.get('/blog/:id/edit', async (req, res) => {
         let post = await BlogPost.fromID(id);
 
         if (!post) {
-            if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+            if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
             post = await BlogPost.create();
             post.id = id;
             post.allowedEdit = true;
             post.tags = [];
             post.new = true;
         } else {
-            if (!await post.isAllowedSeeBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+            if (!await post.isAllowedSeeBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
             post.allowedEdit = await post.isAllowedEditBy(res.locals.user);
             post.tags = await post.getTags();
         }
@@ -273,16 +273,16 @@ app.post('/blog/:id/edit', async (req, res) => {
         let id = parseInt(req.params.id) || 0;
         let post = await BlogPost.fromID(id);
         if (!post) {
-            if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+            if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
 
             post = await BlogPost.create();
             post.user_id = res.locals.user.id;
         } else {
-            if (!await post.isAllowedSeeBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
-            if (!await post.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+            if (!await post.isAllowedSeeBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+            if (!await post.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
         }
 
-        if (!req.body.title.trim()) throw new ErrorMessage('博客名不能为空。');
+        if (!req.body.title.trim()) throw new ErrorMessage('Title cannot be empty.');
         post.title = req.body.title;
         post.content = req.body.content;
         post.problem_id = parseInt(req.body.problem_id);
@@ -316,10 +316,10 @@ async function setPublic(req, res, is_public) {
     try {
         let id = parseInt(req.params.id);
         let post = await BlogPost.fromID(id);
-        if (!post) throw new ErrorMessage('无此博客。');
+        if (!post) throw new ErrorMessage('No such post.');
 
         let allowedEdit = await post.isAllowedEditBy(res.locals.user);
-        if (!allowedEdit) throw new ErrorMessage('您没有权限进行此操作。');
+        if (!allowedEdit) throw new ErrorMessage('You do not have permission to do this.');
 
         post.is_public = is_public;
         await post.save();
@@ -345,9 +345,9 @@ app.post('/blog/:id/delete', async (req, res) => {
     try {
         let id = parseInt(req.params.id);
         let post = await BlogPost.fromID(id);
-        if (!post) throw new ErrorMessage('无此博客。');
+        if (!post) throw new ErrorMessage('No such post.');
 
-        if (!post.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+        if (!post.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
         await post.delete();
 

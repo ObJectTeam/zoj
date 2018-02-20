@@ -53,8 +53,8 @@ app.post('/api/forget', async (req, res) => {
 		const vurl = zoj.config.hostname + zoj.utils.makeUrl(['api', 'forget_confirm'], { token: token });
 		try {
 			await Email.send(user.email,
-				`${user.username} 的 ${zoj.config.title} 密码重置邮件`,
-				`<p>请于1小时内点击该链接来重置密码：</p><p><a href="${vurl}">${vurl}</a></p><p>。如果您不是 ${user.username}，请忽略此邮件。</p>`
+				`Reset password for ${user.username} in ${zoj.config.title}`,
+				`<p>Please click the link in 1h to reset your password:</p><p><a href="${vurl}">${vurl}</a></p><p>.If you are not ${user.username}, please ignore this email.</p>`
 			);
 		} catch (e) {
 			return res.send({
@@ -99,8 +99,8 @@ app.post('/api/sign_up', async (req, res) => {
 			const vurl = zoj.config.hostname + zoj.utils.makeUrl(['api', 'sign_up_confirm'], { token: token });
 			try {
 				await Email.send(req.body.email,
-					`${req.body.username} 的 ${zoj.config.title} 注册验证邮件`,
-					`<p>请于1小时内点击该链接完成您在 ${zoj.config.title} 的注册：</p><p><a href="${vurl}">${vurl}</a></p><p>如果您不是 ${req.body.username}，请忽略此邮件。</p>`
+					`Sign up for ${req.body.username} in ${zoj.config.title}`,
+					`<p>Please click the link in 1h to finish your registration in ${zoj.config.title}:</p><p><a href="${vurl}">${vurl}</a></p><p>If you are not ${req.body.username}, please ignore it.</p>`
 				);
 			} catch (e) {
 				return res.send({
@@ -132,7 +132,7 @@ app.get('/api/forget_confirm', async (req, res) => {
 		try {
 			WebToken.verify(req.query.token, zoj.config.session_secret, { subject: 'forget' });
 		} catch (e) {
-			throw new ErrorMessage("Token 不正确。");
+			throw new ErrorMessage("Token incorrect。");
 		}
 		res.render('forget_confirm', {
 			token: req.query.token
@@ -176,16 +176,16 @@ app.get('/api/sign_up_confirm', async (req, res) => {
 		try {
 			obj = WebToken.verify(req.query.token, zoj.config.session_secret, { subject: 'register' });
 		} catch (e) {
-			throw new ErrorMessage('无效的注册验证链接: ' + e.toString());
+			throw new ErrorMessage('Invalid registration verification link: ' + e.toString());
 		}
 
 		let user = await User.fromName(obj.username);
-		if (user) throw new ErrorMessage('用户名已被占用。');
+		if (user) throw new ErrorMessage('Username has been used.');
 		user = await User.findOne({ where: { email: obj.email } });
-		if (user) throw new ErrorMessage('邮件地址已被占用。');
+		if (user) throw new ErrorMessage('E-mail address has been used.');
 
-		if (!(obj.email = obj.email.trim())) throw new ErrorMessage('邮件地址不能为空。');
-		if (!zoj.utils.isValidUsername(obj.username)) throw new ErrorMessage('用户名不合法。');
+		if (!(obj.email = obj.email.trim())) throw new ErrorMessage('E-mail address cannot be empty.');
+		if (!zoj.utils.isValidUsername(obj.username)) throw new ErrorMessage('User name is not valid.');
 
 		user = await User.create({
 			username: obj.username,

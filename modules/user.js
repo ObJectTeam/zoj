@@ -12,7 +12,7 @@ app.get('/ranklist', async (req, res) => {
 		const sort = req.query.sort || zoj.config.sorting.ranklist.field;
 		const order = req.query.order || zoj.config.sorting.ranklist.order;
 		if (!['ac_num', 'rating', 'id', 'username', 'admin', 'is_show'].includes(sort) || !['asc', 'desc'].includes(order)) {
-			throw new ErrorMessage('错误的排序参数。');
+			throw new ErrorMessage('Illegal sorting parameters.');
 		}
 		let paginate = zoj.utils.paginate(await User.count({ is_show: true }), req.query.page, zoj.config.page.ranklist);
 		let ranklist;
@@ -39,7 +39,7 @@ app.get('/ranklist', async (req, res) => {
 app.get('/find_user', async (req, res) => {
 	try {
 		let user = await User.fromName(req.query.nickname);
-		if (!user) throw new ErrorMessage('无此用户。');
+		if (!user) throw new ErrorMessage('No such user.');
 		res.redirect(zoj.utils.makeUrl(['user', user.id]));
 	} catch (e) {
 		zoj.log(e);
@@ -53,7 +53,7 @@ app.get('/find_user', async (req, res) => {
 app.get('/login', async (req, res) => {
 	if (res.locals.user) {
 		res.render('error', {
-			err: new ErrorMessage('您已经登录了，请先注销。', { '注销': zoj.utils.makeUrl(['logout'], { 'url': req.originalUrl }) })
+			err: new ErrorMessage('Please logout first.', { 'Logout': zoj.utils.makeUrl(['logout'], { 'url': req.originalUrl }) })
 		});
 	} else {
 		res.render('login');
@@ -64,7 +64,7 @@ app.get('/login', async (req, res) => {
 app.get('/sign_up', async (req, res) => {
 	if (res.locals.user) {
 		res.render('error', {
-			err: new ErrorMessage('您已经登录了，请先注销。', { '注销': zoj.utils.makeUrl(['logout'], { 'url': req.originalUrl }) })
+			err: new ErrorMessage('Please logout first.', { 'Logout': zoj.utils.makeUrl(['logout'], { 'url': req.originalUrl }) })
 		});
 	} else {
 		res.render('sign_up');
@@ -89,7 +89,7 @@ app.get('/user/:id', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let user = await User.fromID(id);
-		if (!user) throw new ErrorMessage('无此用户。');
+		if (!user) throw new ErrorMessage('No such user.');
 		user.ac_problems = await user.getACProblems();
 		user.articles = await user.getArticles();
 		user.allowedEdit = await user.isAllowedEditBy(res.locals.user);
@@ -99,7 +99,7 @@ app.get('/user/:id', async (req, res) => {
 
 		const ratingHistoryValues = await RatingHistory.query(null, { user_id: user.id }, [['rating_calculation_id', 'asc']]);
 		const ratingHistories = [{
-			contestName: "初始积分",
+			contestName: "Basic rating",
 			value: zoj.config.default.user.rating,
 			delta: null,
 			rank: null
@@ -134,11 +134,11 @@ app.get('/user/:id/edit', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let user = await User.fromID(id);
-		if (!user) throw new ErrorMessage('无此用户。');
+		if (!user) throw new ErrorMessage('No such user.');
 
 		let allowedEdit = await user.isAllowedEditBy(res.locals.user);
 		if (!allowedEdit) {
-			throw new ErrorMessage('您没有权限进行此操作。');
+			throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		res.locals.user.allowedManage = await res.locals.user.admin >= 3;
@@ -160,10 +160,10 @@ app.post('/user/:id/edit', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		user = await User.fromID(id);
-		if (!user) throw new ErrorMessage('无此用户。');
+		if (!user) throw new ErrorMessage('No such user.');
 
 		let allowedEdit = await user.isAllowedEditBy(res.locals.user);
-		if (!allowedEdit) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!allowedEdit) throw new ErrorMessage('You do not have permission to do this.');
 
 		if (req.body.admin && res.locals.user.id == user.id)
 			throw new ErrorMessage('You cannot change your privilege.');
@@ -174,7 +174,7 @@ app.post('/user/:id/edit', async (req, res) => {
 			throw new ErrorMessage('You cannot ban yourself.');
 
 		if (req.body.admin && (await res.locals.user.admin < 3 || res.locals.user.admin <= user.admin))
-			throw new ErrorMessage('您没有权限进行此操作。');
+			throw new ErrorMessage('You do not have permission to do this.');
 
 		if (req.body.old_password && req.body.new_password) {
 			if (user.password !== req.body.old_password && !await res.locals.user.admin >= 3) throw new ErrorMessage('旧密码错误。');
@@ -182,7 +182,7 @@ app.post('/user/:id/edit', async (req, res) => {
 		}
 
 		if (res.locals.user && await res.locals.user.admin >= 3) {
-			if (!zoj.utils.isValidUsername(req.body.username)) throw new ErrorMessage('无效的用户名。');
+			if (!zoj.utils.isValidUsername(req.body.username)) throw new ErrorMessage('Invalid user name.');
 			user.username = req.body.username;
 			user.email = req.body.email;
 		}

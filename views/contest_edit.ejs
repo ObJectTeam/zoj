@@ -1,17 +1,17 @@
-<% this.title = contest.id ? '编辑比赛' : '新建比赛' %>
+<% this.title = contest.id ? 'Edit Contest' : 'New Contest' %>
   <% include header %>
     <div class="padding">
       <form class="ui form" action="<%= zoj.utils.makeUrl(['contest', contest.id, 'edit']) %>" method="post">
         <div class="field">
-          <label>比赛名称</label>
+          <label>Contest Name</label>
           <input type="text" name="title" value="<%= contest.title %>">
         </div>
         <div class="field">
-          <label>比赛描述</label>
+          <label>Contest Description</label>
           <input type="text" name="subtitle" value="<%= contest.subtitle %>">
         </div>
         <div class="field">
-          <label>试题列表</label>
+          <label>Problem List</label>
           <select class="ui fluid search dropdown" multiple="" id="search_problems" name="problems">
             <% for (let problem of problems) { %>
               <option value="<%= problem.id %>" selected>#
@@ -22,7 +22,7 @@
           </select>
         </div>
         <div class="inline fields">
-          <label>赛制</label>
+          <label>Competition System</label>
           <div class="field">
             <div class="ui radio checkbox">
               <input <% if (contest.id) { %>disabled
@@ -52,19 +52,19 @@
           </div>
         </div>
         <div class="field">
-          <label>比赛公告<i class="mega-octicon octicon-markdown"></i></label>
+          <label>Contest Bulletins<i class="mega-octicon octicon-markdown"></i></label>
           <textarea class="" rows="5" id="doc-ta-1" name="information" class="font-content"><%= contest.information %></textarea>
         </div>
         <div class="field">
-          <label>开始时间</label>
+          <label>Start</label>
           <input type="text" name="start_time" value="<%= zoj.utils.formatDate(contest.start_time || zoj.utils.getCurrentDate()) %>">
         </div>
         <div class="field">
-          <label>结束时间</label>
+          <label>End</label>
           <input type="text" name="end_time" value="<%= zoj.utils.formatDate(contest.end_time || zoj.utils.getCurrentDate()) %>">
         </div>
         <div class="inline field">
-          <label class="ui header">公开</label>
+          <label class="ui header">Public</label>
           <div class="ui toggle checkbox">
             <input type="checkbox" <% if (contest.is_public) { %> checked
             <% } %> name="is_public">
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="inline field">
-          <label class="ui header">权限</label>
+          <label class="ui header">Protected</label>
           <div class="ui toggle checkbox">
             <input type="checkbox" <% if (contest.is_protected) { %> checked
             <% } %> name="is_protected">
@@ -83,7 +83,7 @@
               </label>
           </div>
         </div>
-        <button type="submit" class="ui button">提交</button>
+        <button type="submit" class="ui button">Submit</button>
       </form>
       <script>
         $(function () {

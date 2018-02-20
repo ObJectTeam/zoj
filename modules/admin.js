@@ -19,7 +19,7 @@ let db = zoj.db;
 
 app.get('/admin/rating', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('You do not have permission to do this.');
 		const contests = await Contest.query(null, {}, [['start_time', 'desc']]);
 		const calcs = await RatingCalculation.query(null, {}, [['id', 'desc']]);
 		const util = require('util');
@@ -40,16 +40,16 @@ app.get('/admin/rating', async (req, res) => {
 
 app.post('/admin/rating/add', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('You do not have permission to do this.');
 		const contest = await Contest.fromID(req.body.contest);
-		if (!contest) throw new ErrorMessage('无此比赛');
+		if (!contest) throw new ErrorMessage('No such contest');
 
 		await contest.loadRelationships();
 		const newcalc = await RatingCalculation.create(contest.id);
 		await newcalc.save();
 
 		if (!contest.ranklist || contest.ranklist.ranklist.player_num <= 1) {
-			throw new ErrorMessage("比赛人数太少。");
+			throw new ErrorMessage("Too few players.");
 		}
 
 		const players = [];
@@ -81,9 +81,9 @@ app.post('/admin/rating/add', async (req, res) => {
 
 app.post('/admin/rating/delete', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('You do not have permission to do this.');
 		const calcList = await RatingCalculation.query(null, { id: { $gte: req.body.calc_id } }, [['id', 'desc']]);
-		if (calcList.length === 0) throw new ErrorMessage('ID 不正确');
+		if (calcList.length === 0) throw new ErrorMessage('ID incorrect');
 
 		for (let i = 0; i < calcList.length; i++) {
 			await calcList[i].delete();
@@ -100,7 +100,7 @@ app.post('/admin/rating/delete', async (req, res) => {
 
 app.get('/admin/info', async (req, res) => {
 	try {
-		if (!res.locals.user || await res.locals.user.admin < 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || await res.locals.user.admin < 4) throw new ErrorMessage('You do not have permission to do this.');
 
 		let allSubmissionsCount = await JudgeState.count();
 		let todaySubmissionsCount = await JudgeState.count({ submit_time: { $gte: zoj.utils.getCurrentDate(true) } });
@@ -125,97 +125,10 @@ app.get('/admin/info', async (req, res) => {
 	}
 });
 
-let configItems = {
-	'title': { name: '站点标题', type: String },
-	'邮箱验证': null,
-	'register_mail.enabled': { name: '启用', type: Boolean },
-	'register_mail.host': { name: 'SMTP Server Address', type: String },
-	'register_mail.port': { name: 'SMTP Server Port', type: Number },
-	'register_mail.username': { name: 'SMTP Username', type: String },
-	'register_mail.password': { name: 'SMTP Password', type: String },
-	'register_mail.allowUnauthorizedTls': { name: 'Allow Unauthorized TLS', type: Boolean },
-	'默认参数': null,
-	'default.problem.time_limit': { name: '时间限制（单位：ms）', type: Number },
-	'default.problem.memory_limit': { name: '空间限制（单位：MiB）', type: Number },
-	'限制': null,
-	'limit.time_limit': { name: '最大时间限制（单位：ms）', type: Number },
-	'limit.memory_limit': { name: '最大空间限制（单位：MiB）', type: Number },
-	'limit.data_size': { name: '所有数据包大小（单位：byte）', type: Number },
-	'limit.testdata': { name: '测试数据大小（单位：byte）', type: Number },
-	'limit.submit_code': { name: '代码长度（单位：byte）', type: Number },
-	'limit.submit_answer': { name: '提交答案题目答案大小（单位：byte）', type: Number },
-	'limit.testdata_filecount': { name: '测试数据文件数量（单位：byte）', type: Number },
-	'每页显示数量': null,
-	'page.problem': { name: '题库', type: Number },
-	'page.judge_state': { name: '提交记录', type: Number },
-	'page.problem_statistics': { name: '题目统计', type: Number },
-	'page.ranklist': { name: '排行榜', type: Number },
-	'page.discussion': { name: '讨论', type: Number },
-	'page.article_comment': { name: '评论', type: Number },
-	'page.contest': { name: '比赛', type: Number },
-	'编译器版本': null,
-	'languages.cpp.version': { name: 'C++', type: String },
-	'languages.cpp11.version': { name: 'C++11', type: String },
-	'languages.c.version': { name: 'C', type: String },
-	'languages.java.version': { name: 'Java', type: String }
-};
-
-app.get('/admin/config', async (req, res) => {
-	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
-
-		for (let i in configItems) {
-			if (!configItems[i]) continue;
-			configItems[i].val = eval(`zoj.config.${i}`);
-		}
-
-		res.render('admin_config', {
-			items: configItems
-		});
-	} catch (e) {
-		zoj.log(e);
-		res.render('error', {
-			err: e
-		})
-	}
-});
-
-app.post('/admin/config', async (req, res) => {
-	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
-
-		for (let i in configItems) {
-			if (!configItems[i]) continue;
-			if (req.body[i]) {
-				let val;
-				if (configItems[i].type === Boolean) {
-					val = req.body[i] === 'on';
-				} else if (configItems[i].type === Number) {
-					val = Number(req.body[i]);
-				} else {
-					val = req.body[i];
-				}
-
-				let f = new Function('val', `zoj.config.${i} = val`);
-				f(val);
-			}
-		}
-
-		await zoj.utils.saveConfig();
-
-		res.redirect(zoj.utils.makeUrl(['admin', 'config']));
-	} catch (e) {
-		zoj.log(e);
-		res.render('error', {
-			err: e
-		})
-	}
-});
-
 
 app.get('/admin/rejudge', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('You do not have permission to do this.');
 
 		res.render('admin_rejudge', {
 			form: {},
@@ -231,7 +144,7 @@ app.get('/admin/rejudge', async (req, res) => {
 
 app.post('/admin/rejudge', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('You do not have permission to do this.');
 
 		let user = await User.fromName(req.body.submitter || '');
 		let where = {};
@@ -303,7 +216,7 @@ app.post('/admin/rejudge', async (req, res) => {
 
 app.get('/admin/links', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('You do not have permission to do this.');
 
 		res.render('admin_links', {
 			links: zoj.config.links || []
@@ -318,7 +231,7 @@ app.get('/admin/links', async (req, res) => {
 
 app.post('/admin/links', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('You do not have permission to do this.');
 
 		zoj.config.links = JSON.parse(req.body.data);
 		await zoj.utils.saveConfig();
@@ -334,7 +247,7 @@ app.post('/admin/links', async (req, res) => {
 
 app.get('/admin/raw', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('You do not have permission to do this.');
 
 		res.render('admin_raw', {
 			data: JSON.stringify(zoj.config, null, 2)
@@ -349,7 +262,7 @@ app.get('/admin/raw', async (req, res) => {
 
 app.post('/admin/raw', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('You do not have permission to do this.');
 
 		zoj.config = JSON.parse(req.body.data);
 		await zoj.utils.saveConfig();
