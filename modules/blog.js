@@ -1,7 +1,7 @@
 /*
  *  Package  : modules
  *  Filename : blog.js
- *  Create   : 2018-02-05
+ *  Create   : 2018-02-19
  */
 
 'use strict';
@@ -291,20 +291,20 @@ app.post('/blog/:id/dis_public', async (req, res) => {
 });
 
 app.post('/blog/:id/delete', async (req, res) => {
-	try {
-		let id = parseInt(req.params.id);
-		let post = await BlogPost.fromID(id);
-		if (!post) throw new ErrorMessage('无此博客。');
+    try {
+        let id = parseInt(req.params.id);
+        let post = await BlogPost.fromID(id);
+        if (!post) throw new ErrorMessage('无此博客。');
 
-		if (!post.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+        if (!post.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
 
-		await post.delete();
+        await post.delete();
 
-		res.redirect(zoj.utils.makeUrl(['blogs']));
-	} catch (e) {
-		zoj.log(e);
-		res.render('error', {
-			err: e
-		});
-	}
+        res.redirect(zoj.utils.makeUrl(['blogs']));
+    } catch (e) {
+        zoj.log(e);
+        res.render('error', {
+            err: e
+        });
+    }
 });
