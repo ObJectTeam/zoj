@@ -200,7 +200,7 @@ app.get('/problem/:id', async (req, res) => {
 		if (!problem) throw new ErrorMessage('无此题目。');
 
 		if (!await problem.isAllowedUseBy(res.locals.user)) {
-			throw new ErrorMessage('您没有权限进行此操作。');
+			throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		problem.allowedEdit = await problem.isAllowedEditBy(res.locals.user);
@@ -209,7 +209,7 @@ app.get('/problem/:id', async (req, res) => {
 		if (problem.is_public || problem.allowedEdit) {
 			await zoj.utils.markdown(problem, ['description', 'input_format', 'output_format', 'example', 'limit_and_hint']);
 		} else {
-			throw new ErrorMessage('您没有权限进行此操作。');
+			throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		let state = await problem.getJudgeState(res.locals.user, false);
@@ -282,7 +282,7 @@ app.get('/problem/:id/edit', async (req, res) => {
 			problem.tags = [];
 			problem.new = true;
 		} else {
-			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 			problem.allowedEdit = await problem.isAllowedEditBy(res.locals.user);
 			problem.tags = await problem.getTags();
 		}
@@ -320,8 +320,8 @@ app.post('/problem/:id/edit', async (req, res) => {
 			problem.user_id = res.locals.user.id;
 			problem.publicizer_id = res.locals.user.id;
 		} else {
-			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
-			if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+			if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 			if (await res.locals.user.admin >= 3) {
 				let customID = parseInt(req.body.id);
@@ -376,8 +376,8 @@ app.get('/problem/:id/import', async (req, res) => {
 			problem.user_id = res.locals.user.id;
 			problem.publicizer_id = res.locals.user.id;
 		} else {
-			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
-			if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+			if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		problem.allowedManage = await problem.isAllowedManageBy(res.locals.user);
@@ -395,7 +395,7 @@ app.get('/problem/:id/import', async (req, res) => {
 
 app.post('/problem/:id/import', async (req, res) => {
 	try {
-		if (!res.locals.user || await res.locals.user.admin < 3) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || await res.locals.user.admin < 3) throw new ErrorMessage('You do not have permission to do this.');
 		let id = parseInt(req.params.id) || 0;
 		let problem = await Problem.fromID(id);
 		if (!problem) {
@@ -410,8 +410,8 @@ app.post('/problem/:id/import', async (req, res) => {
 			problem.user_id = res.locals.user.id;
 			problem.publicizer_id = res.locals.user.id;
 		} else {
-			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
-			if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+			if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		let request = require('request-promise');
@@ -475,7 +475,7 @@ app.get('/problem/:id/manage', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await problem.loadRelationships();
 
@@ -499,7 +499,7 @@ app.post('/problem/:id/manage', app.multer.fields([{ name: 'testdata', maxCount:
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await problem.loadRelationships();
 
@@ -548,7 +548,7 @@ async function setPublic(req, res, is_public) {
 		if (!problem) throw new ErrorMessage('无此题目。');
 
 		let allowedManage = await problem.isAllowedManageBy(res.locals.user);
-		if (!allowedManage) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!allowedManage) throw new ErrorMessage('You do not have permission to do this.');
 
 		problem.is_public = is_public;
 		problem.publicizer_id = res.locals.user.id;
@@ -571,7 +571,7 @@ async function setProtect(req, res, is_protect) {
 		if (!problem) throw new ErrorMessage('无此题目。');
 
 		let allowedManage = await problem.isAllowedManageBy(res.locals.user);
-		if (!res.locals.user || !(res.locals.user.admin >= 2) || !allowedManage) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !allowedManage) throw new ErrorMessage('You do not have permission to do this.');
 
 		problem.is_protected = is_protect;
 		await problem.save();
@@ -658,7 +658,7 @@ app.post('/problem/:id/submit', app.multer.fields([{ name: 'answer', maxCount: 1
 
 			await judge_state.save();
 		} else {
-			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 			judge_state.type = 0;
 			await judge_state.save();
 		}
@@ -687,7 +687,7 @@ app.post('/problem/:id/delete', async (req, res) => {
 		let problem = await Problem.fromID(id);
 		if (!problem) throw new ErrorMessage('无此题目。');
 
-		if (!res.locals.user || !(res.locals.user.admin >= 2) || !problem.isAllowedManageBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !problem.isAllowedManageBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await problem.delete();
 
@@ -706,7 +706,7 @@ app.get('/problem/:id/testdata', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!res.locals.user || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		let testdata = await problem.listTestdata();
 		let testcases = await zoj.utils.parseTestdata(problem.getTestdataPath(), problem.type === 'submit-answer');
@@ -733,7 +733,7 @@ app.post('/problem/:id/testdata/upload', app.multer.array('file'), async (req, r
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		if (req.files) {
 			for (let file of req.files) {
@@ -756,7 +756,7 @@ app.post('/problem/:id/testdata/delete/:filename', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await problem.deleteTestdataSingleFile(req.params.filename);
 
@@ -775,7 +775,7 @@ app.get('/problem/:id/testdata/download/:filename?', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		if (!req.params.filename) {
 			if (!await zoj.utils.isFile(problem.getTestdataPath() + '.zip')) {
@@ -812,7 +812,7 @@ app.get('/problem/:id/download/additional_file', async (req, res) => {
 			let problems_id = await contest.getProblems();
 			if (!problems_id.includes(id)) throw new ErrorMessage('无此题目。');
 		} else {
-			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		await problem.loadRelationships();
@@ -835,7 +835,7 @@ app.get('/problem/:id/statistics/:type', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('无此题目。');
-		if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		let count = await problem.countStatistics(req.params.type);
 		if (count === null) throw new ErrorMessage('无此统计类型。');

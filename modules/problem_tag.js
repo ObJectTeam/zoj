@@ -10,7 +10,7 @@ let ProblemTag = zoj.model('problem_tag');
 
 app.get('/problems/tag/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user || !await res.locals.user.admin >= 2) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !await res.locals.user.admin >= 2) throw new ErrorMessage('You do not have permission to do this.');
 
 		let id = parseInt(req.params.id) || 0;
 		let tag = await ProblemTag.fromID(id);
@@ -33,7 +33,7 @@ app.get('/problems/tag/:id/edit', async (req, res) => {
 
 app.post('/problems/tag/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user || !await res.locals.user.admin >= 2) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !await res.locals.user.admin >= 2) throw new ErrorMessage('You do not have permission to do this.');
 
 		let id = parseInt(req.params.id) || 0;
 		let tag = await ProblemTag.fromID(id);

@@ -138,7 +138,7 @@ app.get('/user/:id/edit', async (req, res) => {
 
 		let allowedEdit = await user.isAllowedEditBy(res.locals.user);
 		if (!allowedEdit) {
-			throw new ErrorMessage('您没有权限进行此操作。');
+			throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		res.locals.user.allowedManage = await res.locals.user.admin >= 3;
@@ -163,7 +163,7 @@ app.post('/user/:id/edit', async (req, res) => {
 		if (!user) throw new ErrorMessage('无此用户。');
 
 		let allowedEdit = await user.isAllowedEditBy(res.locals.user);
-		if (!allowedEdit) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!allowedEdit) throw new ErrorMessage('You do not have permission to do this.');
 
 		if (req.body.admin && res.locals.user.id == user.id)
 			throw new ErrorMessage('You cannot change your privilege.');
@@ -174,7 +174,7 @@ app.post('/user/:id/edit', async (req, res) => {
 			throw new ErrorMessage('You cannot ban yourself.');
 
 		if (req.body.admin && (await res.locals.user.admin < 3 || res.locals.user.admin <= user.admin))
-			throw new ErrorMessage('您没有权限进行此操作。');
+			throw new ErrorMessage('You do not have permission to do this.');
 
 		if (req.body.old_password && req.body.new_password) {
 			if (user.password !== req.body.old_password && !await res.locals.user.admin >= 3) throw new ErrorMessage('旧密码错误。');

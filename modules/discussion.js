@@ -38,7 +38,7 @@ app.get('/problem/:pid/discussion', async (req, res) => {
 		let problem = await Problem.fromID(pid);
 		if (!problem) throw new ErrorMessage('无此题目。');
 		if (!await problem.isAllowedUseBy(res.locals.user)) {
-			throw new ErrorMessage('您没有权限进行此操作。');
+			throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		let where = { problem_id: pid };
@@ -87,7 +87,7 @@ app.get('/article/:id', async (req, res) => {
 		if (article.problem_id) {
 			problem = await Problem.fromID(article.problem_id);
 			if (!await problem.isAllowedUseBy(res.locals.user)) {
-				throw new ErrorMessage('您没有权限进行此操作。');
+				throw new ErrorMessage('You do not have permission to do this.');
 			}
 		}
 
@@ -153,7 +153,7 @@ app.post('/article/:id/edit', async (req, res) => {
 				article.problem_id = null;
 			}
 		} else {
-			if (!await article.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await article.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		if (!req.body.title.trim()) throw new ErrorMessage('标题不能为空。');
@@ -183,7 +183,7 @@ app.post('/article/:id/delete', async (req, res) => {
 		if (!article) {
 			throw new ErrorMessage('无此帖子。');
 		} else {
-			if (!await article.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await article.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		await article.destroy();
@@ -207,7 +207,7 @@ app.post('/article/:id/comment', async (req, res) => {
 		if (!article) {
 			throw new ErrorMessage('无此帖子。');
 		} else {
-			if (!await article.isAllowedCommentBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await article.isAllowedCommentBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		let comment = await ArticleComment.create({
@@ -238,7 +238,7 @@ app.post('/article/:article_id/comment/:id/delete', async (req, res) => {
 		if (!comment) {
 			throw new ErrorMessage('无此评论。');
 		} else {
-			if (!await comment.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+			if (!await comment.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		await comment.destroy();

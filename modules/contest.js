@@ -39,7 +39,7 @@ app.get('/contests', async (req, res) => {
 
 app.get('/contest/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('You do not have permission to do this.');
 
 		let contest_id = parseInt(req.params.id);
 		let contest = await Contest.fromID(contest_id);
@@ -65,7 +65,7 @@ app.get('/contest/:id/edit', async (req, res) => {
 
 app.post('/contest/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('You do not have permission to do this.');
 
 		let contest_id = parseInt(req.params.id);
 		let contest = await Contest.fromID(contest_id);
@@ -210,7 +210,7 @@ app.get('/contest/:id/ranklist', async (req, res) => {
 		let contest = await Contest.fromID(contest_id);
 
 		if (!contest) throw new ErrorMessage('无此比赛。');
-		if (!await contest.isAllowedSeeResultBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!await contest.isAllowedSeeResultBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await contest.loadRelationships();
 
@@ -253,7 +253,7 @@ app.get('/contest/:id/submissions', async (req, res) => {
 		let contest = await Contest.fromID(contest_id);
 
 		if (!contest) throw new ErrorMessage('无此比赛。');
-		if (!await contest.isAllowedSeeResultBy(res.locals.user)) throw new ErrorMessage('您没有权限进行此操作。');
+		if (!await contest.isAllowedSeeResultBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		contest.ended = await contest.isEnded();
 
