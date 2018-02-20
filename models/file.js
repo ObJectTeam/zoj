@@ -66,7 +66,11 @@ class File extends Model {
 
 		let buf = await fs.readFileAsync(path);
 
+<<<<<<< HEAD
+		if (!noLimit && buf.length > zoj.config.limit.data_size) throw new ErrorMessage('The data package is too large.');
+=======
 		if (!noLimit && buf.length > zoj.config.limit.data_size) throw new ErrorMessage('The testdata package is too large.');
+>>>>>>> 8fe2bd6edee1b7a9ea7a917d15fbd30d1863b604
 
 		try {
 			let p7zip = new (require('node-7z'));
@@ -106,7 +110,11 @@ class File extends Model {
 			}
 		}
 
+<<<<<<< HEAD
+		if (this.unzipSize === null) throw new ErrorMessage('Invaild ZIP file.');
+=======
 		if (this.unzipSize === null) throw new ErrorMessage('Invalid ZIP file.');
+>>>>>>> 8fe2bd6edee1b7a9ea7a917d15fbd30d1863b604
 		else return this.unzipSize;
 	}
 

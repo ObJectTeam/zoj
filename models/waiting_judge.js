@@ -17,6 +17,7 @@ let model = db.define('waiting_judge', {
 
 	// Smaller is higher
 	priority: { type: Sequelize.INTEGER },
+	// It determines first or later
 
 	type: {
 		type: Sequelize.ENUM,

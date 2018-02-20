@@ -227,6 +227,7 @@ let model = db.define('problem', {
 	is_protected: { type: Sequelize.BOOLEAN },
 
 	file_io: { type: Sequelize.BOOLEAN },
+	// Whether use file IO
 	file_io_input_name: { type: Sequelize.TEXT },
 	file_io_output_name: { type: Sequelize.TEXT },
 
@@ -288,6 +289,8 @@ class Problem extends Model {
 		if (!user) return false;
 		if (await user.admin >= 3) return true;
 		return this.user_id === user.id;
+		// 1. The user is teacher/system admin
+		// 2. The user is the creator of this problem
 	}
 
 	async isAllowedUseBy(user) {
@@ -297,11 +300,16 @@ class Problem extends Model {
 		if (this.is_public && this.is_protected) return user.admin >= 1;
 		if (await user.admin >= 3) return true;
 		return false;
+		// 1. The problem is publid and not protected
+		// 2. The user is the creator of the problem
+		// 3. The problem is public and the user the indoor student/student admin
+		// 4. The user is teacher/system admin
 	}
 
 	async isAllowedManageBy(user) {
 		if (!user) return false;
 		return user.admin >= 3;
+		// The user is teacher/system admin
 	}
 
 	getTestdataPath() {
@@ -317,8 +325,13 @@ class Problem extends Model {
 				unzipCount = files.length;
 				for (let file of files) unzipSize += file.size;
 			});
+<<<<<<< HEAD
+			if (!noLimit && unzipCount > zoj.config.limit.testdata_filecount) throw new ErrorMessage('Too many files in the data package.');
+			if (!noLimit && unzipSize > zoj.config.limit.testdata) throw new ErrorMessage('The data package is too large.');
+=======
 			if (!noLimit && unzipCount > zoj.config.limit.testdata_filecount) throw new ErrorMessage('There is too many files in the testdata package.');
 			if (!noLimit && unzipSize > zoj.config.limit.testdata) throw new ErrorMessage('The testdata package is too large.');
+>>>>>>> 8fe2bd6edee1b7a9ea7a917d15fbd30d1863b604
 
 			let dir = this.getTestdataPath();
 			let fs = Promise.promisifyAll(require('fs-extra'));
@@ -345,8 +358,13 @@ class Problem extends Model {
 				}
 			}
 
+<<<<<<< HEAD
+			if (!noLimit && oldSize + size > zoj.config.limit.testdata) throw new ErrorMessage('The data package is too large.');
+			if (!noLimit && oldCount + !replace > zoj.config.limit.testdata_filecount) throw new ErrorMessage('Too many files in the data package.');
+=======
 			if (!noLimit && oldSize + size > zoj.config.limit.testdata) throw new ErrorMessage('The testdata package is too large.');
 			if (!noLimit && oldCount + !replace > zoj.config.limit.testdata_filecount) throw new ErrorMessage('There is too many files in the testdata package.');
+>>>>>>> 8fe2bd6edee1b7a9ea7a917d15fbd30d1863b604
 
 			await fs.moveAsync(filepath, path.join(dir, filename), { overwrite: true });
 			await fs.removeAsync(dir + '.zip');
@@ -366,12 +384,20 @@ class Problem extends Model {
 		await zoj.utils.lock(['Promise::Testdata', this.id], async () => {
 			let dir = this.getTestdataPath();
 			if (await zoj.utils.isFile(dir + '.zip')) return;
+<<<<<<< HEAD
+			if (!await zoj.utils.isDir(dir)) throw new ErrorMessage('No testdata.');
+=======
 			if (!await zoj.utils.isDir(dir)) throw new ErrorMessage('No Testdata.');
+>>>>>>> 8fe2bd6edee1b7a9ea7a917d15fbd30d1863b604
 
 			let p7zip = new (require('node-7z'));
 
 			let list = await this.listTestdata(), path = require('path'), pathlist = list.files.map(file => path.join(dir, file.filename));
+<<<<<<< HEAD
+			if (!pathlist.length) throw new ErrorMessage('No testdata.');
+=======
 			if (!pathlist.length) throw new ErrorMessage('No Testdata.');
+>>>>>>> 8fe2bd6edee1b7a9ea7a917d15fbd30d1863b604
 			await p7zip.add(dir + '.zip', pathlist);
 		});
 	}

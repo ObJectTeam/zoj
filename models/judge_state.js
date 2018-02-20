@@ -29,15 +29,15 @@ let model = db.define('judge_state', {
 	result: { type: Sequelize.TEXT('medium'), json: true },
 
 	user_id: { type: Sequelize.INTEGER },
-
+	// The id of the user who submitted
 	problem_id: { type: Sequelize.INTEGER },
-
+	// The id of the problem
 	submit_time: { type: Sequelize.INTEGER },
+	type: { type: Sequelize.INTEGER },
 	/*
 	 * "type" indicate it's contest's submission(type = 1) or normal submission(type = 0)
-	 * "type_id" will be the contest id if it's a contest's submission
+	 * "type_info" will be the contest id if it's a contest's submission
 	 */
-	type: { type: Sequelize.INTEGER },
 	type_info: { type: Sequelize.INTEGER }
 }, {
 		timestamps: false,
@@ -90,64 +90,102 @@ class JudgeState extends Model {
 		await this.loadRelationships();
 
 		if (user && user.id === this.problem.user_id) return true;
+		// The user is the creator of the problem.
+		else if (user && user.id === this.user_id) return true;
+		// The user is the submitter.
 		else if (this.type === 0) {
 			if (!user || await user.admin < 1) return this.problem.is_public && !this.problem.is_protected;
 			else if (await user.admin < 3) return this.problem.is_public;
 			return true;
 		}
+		// Normal submission
+		// 1. The problem is public and not protected
+		// 2. The problem is public and the user is indoor student/student admin
+		// 3. The the user is teacher/system admin
 		else if (this.type === 1) {
 			let contest = await Contest.fromID(this.type_info);
 			if (await contest.isRunning()) {
-				return (user && this.user_id === user.id) || (user && user.admin >= 3);
+				return ((user && user.admin >= 3) || (user && user.id === contest.holder_id));
 			} else {
 				return true;
 			}
 		}
+		// Contest's submissions
+		// 1. The user is teacher/system admin
+		// 2. The user is the holder of the contest
+		// 3. The contest is not running
 	}
 
 	async isAllowedSeeCodeBy(user) {
 		await this.loadRelationships();
 
 		if (user && user.id === this.problem.user_id) return true;
+		// The user is the creator of the problem
+		else if (user && user.id === this.user_id) return true;
+		// The user is the submitter
 		else if (this.type === 0) return this.problem.is_public || (user && (await user.admin >= 3));
+		// Normal submission
+		// 1. The problem is public
+		// 2. The user is teacher/system admin
 		else if (this.type === 1) {
 			let contest = await Contest.fromID(this.type_info);
 			if (await contest.isRunning()) {
-				return (user && this.user_id === user.id) || (user && user.admin >= 3);
+				return (user && user.admin >= 3) || (user && user.id === contest.holder_id);
 			} else {
 				return true;
 			}
 		}
+		// Contest's submission
+		// 1. The user is the teacher/system admin
+		// 2. The user is the holder of the contest
+		// 3. The contest is not running
 	}
 
 	async isAllowedSeeCaseBy(user) {
 		await this.loadRelationships();
 
 		if (user && user.id === this.problem.user_id) return true;
+		// The user is the creator of the problem
 		else if (this.type === 0) return this.problem.is_public || (user && (await user.admin >= 3));
+		// Normal Submission
+		// 1. The problem is public
+		// 2. The user is teacher/system admin
 		else if (this.type === 1) {
 			let contest = await Contest.fromID(this.type_info);
 			if (await contest.isRunning()) {
-				return contest.type === 'ioi' || (user && user.admin >= 3);
+				return (contest.type === 'ioi' && user && user.id === this.user_id) 
+						|| (user && user.admin >= 3) || (user && user.id === contest.holder_id);
 			} else {
 				return true;
 			}
 		}
+		// Contest's submission
+		// 1.The user is teacher/system admin
+		// 2.The contest's type is "ioi" and the user is the submitter
+		// 3.The user is the holder of the contest
+		// 4.The contest is not running
 	}
 
 	async isAllowedSeeDataBy(user) {
 		await this.loadRelationships();
 
 		if (user && user.id === this.problem.user_id) return true;
+		// The user is the creator of the problem
 		else if (this.type === 0) return this.problem.is_public || (user && (await user.admin >= 3));
+		// Normal submission
+		// 1. The problem is public
+		// 2. The user is teacher/system admin
 		else if (this.type === 1) {
 			let contest = await Contest.fromID(this.type_info);
 			if (await contest.isRunning()) {
-				return user && user.admin >= 3;
+				return (user && user.admin >= 3) || (user && user.id === contest.holder_id);
 			} else {
 				return true;
 			}
 		}
+		// Contest's submission
+		// 1. The user is teacher/system admin
+		// 2. The user is the holder of the contest
 	}
 
 	async updateResult(result) {
@@ -172,12 +210,14 @@ class JudgeState extends Model {
 						this.problem.submit_num++;
 						await this.user.save();
 						await this.problem.save();
+						// New submission
 					} else if (this.status === 'Accepted') {
 						await this.loadRelationships();
 						await this.user.refreshSubmitInfo();
 						this.problem.ac_num++;
 						await this.user.save();
 						await this.problem.save();
+						// New AC submission
 					}
 				} else if (this.type === 1) {
 					let contest = await Contest.fromID(this.type_info);
