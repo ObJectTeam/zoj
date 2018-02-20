@@ -16,8 +16,11 @@ let model = db.define('blog_post', {
     id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
     
 	user_id: { type: Sequelize.INTEGER },
-    problem_id: { type: Sequelize.INTEGER  },
-    
+
+	from: {type: Sequelize.STRING(50) },
+	problem_id: { type: Sequelize.INTEGER  },
+	
+	
     title: { type: Sequelize.STRING(80) },
 	content: { type: Sequelize.TEXT },
 	is_public: { type: Sequelize.BOOLEAN }
@@ -38,7 +41,8 @@ let Model = require('./common');
 class BlogPost extends Model {
 	static async create(val) {
 		return BlogPost.fromRecord(BlogPost.model.build(Object.assign({
-            user_id: '',
+			user_id: '',
+			from:'',
             problem_id: '',
 			title: '',
 			content: '',

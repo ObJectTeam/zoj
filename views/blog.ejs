@@ -85,7 +85,8 @@ if (typeof tags !== 'undefined') tagIDs = tags.map(x => x.id);
       <tr>
         <th class="one wide">编号</th>
         <th class="one wide">作者</th>
-        <th class="one wide">题目</th>
+        <th class="one wide">题目来源</th>
+        <th class="one wide">题目编号</th>
         <th>标题</th>
       </tr>
     </thead>
@@ -95,6 +96,7 @@ if (typeof tags !== 'undefined') tagIDs = tags.map(x => x.id);
         <tr style="height: 44px; ">
             <td><%= blog.id %></td>
             <td><%= blog.user.username %></td>
+            <td><%= blog.from %></td>
             <td><%= blog.problem_id %></td>
             <td>
               <a style="vertical-align: middle; " href="<%= zoj.utils.makeUrl(['blog', blog.id]) %>"><%= blog.title %>

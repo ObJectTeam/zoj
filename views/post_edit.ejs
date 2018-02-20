@@ -10,7 +10,9 @@
         <div class="field">
           <label for="title">标题</label>
           <input class="font-content" type="text" id="title" name="title" value="<%= post.title %>">
-          <label for="title">题目</label>
+          <label for="title">题目来源</label>
+          <input class="font-content" type="text" id="from" name="from" value="<%= post.from %>">
+          <label for="title">题目编号</label>
           <input class="font-content" type="text" id="problem_id" name="problem_id" value="<%= post.problem_id %>">
           <label style="margin-top: 15px; " for="content">内容</label>
           <textarea class="font-content" rows="15" id="content" name="content"><%= post.content %></textarea>

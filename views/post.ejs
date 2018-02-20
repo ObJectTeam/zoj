@@ -6,7 +6,7 @@
 <div class="ui center aligned grid">
     <div class="row">
       <h1 class="ui header">
-          #<%= post.problem_id %>. <%= post.title %><% if (post.allowedEdit) { if (!post.is_public) {%><span class="ui tiny red label">未公开</span><% }} %>
+          <%= post.from %> #<%= post.problem_id %>. <%= post.title %><% if (post.allowedEdit) { if (!post.is_public) {%><span class="ui tiny red label">未公开</span><% }} %>
       </h1>
     </div>
     <div class="row" style="margin-top: -23px">

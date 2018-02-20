@@ -236,6 +236,7 @@ app.post('/blog/:id/edit', async (req, res) => {
         post.title = req.body.title;
         post.content = req.body.content;
         post.problem_id = parseInt(req.body.problem_id);
+        post.from = req.body.from;
         if (isNaN(post.problem_id)) post.problem_id = 0;
 
         // Save the post first, to have the `id` allocated
