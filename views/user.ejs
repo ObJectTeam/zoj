@@ -18,8 +18,10 @@ padding-top: 100%;
 <div class="center">
 <% if (show_user.allowedEdit) { %>
 <a class="ui inverted button" href="<%= zoj.utils.makeUrl(['user', show_user.id, 'edit']) %>"><i class="edit icon"></i>Modify Information</a>
+<br>
+<br>
 <% } %>
-<a class="ui button" href="<%= zoj.utils.makeUrl(['blogs', show_user.id]) %>"><i class="coffee icon"></i>Visit the Blog</a>
+<a class="ui button" href="<%= zoj.utils.makeUrl(['blogs', show_user.id]) %>"><i class="coffee icon"></i>Visit Blog</a>
 </div>
 </div>
 </div>
