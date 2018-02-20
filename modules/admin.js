@@ -42,14 +42,14 @@ app.post('/admin/rating/add', async (req, res) => {
 	try {
 		if (!res.locals.user || !res.locals.user.admin >= 3) throw new ErrorMessage('You do not have permission to do this.');
 		const contest = await Contest.fromID(req.body.contest);
-		if (!contest) throw new ErrorMessage('无此比赛');
+		if (!contest) throw new ErrorMessage('No such contest');
 
 		await contest.loadRelationships();
 		const newcalc = await RatingCalculation.create(contest.id);
 		await newcalc.save();
 
 		if (!contest.ranklist || contest.ranklist.ranklist.player_num <= 1) {
-			throw new ErrorMessage("比赛人数太少。");
+			throw new ErrorMessage("Too few players.");
 		}
 
 		const players = [];
