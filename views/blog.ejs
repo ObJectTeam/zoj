@@ -59,7 +59,7 @@ if (typeof tags !== 'undefined') tagIDs = tags.map(x => x.id);
             });
           });
           </script>
-          <label>Show the Tags</label>
+          <label>Show Tags</label>
         </div>
         <div style="margin-left: 10px; display: inline-block; ">
           <% if (allowedManageTag) { %>
@@ -69,7 +69,7 @@ if (typeof tags !== 'undefined') tagIDs = tags.map(x => x.id);
             <a style="margin-left: 10px; " href="<%= zoj.utils.makeUrl(['blogs', 'tag', 0, 'edit']) %>" class="ui labeled icon mini green button"><i class="plus icon"></i> Add Tags</a>
           <% } %>
           <div style="margin-left: 10px; " class="ui mini buttons">
-            <a class="ui labeled icon mini dropdown button" href="<%= zoj.utils.makeUrl(['blog', 0, 'edit']) %>"><i class="file icon"></i>New Blog</a>
+            <a class="ui labeled icon mini dropdown button" href="<%= zoj.utils.makeUrl(['blog', 0, 'edit']) %>"><i class="file icon"></i>Add Article</a>
           </div>
         </div>
       </div>
