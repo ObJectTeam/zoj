@@ -197,7 +197,7 @@ app.get('/problem/:id', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 
 		if (!await problem.isAllowedUseBy(res.locals.user)) {
 			throw new ErrorMessage('You do not have permission to do this.');
@@ -241,7 +241,7 @@ app.get('/problem/:id/export', async (req, res) => {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 		if (!problem || !await problem.isAllowedUseBy(res.locals.user))
-			throw new ErrorMessage('无此题目。');
+			throw new ErrorMessage('No such problem.');
 
 		let obj = {
 			title: problem.title,
@@ -275,7 +275,7 @@ app.get('/problem/:id/edit', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) {
-			if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+			if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
 			problem = await Problem.create();
 			problem.id = id;
 			problem.allowedEdit = true;
@@ -305,14 +305,14 @@ app.post('/problem/:id/edit', async (req, res) => {
 		let id = parseInt(req.params.id) || 0;
 		let problem = await Problem.fromID(id);
 		if (!problem) {
-			if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+			if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
 
 			problem = await Problem.create();
 
 			if (await res.locals.user.admin >= 3) {
 				let customID = parseInt(req.body.id);
 				if (customID) {
-					if (await Problem.fromID(customID)) throw new ErrorMessage('ID 已被使用。');
+					if (await Problem.fromID(customID)) throw new ErrorMessage('ID is used.');
 					problem.id = customID;
 				} else if (id) problem.id = id;
 			}
@@ -326,13 +326,13 @@ app.post('/problem/:id/edit', async (req, res) => {
 			if (await res.locals.user.admin >= 3) {
 				let customID = parseInt(req.body.id);
 				if (customID && customID !== id) {
-					if (await Problem.fromID(customID)) throw new ErrorMessage('ID 已被使用。');
+					if (await Problem.fromID(customID)) throw new ErrorMessage('ID is used.');
 					await problem.changeID(customID);
 				}
 			}
 		}
 
-		if (!req.body.title.trim()) throw new ErrorMessage('题目名不能为空。');
+		if (!req.body.title.trim()) throw new ErrorMessage('Title cannot be empty.');
 		problem.title = req.body.title;
 		problem.description = req.body.description;
 		problem.input_format = req.body.input_format;
@@ -368,7 +368,7 @@ app.get('/problem/:id/import', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) {
-			if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+			if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
 
 			problem = await Problem.create();
 			problem.id = id;
@@ -403,7 +403,7 @@ app.post('/problem/:id/import', async (req, res) => {
 
 			let customID = parseInt(req.body.id);
 			if (customID) {
-				if (await Problem.fromID(customID)) throw new ErrorMessage('ID 已被使用。');
+				if (await Problem.fromID(customID)) throw new ErrorMessage('ID is used.');
 				problem.id = customID;
 			} else if (id) problem.id = id;
 
@@ -423,9 +423,9 @@ app.post('/problem/:id/import', async (req, res) => {
 			json: true
 		});
 
-		if (!json.success) throw new ErrorMessage('题目加载失败。', null, json.error);
+		if (!json.success) throw new ErrorMessage('Problem failed to login.', null, json.error);
 
-		if (!json.obj.title.trim()) throw new ErrorMessage('题目名不能为空。');
+		if (!json.obj.title.trim()) throw new ErrorMessage('Title cannot be empty.');
 		problem.title = json.obj.title;
 		problem.description = json.obj.description;
 		problem.input_format = json.obj.input_format;
@@ -439,7 +439,7 @@ app.post('/problem/:id/import', async (req, res) => {
 		problem.file_io_output_name = json.obj.file_io_output_name;
 
 		let validateMsg = await problem.validate();
-		if (validateMsg) throw new ErrorMessage('无效的题目数据配置。', null, validateMsg);
+		if (validateMsg) throw new ErrorMessage('Invalid data configuration.', null, validateMsg);
 
 		await problem.save();
 
@@ -474,7 +474,7 @@ app.get('/problem/:id/manage', async (req, res) => {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 		if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await problem.loadRelationships();
@@ -498,7 +498,7 @@ app.post('/problem/:id/manage', app.multer.fields([{ name: 'testdata', maxCount:
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 		if (!await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await problem.loadRelationships();
@@ -513,13 +513,13 @@ app.post('/problem/:id/manage', app.multer.fields([{ name: 'testdata', maxCount:
 
 		if (problem.type === 'submit-answer' && req.body.type !== 'submit-answer' || problem.type !== 'submit-answer' && req.body.type === 'submit-answer') {
 			if (await JudgeState.count({ problem_id: id }) !== 0) {
-				throw new ErrorMessage('已有提交的题目不允许在提交答案和非提交答案之间更改。');
+				throw new ErrorMessage('Cannot change type for problem which exists submissions.');
 			}
 		}
 		problem.type = req.body.type;
 
 		let validateMsg = await problem.validate();
-		if (validateMsg) throw new ErrorMessage('无效的题目数据配置。', null, validateMsg);
+		if (validateMsg) throw new ErrorMessage('Invalid data configuration.', null, validateMsg);
 
 		if (req.files['testdata']) {
 			await problem.updateTestdata(req.files['testdata'][0].path, await res.locals.user.admin >= 3);
@@ -545,7 +545,7 @@ async function setPublic(req, res, is_public) {
 	try {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 
 		let allowedManage = await problem.isAllowedManageBy(res.locals.user);
 		if (!allowedManage) throw new ErrorMessage('You do not have permission to do this.');
@@ -568,7 +568,7 @@ async function setProtect(req, res, is_protect) {
 	try {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 
 		let allowedManage = await problem.isAllowedManageBy(res.locals.user);
 		if (!res.locals.user || !(res.locals.user.admin >= 2) || !allowedManage) throw new ErrorMessage('You do not have permission to do this.');
@@ -606,9 +606,9 @@ app.post('/problem/:id/submit', app.multer.fields([{ name: 'answer', maxCount: 1
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 
-		if (!problem) throw new ErrorMessage('无此题目。');
-		if (problem.type !== 'submit-answer' && !zoj.config.languages[req.body.language]) throw new ErrorMessage('不支持该语言。');
-		if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': zoj.utils.makeUrl(['problem', id]) }) });
+		if (!problem) throw new ErrorMessage('No such problem.');
+		if (problem.type !== 'submit-answer' && !zoj.config.languages[req.body.language]) throw new ErrorMessage('Permission denied.');
+		if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': zoj.utils.makeUrl(['problem', id]) }) });
 
 		let judge_state;
 		if (problem.type === 'submit-answer') {
@@ -616,15 +616,15 @@ app.post('/problem/:id/submit', app.multer.fields([{ name: 'answer', maxCount: 1
 			try {
 				path = await File.zipFiles(JSON.parse(req.body.answer_by_editor));
 			} catch (e) {
-				throw new ErrorMessage('无法解析提交数据。');
+				throw new ErrorMessage('Can not parse data.');
 			}
 
 			let file = await File.upload(path, 'answer');
 			let size = await file.getUnzipSize();
 
-			if (size > zoj.config.limit.submit_answer) throw new ErrorMessage('答案文件太大。');
+			if (size > zoj.config.limit.submit_answer) throw new ErrorMessage('Your answer is too large.');
 
-			if (!file.md5) throw new ErrorMessage('上传答案文件失败。');
+			if (!file.md5) throw new ErrorMessage('Upload failed.');
 			judge_state = await JudgeState.create({
 				code: file.md5,
 				max_memory: size,
@@ -634,7 +634,7 @@ app.post('/problem/:id/submit', app.multer.fields([{ name: 'answer', maxCount: 1
 			});
 		} else {
 			let code;
-			if (req.body.code.length > zoj.config.limit.submit_code) throw new ErrorMessage('代码太长。');
+			if (req.body.code.length > zoj.config.limit.submit_code) throw new ErrorMessage('Your code is too long.');
 			code = req.body.code;
 
 			judge_state = await JudgeState.create({
@@ -648,10 +648,10 @@ app.post('/problem/:id/submit', app.multer.fields([{ name: 'answer', maxCount: 1
 		let contest_id = parseInt(req.query.contest_id), redirectToContest = false;
 		if (contest_id) {
 			let contest = await Contest.fromID(contest_id);
-			if (!contest) throw new ErrorMessage('无此比赛。');
-			if (!await contest.isRunning()) throw new ErrorMessage('比赛未开始或已结束。');
+			if (!contest) throw new ErrorMessage('No such contest.');
+			if (!await contest.isRunning()) throw new ErrorMessage('Permission denied.');
 			let problems_id = await contest.getProblems();
-			if (!problems_id.includes(id)) throw new ErrorMessage('无此题目。');
+			if (!problems_id.includes(id)) throw new ErrorMessage('No such problem.');
 
 			judge_state.type = 1;
 			judge_state.type_info = contest_id;
@@ -685,7 +685,7 @@ app.post('/problem/:id/delete', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 
 		if (!res.locals.user || !(res.locals.user.admin >= 2) || !problem.isAllowedManageBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
@@ -705,7 +705,7 @@ app.get('/problem/:id/testdata', async (req, res) => {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 		if (!res.locals.user || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		let testdata = await problem.listTestdata();
@@ -732,7 +732,7 @@ app.post('/problem/:id/testdata/upload', app.multer.array('file'), async (req, r
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		if (req.files) {
@@ -755,7 +755,7 @@ app.post('/problem/:id/testdata/delete/:filename', async (req, res) => {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await problem.deleteTestdataSingleFile(req.params.filename);
@@ -774,7 +774,7 @@ app.get('/problem/:id/testdata/download/:filename?', async (req, res) => {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		if (!req.params.filename) {
@@ -785,7 +785,7 @@ app.get('/problem/:id/testdata/download/:filename?', async (req, res) => {
 
 		let path = require('path');
 		let filename = req.params.filename ? path.join(problem.getTestdataPath(), req.params.filename) : (problem.getTestdataPath() + '.zip');
-		if (!await zoj.utils.isFile(filename)) throw new ErrorMessage('文件不存在。');
+		if (!await zoj.utils.isFile(filename)) throw new ErrorMessage('No such file.');
 		res.download(filename, path.basename(filename));
 	} catch (e) {
 		zoj.log(e);
@@ -801,23 +801,23 @@ app.get('/problem/:id/download/additional_file', async (req, res) => {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 
 		// XXX: Reduce duplication (see the '/problem/:id/submit' handler)
 		let contest_id = parseInt(req.query.contest_id);
 		if (contest_id) {
 			let contest = await Contest.fromID(contest_id);
-			if (!contest) throw new ErrorMessage('无此比赛。');
-			if (!await contest.isRunning()) throw new ErrorMessage('比赛未开始或已结束。');
+			if (!contest) throw new ErrorMessage('No such contest.');
+			if (!await contest.isRunning()) throw new ErrorMessage('Permission denied.');
 			let problems_id = await contest.getProblems();
-			if (!problems_id.includes(id)) throw new ErrorMessage('无此题目。');
+			if (!problems_id.includes(id)) throw new ErrorMessage('No such problem.');
 		} else {
 			if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
 
 		await problem.loadRelationships();
 
-		if (!problem.additional_file) throw new ErrorMessage('无附加文件。');
+		if (!problem.additional_file) throw new ErrorMessage('No such file.');
 
 		res.download(problem.additional_file.getPath(), `additional_file_${id}.zip`);
 	} catch (e) {
@@ -834,11 +834,11 @@ app.get('/problem/:id/statistics/:type', async (req, res) => {
 		let id = parseInt(req.params.id);
 		let problem = await Problem.fromID(id);
 
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 		if (!await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		let count = await problem.countStatistics(req.params.type);
-		if (count === null) throw new ErrorMessage('无此统计类型。');
+		if (count === null) throw new ErrorMessage('No results.');
 
 		let paginate = zoj.utils.paginate(count, req.query.page, zoj.config.page.problem_statistics);
 		let statistics = await problem.getStatistics(req.params.type, paginate);

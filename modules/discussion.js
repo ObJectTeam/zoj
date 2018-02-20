@@ -36,7 +36,7 @@ app.get('/problem/:pid/discussion', async (req, res) => {
 	try {
 		let pid = parseInt(req.params.pid);
 		let problem = await Problem.fromID(pid);
-		if (!problem) throw new ErrorMessage('无此题目。');
+		if (!problem) throw new ErrorMessage('No such problem.');
 		if (!await problem.isAllowedUseBy(res.locals.user)) {
 			throw new ErrorMessage('You do not have permission to do this.');
 		}
@@ -64,7 +64,7 @@ app.get('/article/:id', async (req, res) => {
 	try {
 		let id = parseInt(req.params.id);
 		let article = await Article.fromID(id);
-		if (!article) throw new ErrorMessage('无此帖子。');
+		if (!article) throw new ErrorMessage('No such article.');
 
 		await article.loadRelationships();
 		article.allowedEdit = await article.isAllowedEditBy(res.locals.user);
@@ -108,7 +108,7 @@ app.get('/article/:id', async (req, res) => {
 
 app.get('/article/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+		if (!res.locals.user) throw new ErrorMessage('Please login.', { 'Login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
 
 		let id = parseInt(req.params.id);
 		let article = await Article.fromID(id);
@@ -134,7 +134,7 @@ app.get('/article/:id/edit', async (req, res) => {
 
 app.post('/article/:id/edit', async (req, res) => {
 	try {
-		if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+		if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
 
 		let id = parseInt(req.params.id);
 		let article = await Article.fromID(id);
@@ -147,7 +147,7 @@ app.post('/article/:id/edit', async (req, res) => {
 
 			if (req.query.problem_id) {
 				let problem = await Problem.fromID(req.query.problem_id);
-				if (!problem) throw new ErrorMessage('无此题目。');
+				if (!problem) throw new ErrorMessage('No such problem.');
 				article.problem_id = problem.id;
 			} else {
 				article.problem_id = null;
@@ -156,7 +156,7 @@ app.post('/article/:id/edit', async (req, res) => {
 			if (!await article.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
 
-		if (!req.body.title.trim()) throw new ErrorMessage('标题不能为空。');
+		if (!req.body.title.trim()) throw new ErrorMessage('Title cannot be empty');
 		article.title = req.body.title;
 		article.content = req.body.content;
 		article.update_time = time;
@@ -175,13 +175,13 @@ app.post('/article/:id/edit', async (req, res) => {
 
 app.post('/article/:id/delete', async (req, res) => {
 	try {
-		if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+		if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
 
 		let id = parseInt(req.params.id);
 		let article = await Article.fromID(id);
 
 		if (!article) {
-			throw new ErrorMessage('无此帖子。');
+			throw new ErrorMessage('No such article.');
 		} else {
 			if (!await article.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
@@ -199,13 +199,13 @@ app.post('/article/:id/delete', async (req, res) => {
 
 app.post('/article/:id/comment', async (req, res) => {
 	try {
-		if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+		if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
 
 		let id = parseInt(req.params.id);
 		let article = await Article.fromID(id);
 
 		if (!article) {
-			throw new ErrorMessage('无此帖子。');
+			throw new ErrorMessage('No such article.');
 		} else {
 			if (!await article.isAllowedCommentBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
@@ -230,13 +230,13 @@ app.post('/article/:id/comment', async (req, res) => {
 
 app.post('/article/:article_id/comment/:id/delete', async (req, res) => {
 	try {
-		if (!res.locals.user) throw new ErrorMessage('请登录后继续。', { '登录': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
+		if (!res.locals.user) throw new ErrorMessage('Please login.', { 'login': zoj.utils.makeUrl(['login'], { 'url': req.originalUrl }) });
 
 		let id = parseInt(req.params.id);
 		let comment = await ArticleComment.fromID(id);
 
 		if (!comment) {
-			throw new ErrorMessage('无此评论。');
+			throw new ErrorMessage('No such comment');
 		} else {
 			if (!await comment.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 		}
