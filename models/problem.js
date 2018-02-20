@@ -317,8 +317,8 @@ class Problem extends Model {
 				unzipCount = files.length;
 				for (let file of files) unzipSize += file.size;
 			});
-			if (!noLimit && unzipCount > zoj.config.limit.testdata_filecount) throw new ErrorMessage('数据包中的文件太多。');
-			if (!noLimit && unzipSize > zoj.config.limit.testdata) throw new ErrorMessage('数据包太大。');
+			if (!noLimit && unzipCount > zoj.config.limit.testdata_filecount) throw new ErrorMessage('There is too many files in the testdata package.');
+			if (!noLimit && unzipSize > zoj.config.limit.testdata) throw new ErrorMessage('The testdata package is too large.');
 
 			let dir = this.getTestdataPath();
 			let fs = Promise.promisifyAll(require('fs-extra'));
@@ -345,8 +345,8 @@ class Problem extends Model {
 				}
 			}
 
-			if (!noLimit && oldSize + size > zoj.config.limit.testdata) throw new ErrorMessage('数据包太大。');
-			if (!noLimit && oldCount + !replace > zoj.config.limit.testdata_filecount) throw new ErrorMessage('数据包中的文件太多。');
+			if (!noLimit && oldSize + size > zoj.config.limit.testdata) throw new ErrorMessage('The testdata package is too large.');
+			if (!noLimit && oldCount + !replace > zoj.config.limit.testdata_filecount) throw new ErrorMessage('There is too many files in the testdata package.');
 
 			await fs.moveAsync(filepath, path.join(dir, filename), { overwrite: true });
 			await fs.removeAsync(dir + '.zip');
@@ -366,12 +366,12 @@ class Problem extends Model {
 		await zoj.utils.lock(['Promise::Testdata', this.id], async () => {
 			let dir = this.getTestdataPath();
 			if (await zoj.utils.isFile(dir + '.zip')) return;
-			if (!await zoj.utils.isDir(dir)) throw new ErrorMessage('无测试数据。');
+			if (!await zoj.utils.isDir(dir)) throw new ErrorMessage('No Testdata.');
 
 			let p7zip = new (require('node-7z'));
 
 			let list = await this.listTestdata(), path = require('path'), pathlist = list.files.map(file => path.join(dir, file.filename));
-			if (!pathlist.length) throw new ErrorMessage('无测试数据。');
+			if (!pathlist.length) throw new ErrorMessage('No Testdata.');
 			await p7zip.add(dir + '.zip', pathlist);
 		});
 	}
