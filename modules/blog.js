@@ -8,6 +8,7 @@
 
 let BlogPost = zoj.model('blog_post');
 let BlogPostTag = zoj.model('blog_post_tag');
+let User = zoj.model('user');
 
 app.get('/blogs', async (req, res) => {
     try {
@@ -23,6 +24,55 @@ app.get('/blogs', async (req, res) => {
                     user_id: res.locals.user.id
                 }
             };
+        }
+
+        let paginate = zoj.utils.paginate(await BlogPost.count(where), req.query.page, zoj.config.page.post);
+        let posts = await BlogPost.query(paginate, where, [["id", "desc"]]);
+
+        await posts.forEachAsync(async post => {
+            await post.loadRelationships();
+            post.allowedEdit = await post.isAllowedEditBy(res.locals.user);
+            post.tags = await post.getTags();
+        });
+
+        res.render('blog', {
+            allowedManageTag: res.locals.user && res.locals.user.admin >= 2,
+            posts: posts,
+            paginate: paginate
+        });
+    } catch (e) {
+        zoj.log(e);
+        res.render('error', {
+            err: e
+        });
+    }
+});
+
+app.get('/blogs/:id', async (req, res) => {
+    try {
+        let id = parseInt(req.params.id);
+        let user = await User.fromID(id);
+        if (!user) throw new ErrorMessage('无此用户。');
+        let where = {};
+        if (!res.locals.user) {
+            where = {
+                $and: {
+                    user_id: id,
+                    is_public: 1
+                }
+            };
+        } else if (res.locals.user.admin < 3) {
+            where = {
+                $and: {
+                    user_id: id,
+                    $or: {
+                        is_public: 1,
+                        user_id: res.locals.user.id
+                    }
+                }
+            };
+        } else {
+            where = { user_id: id };
         }
 
         let paginate = zoj.utils.paginate(await BlogPost.count(where), req.query.page, zoj.config.page.post);
