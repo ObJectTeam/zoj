@@ -1,24 +1,24 @@
-<% this.title = '修改资料'; %>
+<% this.title = 'Modify Information'; %>
 <% include header %>
 <div class="padding">
     <div class="ui <% if (error_info === '') { %>success<% } else { %>error<% } %> message" id="error" <% if (error_info === null) { %>hidden<% } %>>
       <% if (error_info !== null) {
-          if (error_info === '') error_info = '修改成功。';
+          if (error_info === '') error_info = 'Modify Successfully.';
       %>
       	<p id="error_info"><%= error_info %></p>
       <% } %>
     </div>
 		<form id="form" class="ui form" action="<%= zoj.utils.makeUrl(['user', edited_user.id, 'edit']) %>" method="post" onsubmit="return check()">
       <div class="field">
-	    	<label for="username">用户名</label>
+	    	<label for="username">User Name</label>
 	    	<input type="text" id="username" name="username" value="<%= edited_user.username %>"<% if (!user.allowedManage) { %> readonly<% } %>>
 	    </div>
       <div class="field">
-	    	<label for="sex">性别</label>
+	    	<label for="sex">Sex</label>
 	    	<select class="ui dropdown" name="sex">
-          <option value="0" <%= edited_user.sex == 0 ? 'selected': '' %>>其它</option>
-          <option value="1" <%= edited_user.sex == 1 ? 'selected': '' %>>男</option>
-          <option value="-1" <%= edited_user.sex == -1 ? 'selected': '' %>>女</option>
+          <option value="0" <%= edited_user.sex == 0 ? 'selected': '' %>>Other</option>
+          <option value="1" <%= edited_user.sex == 1 ? 'selected': '' %>>Male</option>
+          <option value="-1" <%= edited_user.sex == -1 ? 'selected': '' %>>Female</option>
         </select>
 	    </div>
 	    <div class="field">
@@ -26,26 +26,26 @@
 	    	<input class="font-content" type="email" id="email" name="email" value="<%= edited_user.email %>"<% if (!user.allowedManage) { %> readonly<% } %>>
 	    </div>
       <div class="inline field">
-        <label class="ui header">公开 Email</label>
+        <label class="ui header">Publish Email</label>
         <div class="ui toggle checkbox">
           <input id="public_email" name="public_email" type="checkbox" <% if (edited_user.public_email) { %> checked<% } %>>
           <label></label>
         </div>
 	    </div>
 	    <div class="field">
-	    	<label for="information">个性签名</label>
+	    	<label for="information">Nick Name</label>
 	    	<input type="text" class="font-content" id="information" name="information" value="<%= edited_user.information %>"></textarea>
 	    </div>
       <div class="field">
-      <label class="ui header">密码</label>
-        <input type="password" placeholder="原密码（留空则不修改）" name="old_password" id="old_password">
+      <label class="ui header">Password</label>
+        <input type="password" placeholder="The original password (Won't modify if it is empty)" name="old_password" id="old_password">
       </div>
       <div class="two fields" id="new_password_field">
         <div class="field">
-          <input type="password" placeholder="新密码" name="new_password" id="password1">
+          <input type="password" placeholder="New Password" name="new_password" id="password1">
         </div>
         <div class="field">
-          <input type="password" placeholder="确认密码" id="password2">
+          <input type="password" placeholder="Repeat the Password" id="password2">
         </div>
       </div>
       <%
@@ -53,12 +53,12 @@
       %>
       <% if(allowedManagePrivilege && edited_user.id !== user.id){ %>
       <div class="inline field">
-        <label class="ui header">权限</label>
+        <label class="ui header">Permissions</label>
         <input type="range" id="admin" name="admin" min="0" max="<%= user.admin - 1 %>" value="<%= edited_user.admin %>">
         <label class="ui header" id="admintip"></label>
       </div>
       <div class="inline field">
-        <label class="ui header">封禁</label>
+        <label class="ui header">Ban</label>
         <div class="ui toggle checkbox">
           <input id="is_show" name="is_show" type="checkbox" <% if (!edited_user.is_show) { %> checked<% } %>>
           <label></label>
@@ -66,8 +66,8 @@
       </div>
       <% } %>
       <div style="text-align: center; ">
-        <button type="submit" class="ui button">修改</button>
-        <a href="<%= zoj.utils.makeUrl(['user', edited_user.id]) %>" class="ui blue button">返回个人资料</a>
+        <button type="submit" class="ui button">Modify</button>
+        <a href="<%= zoj.utils.makeUrl(['user', edited_user.id]) %>" class="ui blue button">Return to Personal Information</a>
       </div>
 		</form>
 	</div>
@@ -87,7 +87,7 @@ function check() {
 		$("#error").removeClass("success");
 		$("#error").removeClass("error");
 		$("#error").addClass("error");
-		$("#error_info").html("两次输入的密码不一致。");
+		$("#error_info").html("The two passwords are not the same!");
 		$("#error").show();
 		return false;
 	}

@@ -1,4 +1,4 @@
-<% this.title = contest.title + ' - 比赛' %>
+<% this.title = contest.title + ' - Contest' %>
 <style>
 .ui.label.pointing.below.left::before { left: 12%; }
 .ui.label.pointing.below.right::before { left: 88%; }
@@ -26,10 +26,10 @@
     <div class="row">
       <div class="column">
         <div class="ui buttons">
-          <a class="ui small blue button" href="<%= zoj.utils.makeUrl(['contest', contest.id, 'ranklist']) %>">排行榜</a>
-          <a class="ui small positive button" href="<%= zoj.utils.makeUrl(['contest', contest.id, 'submissions']) %>">提交记录</a>
+          <a class="ui small blue button" href="<%= zoj.utils.makeUrl(['contest', contest.id, 'ranklist']) %>">Ranklist</a>
+          <a class="ui small positive button" href="<%= zoj.utils.makeUrl(['contest', contest.id, 'submissions']) %>">Submissions</a>
           <% if (contest.allowedEdit) { %>
-            <a class="ui small button" href="<%= zoj.utils.makeUrl(['contest', contest.id, 'edit']) %>">编辑比赛</a>
+            <a class="ui small button" href="<%= zoj.utils.makeUrl(['contest', contest.id, 'edit']) %>">Edit This Contest</a>
           <% } %>
         </div>
       </div>
@@ -38,7 +38,7 @@
   <% if (contest.information) { %>
     <div class="row">
       <div class="column">
-        <h4 class="ui top attached block header">信息与公告</h4>
+        <h4 class="ui top attached block header">Information and Bulletins</h4>
         <div class="ui bottom attached segment font-content">
           <%- contest.information %>
         </div>
@@ -51,10 +51,10 @@
          <table class="ui selectable celled table">
             <thead>
               <tr>
-                <th class="one wide" style="text-align: center">状态</th>
-                <th>题目</th>
+                <th class="one wide" style="text-align: center">Status</th>
+                <th>Problem</th>
                 <% if (hasStatistics) { %>
-                  <th class="one wide center aligned">统计</th>
+                  <th class="one wide center aligned">Statistics</th>
                 <% } %>
               </tr>
             </thead>

@@ -1,4 +1,4 @@
-<% this.title = '错误' %>
+<% this.title = 'Error' %>
 <% include header %>
 
 <%
@@ -19,7 +19,7 @@ if (!(err instanceof ErrorMessage)) {
       <% for (let text in err.nextUrls) { %>
         <a href="<%= err.nextUrls[text] %>" style="margin-right: 5px; "><%= text %></a>
       <% } %>
-      <a href="javascript:history.go(-1)">返回上一页</a>
+      <a href="javascript:history.go(-1)">Return to the Last Page</a>
     </p>
   </div>
 </div>

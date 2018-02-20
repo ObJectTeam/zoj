@@ -6,11 +6,11 @@
   <% } %>
     <form action="<%= zoj.utils.makeUrl(['admin', 'rating', 'add']) %>" method="post" class="ui form">
       <div class="field">
-        <label>比赛</label>
+        <label>Contest</label>
         <div class="ui fluid search selection dropdown">
           <input type="hidden" name="contest">
           <i class="dropdown icon"></i>
-          <div class="default text">选择比赛</div>
+          <div class="default text">Choose a contest</div>
           <div class="menu">
             <% for (const contest of contests) { %>
               <div class="item" data-value="<%= contest.id %>">
@@ -20,10 +20,10 @@
           </div>
         </div>
       </div>
-      <button class="ui blue button" name="type" value="doit" type="submit">计算此比赛的 Rating</button>
+      <button class="ui blue button" name="type" value="doit" type="submit">Calculate the rating of this contest!!!</button>
     </form>
 
-    注意：如果删除一个比赛的 Rating，则该比赛之上的所有比赛也将被删除，Rating 将还原至该比赛之前的状态！
+    Notice:If you delete the rating of a contest,all of the later contests'rating will be deleted,and the rating status will return to the status before this contest.
     <form class="have-csrf" action="<%= zoj.utils.makeUrl(['admin', 'rating', 'delete']) %>" method="POST">
       <input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
       <div class="ui relaxed divided list">

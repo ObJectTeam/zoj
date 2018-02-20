@@ -1,15 +1,15 @@
-<% this.title = '首页'; %>
+<% this.title = 'Index'; %>
 	<% include header %>
 		<div class="padding">
 			<div class="ui three column grid">
 				<div class="eleven wide column">
-					<h4 class="ui top attached block header">公告</h4>
+					<h4 class="ui top attached block header">Bulletins</h4>
 					<div class="ui bottom attached segment">
 						<table class="ui very basic table">
 							<thead>
 								<tr>
-									<th>标题</th>
-									<th>时间</th>
+									<th>Title</th>
+									<th>Time</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -28,14 +28,14 @@
 							</tbody>
 						</table>
 					</div>
-					<h4 class="ui top attached block header">排名</h4>
+					<h4 class="ui top attached block header">Ranklist</h4>
 					<div class="ui bottom attached segment">
 						<table class="ui very basic center aligned table" style="table-layout: fixed; ">
 							<thead>
 								<tr>
 									<th style="width: 50px; ">#</th>
-									<th style="width: 170px; ">用户名</th>
-									<th>个性签名</th>
+									<th style="width: 170px; ">User</th>
+									<th>Nick Name</th>
 								</tr>
 							</thead>
 							<script>
@@ -45,7 +45,7 @@
 									div.style.position = 'fixed';
 									div.style.left = -10000;
 									div.style.visibility = 'hidden';
-									div.innerText = '测试，Test.';
+									div.innerText = 'Test.';
 									document.body.appendChild(div);
 									lineHeight = div.clientHeight;
 								})();
@@ -79,33 +79,33 @@
 					</div>
 				</div>
 				<div class="right floated five wide column">
-					<h4 class="ui top attached block header">一言</h4>
+					<h4 class="ui top attached block header">Saying</h4>
 					<div class="ui bottom attached center aligned segment">
 						<div style="font-size: 1em; line-height: 1.5em; " id="hitokoto-content">Talk is cheap, show me the code.</div>
 						<div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666; " id="hitokoto-from">Linus</div>
 					</div>
-					<h4 class="ui top attached block header">搜索题目</h4>
+					<h4 class="ui top attached block header">Search Problems</h4>
 					<div class="ui bottom attached segment">
 						<form action="<%= zoj.utils.makeUrl(['problems', 'search']) %>" method="get">
 							<div class="ui search" style="width: 100%; ">
 								<div class="ui left icon input" style="width: 100%; ">
-									<input class="prompt" style="width: 100%; " type="text" placeholder="ID / 题目名 …" name="keyword">
+									<input class="prompt" style="width: 100%; " type="text" placeholder="ID / Problem Name …" name="keyword">
 									<i class="search icon"></i>
 								</div>
 								<div class="results" style="width: 100%; "></div>
 							</div>
 						</form>
 					</div>
-					<h4 class="ui top attached block header">近期比赛</h4>
+					<h4 class="ui top attached block header">Recent Contests</h4>
 					<div class="ui bottom attached <% if (!contests || !contests.length) { %>center aligned <% } %>segment">
 						<% if (!contests || !contests.length) { %>
-							还没有举行过任何比赛
+							There is no contest.
 							<% } else { %>
 								<table class="ui very basic center aligned table">
 									<thead>
 										<tr>
-											<th>比赛名称</th>
-											<th>开始时间</th>
+											<th>Contest Name</th>
+											<th>Start</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -116,11 +116,11 @@
 			%>
 											<tr>
 												<% if (now < contest.start_time) { %>
-													<% tag = '<span class="ui header"><div class="ui mini red label">未开始</div></span>' %>
+													<% tag = '<span class="ui header"><div class="ui mini red label">Upcoming</div></span>' %>
 														<% } else if (now >= contest.start_time && now < contest.end_time) { %>
-															<% tag = '<span class="ui header"><div class="ui mini green label">进行中</div></span>' %>
+															<% tag = '<span class="ui header"><div class="ui mini green label">Ongoing</div></span>' %>
 																<% } else { %>
-																	<% tag = '<span class="ui header"><div class="ui mini grey label">已结束</div></span>' %>
+																	<% tag = '<span class="ui header"><div class="ui mini grey label">Finished</div></span>' %>
 																		<% } %>
 																			<td>
 																				<a href="<%= zoj.utils.makeUrl(['contest', contest.id]) %>">
@@ -138,7 +138,7 @@
 								<% } %>
 					</div>
 					<% if (typeof links !== 'undefined' && links) { %>
-						<h4 class="ui top attached block header font-content">友情链接</h4>
+						<h4 class="ui top attached block header font-content">Links</h4>
 						<div class="ui bottom attached segment">
 							<ul style="margin: 0; padding-left: 20px; ">
 								<% for (let link of links) { %>

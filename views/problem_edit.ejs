@@ -1,4 +1,4 @@
-<% this.title = '编辑题目'; %>
+<% this.title = 'Edit Problem'; %>
 <% include header %>
 <style type="text/css">
   .problem_header{
@@ -8,36 +8,36 @@
 <div class="padding">
     <form class="ui form" method="post" action="<%= zoj.utils.makeUrl(['problem', req.params.id, 'edit']) %>">
       <div class="ui top attached tabular menu">
-        <a class="item active" data-tab="edit">编辑<i class="mega-octicon octicon-markdown"></i></a>
-        <a class="item" data-tab="preview" id="preview_tab">预览</a>
+        <a class="item active" data-tab="edit">Edit<i class="mega-octicon octicon-markdown"></i></a>
+        <a class="item" data-tab="preview" id="preview_tab">Preview</a>
       </div>
       <div class="ui bottom attached tab segment active" data-tab="edit">
         <div class="field">
           <% if (problem.allowedManage) { %>
             <label for="id">
               <% if (problem.new) { %>
-                题目编号
+                Problem ID
               <% } else { %>
-                修改题目编号
+                Modify Problem ID
               <% } %>
             </label>
-            <input type="text" id="id" name="id" placeholder="<% if (problem.new) { %>留空则自动延伸<% } else { %>留空则不修改<% } %>" value="<%= problem.id ? problem.id : '' %>">
+            <input type="text" id="id" name="id" placeholder="<% if (problem.new) { %>Will extend if it is empty <% } else { %>Won't modify if it is empty<% } %>" value="<%= problem.id ? problem.id : '' %>">
 
             <div style="margin-top: 15px; "></div>
           <% } %>
-          <label for="title">题目名称</label>
+          <label for="title">Problem Name</label>
           <input class="font-content" type="text" id="title" name="title" value="<%= problem.title %>">
-          <label style="margin-top: 15px; " for="description">题目描述</label>
+          <label style="margin-top: 15px; " for="description">Problem Description</label>
           <textarea class="font-content" rows="15" id="description" name="description"><%= problem.description %></textarea>
-          <label style="margin-top: 15px; " for="input_format">输入格式</label>
+          <label style="margin-top: 15px; " for="input_format">Input</label>
           <textarea class="font-content" rows="10" id="input" name="input_format"><%= problem.input_format %></textarea>
-          <label style="margin-top: 15px; " for="output_format">输出格式</label>
+          <label style="margin-top: 15px; " for="output_format">Output</label>
           <textarea class="font-content" rows="10" id="output" name="output_format"><%= problem.output_format %></textarea>
-          <label style="margin-top: 15px; ">样例</label>
+          <label style="margin-top: 15px; ">Example</label>
           <textarea class="font-content" rows="15" id="example" name="example"><%= problem.example %></textarea>
-          <label style="margin-top: 15px; ">数据范围与提示</label>
+          <label style="margin-top: 15px; ">Testdata Range and Tips</label>
           <textarea class="font-content" rows="10" id="hint" name="limit_and_hint"><%= problem.limit_and_hint %></textarea>
-          <label style="margin-top: 15px; ">标签</label>
+          <label style="margin-top: 15px; ">Tags</label>
           <select class="ui fluid search dropdown" multiple="" id="search_tags" name="tags">
             <% for (let tag of problem.tags) { %>
               <option value="<%= tag.id %>" selected><%= tag.name %></option>
@@ -45,26 +45,26 @@
           </select>
           <div class="ui <% if (problem.is_anonymous) { %>checked <% } %>checkbox" style="margin-top: 15px; ">
             <input <% if (problem.is_anonymous) { %>checked=""<% } %> name="is_anonymous" type="checkbox">
-            <label><strong>匿名上传</strong></label>
-            <p style="margin-top: 5px; ">选择后，上传者的用户名将不在题目页面中显示。</p>
+            <label><strong>Anonymous Upload</strong></label>
+            <p style="margin-top: 5px; ">The user name won't show in the problem page if you choose it.</p>
           </div>
         </div>
       </div>
       <div class="ui bottom attached tab segment" data-tab="preview" id="preview">
         <h1 class="ui header problem_header" id="pv-title"></h1>
-        <h2 class="ui header">题目描述</h2>
+        <h2 class="ui header">Problem Description</h2>
         <div class="font-content" id="pv-description"></div>
-        <h2 class="ui header">输入格式</h2>
+        <h2 class="ui header">Input</h2>
         <div class="font-content" id="pv-input"></div>
-        <h2 class="ui header">输出格式</h2>
+        <h2 class="ui header">Output</h2>
         <div class="font-content" id="pv-output"></div>
-        <h2 class="ui header">样例</h2>
+        <h2 class="ui header">Example</h2>
         <div class="font-content" id="pv-example"></div>
-        <h2 class="ui header">数据范围与提示</h2>
+        <h2 class="ui header">Testdata Range and Tips</h2>
         <div class="font-content" id="pv-hint"></div>
       </div>
       <% if (problem.allowedEdit) { %>
-      <button type="submit" class="ui button">提交</button>
+      <button type="submit" class="ui button">Submit</button>
       <% } %>
     </form>
 </div>
