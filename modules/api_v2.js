@@ -70,10 +70,30 @@ app.get('/api/v2/search/blogs/:keyword*?', async (req, res) => {
 	}
 });
 
-app.get('/api/v2/search/tags/:keyword*?', async (req, res) => {
+app.get('/api/v2/search/tags_problem/:keyword*?', async (req, res) => {
 	try {
 		let Problem = zoj.model('problem');
 		let ProblemTag = zoj.model('problem_tag');
+
+		let keyword = req.params.keyword || '';
+		let tags = await ProblemTag.query(null, {
+			name: { like: `%${req.params.keyword}%` }
+		}, [['name', 'asc']]);
+
+		let result = tags.slice(0, zoj.config.page.edit_problem_tag_list);
+
+		result = result.map(x => ({ name: x.name, value: x.id }));
+		res.send({ success: true, results: result });
+	} catch (e) {
+		zoj.log(e);
+		res.send({ success: false });
+	}
+});
+
+app.get('/api/v2/search/tags_blog_post/:keyword*?', async (req, res) => {
+	try {
+		let Problem = zoj.model('blog_post');
+		let ProblemTag = zoj.model('blog_post_tag');
 
 		let keyword = req.params.keyword || '';
 		let tags = await ProblemTag.query(null, {

@@ -94,7 +94,7 @@ $(function () {
     .dropdown({
       debug: true,
       apiSettings: {
-        url: '/api/v2/search/tags/{query}',
+        url: '/api/v2/search/tags_problem/{query}',
         onResponse: function (response) {
           var a = $('#search_tags').val().map(function (x) { return parseInt(x) });
           if (response.results) {

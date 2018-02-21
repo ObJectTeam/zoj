@@ -8,6 +8,10 @@
       </div>
       <div class="ui bottom attached tab segment active" data-tab="edit">
         <div class="field">
+          <!-- DEBUG -->
+          <% for (let tag of post.tags) { %>
+            <%= tag.id %> <%= tag.name %> <br>
+          <% } %>
           <label for="title">Title</label>
           <input class="font-content" type="text" id="title" name="title" value="<%= post.title %>">
           <label for="title">From</label>
@@ -55,7 +59,7 @@ $(function () {
     .dropdown({
       debug: true,
       apiSettings: {
-        url: '/api/v2/search/tags/{query}',
+        url: '/api/v2/search/tags_blog_post/{query}',
         onResponse: function (response) {
           var a = $('#search_tags').val().map(function (x) { return parseInt(x) });
           if (response.results) {
