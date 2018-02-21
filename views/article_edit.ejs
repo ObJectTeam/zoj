@@ -1,4 +1,4 @@
-<% this.title = article.id ? 'Edit Article' : 'Post Article'; %>
+<% this.title = article.id ? 'Edit Discussion' : 'Post Discussion'; %>
 <% include header %>
 <style type="text/css">
     .am-panel-title{
@@ -30,8 +30,10 @@
       <div class="ui header" id="pv-title"></div>
       <div id="pv-content" class="font-content"></div>
     </div>
-    <button type="submit" class="ui labeled submit icon button">
-      <i class="icon edit"></i> Submit
+    <!--<button type="submit" class="ui labeled submit icon button">
+      <i class="icon edit"></i> -->
+      <button type="submit" class="ui button">
+      Submit
     </button>
   </form>
 </div>
