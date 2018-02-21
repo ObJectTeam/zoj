@@ -33,26 +33,26 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
   <table class="ui very basic center aligned table" id="status_table" style="visibility: hidden; ">
     <thead>
       <tr>
-        <th>编号</th>
-        <th>题目名称</th>
-        <th>状态</th>
+        <th>ID</th>
+        <th>Problem Name</th>
+        <th>Status</th>
         <% if ((typeof contest === 'undefined' || !contest) || !((!user || !user.admin >= 3) && !contest.ended && contest.type === 'acm') && !hideScore) { %>
-          <th>分数</th>
+          <th>Score</th>
         <% } %>
         <% if (judge.problem.type !== 'submit-answer') { %>
           <% if (!hideScore) { %>
-            <th>总时间</th>
-            <th>内存</th>
+            <th>Total Time</th>
+            <th>Memory</th>
           <% } %>
-          <th>代码</th>
+          <th>Code</th>
         <% } else { %>
-          <th>文件大小</th>
+          <th>File Size</th>
         <% } %>
-        <th>提交者</th>
-        <th>提交时间</th>
-        <th>评测机</th>
+        <th>Submitted By</th>
+        <th>Submit Time</th>
+        <th>Judger</th>
         <% if (judge.allowedRejudge) { %>
-          <th>重新评测</th>
+          <th>Rejudge</th>
         <% } %>
       </tr>
      </thead>
@@ -75,7 +75,7 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
           <% if (judge.allowedSeeCode) { %>
             <td><%= zoj.config.languages[judge.language].show %> / <%= zoj.utils.formatSize(judge.codeLength) %></td>
           <% } else { %>
-            <td><%= zoj.config.languages[judge.language].show %> / 隐藏 %></td>
+            <td><%= zoj.config.languages[judge.language].show %> / Hide %></td>
           <% } %>
         <% } else { %>
           <td><%= zoj.utils.formatSize(judge.max_memory) %></td>
@@ -89,11 +89,11 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
             <div class="ui basic modal" id="modal-rejudge">
               <div class="ui icon header">
                 <i class="retweet icon"></i>
-                <p style="margin-top: 15px; ">重新评测</p>
+                <p style="margin-top: 15px; ">Rejudge</p>
               </div>
               <div class="content" style="text-align: center; ">
-                <p>确认重新评测该提交记录吗？</p>
-                <p id="warning_pending"><strong>警告：只有管理员可以重新评测一个未评测完成的记录，<br>这种情况一般发生在评测服务中断后，如果一个提交正在被评测，<br>则将其重新评测会导致系统错乱！</strong></p>
+                <p>Are you sure to rejudge this submission?</p>
+                <p id="warning_pending"><strong>Warning: Only an administrator can re-evaluate an unfinished record, which usually occurs after the evaluation service is interrupted.<br>If a submission is being evaluated, re-evaluating it will cause system confusion!</strong></p>
                 <script>
                 var pending = <%= judge.pending %>;
                 function check_rejudge() {
@@ -109,11 +109,11 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
               <div class="actions">
                 <div class="ui red basic cancel inverted button">
                   <i class="remove icon"></i>
-                  否
+                  No
                 </div>
                 <a class="ui green ok inverted button" href-post="<%= zoj.utils.makeUrl(['submission', judge.id, 'rejudge']) %>">
                   <i class="checkmark icon"></i>
-                  是
+                  Yes
                 </a>
               </div>
             </div>
@@ -148,13 +148,13 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
     </script>
   <% } %>
 <% if (judge.problem.type !== 'submit-answer' && judge.result.compiler_output && judge.status === 'Compile Error' && judge.allowedSeeCode) { %>
-  <h3 class="ui header">编译信息</h3>
+  <h3 class="ui header">Compile Information</h3>
   <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%- zoj.utils.ansiToHTML(judge.result.compiler_output) %></code></pre></div>
 <% } else if (judge.result.message) { %>
-  <h3 class="ui header">系统调试信息</h3>
+  <h3 class="ui header">System Debugging Information</h3>
   <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= judge.result.message %></code></pre></div>
 <% } else if (judge.result.spj_compiler_output) { %>
-  <h3 class="ui header"><%= judge.problem.type === 'interaction' ? '交互程序' : 'Special Judge ' %>编译信息</h3>
+  <h3 class="ui header"><%= judge.problem.type === 'interaction' ? 'Interaction' : 'Special Judge ' %>Compile Information</h3>
   <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%- zoj.utils.ansiToHTML(judge.result.spj_compiler_output) %></code></pre></div>
 <% } else if (judge.allowedSeeCase && judge.result.subtasks && (judge.result.subtasks.length !== 1 || judge.result.subtasks[0].case_num)) { %>
 <div class="ui styled fluid accordion" id="subtasks_list">
@@ -163,12 +163,12 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
     <% if (judge.result.subtasks.length !== 1) { %>
       <div class="title auto_update auto_update_activation<% if (subtask_cases.isActiveSubtask) { %> active<% } %>">
         <div class="ui grid">
-          <div class="three wide column"><i class="dropdown icon"></i>子任务 #<%= ++subtask_count %></div>
+          <div class="three wide column"><i class="dropdown icon"></i>Subtask #<%= ++subtask_count %></div>
           <div class="four wide column status status_detail <%= getStatusMeta(subtask_cases.status).toLowerCase().split(' ').join('_') %>">
           <i class="<%= icon[getStatusMeta(subtask_cases.status)] || 'remove' %> icon"></i>
           <%= subtask_cases.status %></div>
           <% if (!subtask_cases.pending) { %>
-            <div class="three wide column">得分：<span style="font-weight: normal; "><%= parseFloat(subtask_cases.score.toFixed(2)).toString() %></span></div>
+            <div class="three wide column">Score：<span style="font-weight: normal; "><%= parseFloat(subtask_cases.score.toFixed(2)).toString() %></span></div>
           <% } %>
         </div>
       </div>
@@ -179,7 +179,7 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
       <% let testcase = subtask_cases[i]; %>
       <div class="title<% if (testcase.pending || !judge.allowedSeeData || testcase.status === 'Skipped') { %> pending<% } %> auto_update"<% if (testcase.pending || !judge.allowedSeeData) { %> style="cursor: auto; "<% } %>>
         <div class="ui grid">
-          <div class="<%= judge.problem.type === 'submit-answer' ? 'four' : 'three' %> wide column"><i class="dropdown icon"></i>测试点 #<%= i + 1 %></div>
+          <div class="<%= judge.problem.type === 'submit-answer' ? 'four' : 'three' %> wide column"><i class="dropdown icon"></i>Point #<%= i + 1 %></div>
           <div class="four wide column status status_detail <%= getStatusMeta(testcase.status).toLowerCase().split(' ').join('_') %>">
           <i class="<%= icon[getStatusMeta(testcase.status)] || 'remove' %> icon"></i>
           <%= testcase.status %></div>
@@ -187,12 +187,12 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
             <% if (!testcase.score) testcase.score = testcase.status === 'Accepted' ? 100 : 0; %>
             <% if (judge.problem.type === 'submit-answer') { %>
               <% if (testcase.length != null) { %>
-                <div class="three wide column">文件大小：<span style="font-weight: normal; "><%= zoj.utils.formatSize(testcase.length) %></span></div>
+                <div class="three wide column">File Size：<span style="font-weight: normal; "><%= zoj.utils.formatSize(testcase.length) %></span></div>
               <% } %>
             <% } else { %>
-              <div class="three wide column">得分：<span style="font-weight: normal; "><%= parseFloat(testcase.score.toFixed(2)).toString() %></span></div>
-              <div class="three wide column">用时：<span style="font-weight: normal; "><%= testcase.time_used %> ms</span></div>
-              <div class="three wide column">内存：<span style="font-weight: normal; "><%= testcase.memory_used %> KiB</span></div>
+              <div class="three wide column">Score：<span style="font-weight: normal; "><%= parseFloat(testcase.score.toFixed(2)).toString() %></span></div>
+              <div class="three wide column">Time：<span style="font-weight: normal; "><%= testcase.time_used %> ms</span></div>
+              <div class="three wide column">Memory：<span style="font-weight: normal; "><%= testcase.memory_used %> KiB</span></div>
             <% } %>
           <% } %>
         </div>
@@ -200,24 +200,24 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
       <div class="content auto_update">
         <% if (!testcase.pending && judge.allowedSeeData && testcase.status !== 'Skipped') { %>
           <p>
-              <strong>输入文件<% if (testcase.input_file_name) { %>（<span style="font-family: monospace; "><%= testcase.input_file_name %></span>）<% } %></strong>
+              <strong>Input File<% if (testcase.input_file_name) { %>（<span style="font-family: monospace; "><%= testcase.input_file_name %></span>）<% } %></strong>
               <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.input %></code></pre></div>
               <% if (judge.problem.type !== 'interaction') { %>
-                <strong>输出文件<% if (testcase.output_file_name) { %>（<span style="font-family: monospace; "><%= testcase.output_file_name %></span>）<% } %></strong>
+                <strong>Output File<% if (testcase.output_file_name) { %>（<span style="font-family: monospace; "><%= testcase.output_file_name %></span>）<% } %></strong>
                 <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.answer %></code></pre></div>
-                <strong>选手输出</strong>
+                <strong>Your Output</strong>
                 <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.user_out %></code></pre></div>
               <% } %>
               <% if (testcase.spj_message) { %>
-                <strong><%= judge.problem.type === 'interaction' ? '交互程序' : 'Special Judge ' %>信息</strong>
+                <strong><%= judge.problem.type === 'interaction' ? 'Interaction' : 'Special Judge ' %>Information</strong>
                 <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.spj_message %></code></pre></div>
               <% } %>
               <% if (testcase.user_err) { %>
-                <strong>标准错误</strong>
+                <strong>Standard Error</strong>
                 <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.user_err %></code></pre></div>
               <% } %>
               <% if (testcase.runner_message && judge.allowedManage) { %>
-                <strong>调试信息</strong>
+                <strong>Debugging Information</strong>
                 <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.runner_message %></code></pre></div>
               <% } %>
           </p>

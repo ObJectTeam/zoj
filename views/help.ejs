@@ -1,25 +1,25 @@
-<% this.title = '帮助' %>
+<% this.title = 'Help' %>
 <% include header %>
 <div class="padding">
-    <h1 class="ui center aligned header">帮助</h1>
+    <h1 class="ui center aligned header">Help</h1>
     <div style="font-content">
-        <h2 class="ui header">评测</h2>
+        <h2 class="ui header">Judge</h2>
         <p>
-            C++ 使用 <code>g++</code> 编译，命令为 &nbsp;<code>g++ source_file.cpp -o exec_file -O2 -lm -DONLINE_JUDGE</code>；
-            <br> C 使用 <code>gcc</code> 编译，命令为 &nbsp;<code>gcc source_file.c -o exec_file -O2 -lm -DONLINE_JUDGE</code>；
-            <br> Java使用<code>gcj</code>编译
+            C++ code is compiled by <code>g++</code> , command is &nbsp;<code>g++ source_file.cpp -o exec_file -O2 -lm -DONLINE_JUDGE</code>.
+            <br> C code is compiled by <code>gcc</code> , command is &nbsp;<code>gcc source_file.c -o exec_file -O2 -lm -DONLINE_JUDGE</code>.
+            <br> Java code is compiled by <code>gcj</code>.
             <br>
         </p>
-        <p>请根据题目中的说明选择使用<strong>标准输入输出</strong>或<strong>文件输入输出</strong>。</p>
+        <p>Please choose <strong>standard IO</strong> or <strong>File IO</strong>.</p>
 
-        <h2 class="ui header">个人资料<br></h2>
-        <p>本站不提供头像存储服务，而是使用 Gravatar 进行头像显示。请使用邮箱注册 <a href="https://zh-cn.wordpress.com/">WordPress.com</a>，登录 <a href="https://cn.gravatar.com/">Gravatar</a> 并上传头像。同样使用 Gravatar 的 OJ 有 Vijos、COGS、UOJ 等。</p>
-        <h2 class="ui header">添加题目</h2>
-        <h3 class="ui header">题面</h3>
+        <h2 class="ui header">Personal Information<br></h2>
+        <p>Please use <a href="https://cn.gravatar.com/">Gravatar</a> for avatar display.</p>
+        <h2 class="ui header">Add a problem</h2>
+        <h3 class="ui header">Problem content</h3>
         <div>
-            <p>在<a href="/problem/0/edit">添加题目页面</a>填写题面，题目内容可以使用 TeX 公式（请用$包围）。</p>
-            <h3 class="ui header">测试数据</h3>
-            <p>在添加好的题目页面选择“管理”，可以调整时间和内存限制。数据包是一个 <code>zip</code> 压缩包：</p>
+            <p>Click <a href="/problem/0/edit">Add a problem</a>, and write the content.You can use TEX commands like $TEX$.</p>
+            <h3 class="ui header">Testdata</h3>
+            <p>Click "manage" button when you are visiting a problem.You can adjust time and memory limit.Data package is a <code>zip</code> file like this:</p>
             <div class="ui existing segment" style="border-radius: 0.285714rem; font-size: 14px;"><pre style="margin-top: 0px; margin-bottom: 0px;"><code>xxx.zip
 <span class="hljs-string">|</span>
 <span class="hljs-string">|--data_rule.txt</span>
@@ -30,18 +30,18 @@
 <span class="hljs-string">|--......</span>
 </code></pre>
             </div>
-            <p>其中&nbsp;<code>data_rule.txt</code>&nbsp;格式类似这样三行：</p>
+            <p>And the&nbsp;<code>data_rule.txt</code>&nbsp;has the following format:</p>
             <div class="ui existing segment" style="border-radius: 0.285714rem; font-size: 14px;"><pre style="margin-top: 0px; margin-bottom: 0px;"><code>1 2 3 4 5 6 7 8 9 10
 input#.in
 output#.out
 </code></pre>
             </div>
             <ul>
-                <li>第一行表示有哪些测试点，用空格分开；</li>
-                <li>第二行表示输入文件名字，其中&nbsp;<code>#</code>&nbsp;会被替换成相应的测试点编号；</li>
-                <li>第三行表示输出文件名字，其中&nbsp;<code>#</code>&nbsp;会被替换成相应的测试点编号。</li>
+                <li>The 1st line means all the testcases, separated with spaces</li>
+                <li>The 2nd line means the filename of the input file, and&nbsp;<code>#</code>&nbsp;will be replaced by the testcase number in line 1.</li>
+                <li>The 3rd line means the filename of the output file, and&nbsp;<code>#</code>&nbsp;will be replaced by the testcase number in line 1.</li>
             </ul>
-            <p>如果需要配置<strong>子任务</strong>，则需要改为以下格式：</p>
+            <p>If you want to have <strong>subtasks</strong>, you'll need the format below:</p>
             <div class="ui existing segment" style="border-radius: 0.285714rem; font-size: 14px;"><pre style="margin-top: 0px; margin-bottom: 0px;"><code>sum:30  1 2 3
 min:20  4 5 6
 mul:50  7 8 9 10
@@ -49,16 +49,16 @@ mul:50  7 8 9 10
 input#.in
 output#.out
 </code></pre></div>
-            原有的第一行改为若干行（空白行将被忽略），每行表示一个子任务，冒号前面为评分方式，后面为该子任务的总分数，之后若干个整数表示测试点编号。支持的评分方式有：
+            Blank lines in the file will be ignored.Each line of the first few lines describes a sub-task.The format is like <code>WAY:SCORE CASE0 CASE1...</code> and the WAY is one of below:
             <ul>
-                <li><code>sum</code>：测试点分数按百分比相加；</li>
-                <li><code>mul</code>：测试点分数按百分比相乘；</li>
-                <li><code>min</code>：取各测试点最低分；</li>
+                <li><code>sum</code>: the total score will be the average value of all the subtasks.</li>
+                <li><code>mul</code>: the total score will be the product of all the subtasks.</li>
+                <li><code>min</code>: the total score will be the mininum value of all the subtasks.</li>
             </ul>
-            <p>注意：<span><code>zip</code> 包内<strong>没有</strong>一层文件夹，直接是上述文件。如果不希望将数据打包，可以通过题目页面的「测试数据」按钮进入测试数据文件上传的页面。</span>
+            <p>Notice: <span>All the sub-folders in the <code>zip</code> package will be ignored.</span>
             </p>
-            <p>如果没有 <code>data_rule.txt</code>，则评测系统会自动将 <code>.in</code> 文件与同名的 <code>.out</code> 或 <code>.ans</code> 匹配。</p>
-            <p>如果需要配置提交答案题目的数据，请添加额外的一行，表示用户提交的文件名：</p>
+            <p>If there is no <code>data_rule.txt</code>, the judge system will match <code>x.in</code> with <code>x.out/ans</code> .</p>
+            <p>If the testdata is for a submit-answer problem then add a line describes the user's file, like this:</p>
             <div class="ui existing segment" style="border-radius: 0.285714rem; font-size: 14px;"><pre style="margin-top: 0px; margin-bottom: 0px;"><code>sum:30  1 2 3
 min:20  4 5 6
 mul:50  7 8 9 10
@@ -68,11 +68,11 @@ output#.out
 submit#.out
 </code></pre></div>
             <h3 class="ui header">Special Judge</h3>
-            <p>如果需要使用 Special Judge 评分，请在数据包中添加 <code>spj_LANG.xxx</code>，其中 <code>xxx</code> 为任意后缀名，<code>LANG</code> 为所用语言的简称，可为 <code>c</code>、<code>cpp</code>、<code>cpp11</code>、<code>java</code>、<code>nodejs</code>。</p>
-            <p>Special Judge 程序运行时，其目录下会有四个文件 <code>input</code>、<code>user_out</code>、<code>answer</code>、<code>code</code>，分别对应该测试点的输入文件、用户输出、该测试点的输出文件、用户的代码（对于非提交答案题目）。</p>
-            <p>Special Judge 程序运行完成后，应将该测试点的得分输出到<strong>标准输出</strong>（<code>stdout</code>）中（范围为 0 到 100，将自动折合为测试点分数），并将提供给用户的额外信息输出到<strong>标准错误输出</strong>（<code>stderr</code>）中。</p>
+            <p>If you need Special Judge, please add a <code>spj_LANG.xxx</code> file.<code>LANG</code> is the language of the spj program, which can be <code>c</code>, <code>cpp</code>, <code>cpp11</code>, <code>java</code> and <code>nodejs</code>.</p>
+            <p>When Special Judge Program is running, there will be four files in the working directory: <code>input(input file)</code>, <code>user_out(user output file)</code>, <code>answer(standard output file)</code>, <code>code(source file, NO IN SUBMIT-ANSWER PROBLEMS)</code>.</p>
+            <p>Special Judge should output a score to <code>stdout</code> , between 0 and 100. System will turn it into real score automaticlly. The prompt text should be output to <code>stderr</code>.</p>
             <h2 class="ui header">Markdown</h2>
-            <p>凡是出现<i class="mega-octicon octicon-markdown"></i>图标的地方，均可以使用Markdown语法。</p>
+            <p>If there are <i class="mega-octicon octicon-markdown"></i> icon, you can use Markdown.</p>
         </div>
     </div>
 </div>

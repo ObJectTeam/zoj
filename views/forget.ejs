@@ -1,4 +1,4 @@
-<% this.title = '忘记密码' %>
+<% this.title = 'Forget the Password' %>
     <% this.noPreserveUrl = true; %>
         <% include header %>
             <div class="ui message" id="msgBox" hidden>
@@ -9,7 +9,7 @@
                     <div class="column" style="max-width: 450px">
                         <h2 class="ui image header">
                             <div class="content">
-                                忘记密码
+                                Forget the Password
                             </div>
                         </h2>
                         <form class="ui large form" id="forgetForm">
@@ -17,10 +17,10 @@
                                 <div class="field">
                                     <div class="ui left icon input">
                                         <i class="at icon"></i>
-                                        <input name="email" placeholder="电子邮件地址" type="text" id="email">
+                                        <input name="email" placeholder="Email" type="text" id="email">
                                     </div>
                                 </div>
-                                <button type="submit" class="ui fluid large submit button" id="sendEmail">找回密码</div>
+                                <button type="submit" class="ui fluid large submit button" id="sendEmail">Retrieve the Password</div>
                     </div>
                     </form>
                 </div>
@@ -34,7 +34,7 @@
                 }
                 function submitForm() {
                     $("#sendEmail").fadeOut(0);
-                    showMessage("positive", "系统正在处理，请稍候");
+                    showMessage("positive", "The system is processing,please wait...");
                     $.ajax({
                         url: "/api/forget",
                         type: 'POST',
@@ -47,13 +47,13 @@
                             error_code = data.error_code;
                             switch (error_code) {
                                 case 1:
-                                    showMessage("positive", "找回密码邮件已经发至你电子邮箱。");
+                                    showMessage("positive", "Retrieve password email has been sent to your email!");
                                     break;
                                 case 1001:
-                                    showMessage("error", "用户不存在");
+                                    showMessage("error", "This user does not exist!");
                                     break;
                                 default:
-                                    showMessage("error", "未知错误" + error_code);
+                                    showMessage("error", "Unknown error!" + error_code);
                                     break;
                             }
                             $("#sendEmail").fadeIn(0);

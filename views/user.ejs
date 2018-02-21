@@ -1,4 +1,4 @@
-<% this.title = show_user.username + ' - 用户'; %>
+<% this.title = show_user.username + ' - User'; %>
 <% include header %>
 <style>
 #avatar_container:before {
@@ -17,9 +17,11 @@ padding-top: 100%;
 <div class="content">
 <div class="center">
 <% if (show_user.allowedEdit) { %>
-<a class="ui inverted button" href="<%= zoj.utils.makeUrl(['user', show_user.id, 'edit']) %>"><i class="edit icon"></i>修改资料</a>
+<a class="ui inverted button" href="<%= zoj.utils.makeUrl(['user', show_user.id, 'edit']) %>"><i class="edit icon"></i>Modify Information</a>
+<br>
+<br>
 <% } %>
-<a class="ui button" href="<%= zoj.utils.makeUrl(['blogs', show_user.id]) %>"><i class="coffee icon"></i>访问博客</a>
+<a class="ui button" href="<%= zoj.utils.makeUrl(['blogs', show_user.id]) %>"><i class="coffee icon"></i>Visit Blog</a>
 </div>
 </div>
 </div>
@@ -42,7 +44,7 @@ padding-top: 100%;
 </div>
 </div>
 <div class="extra content">
-<a><i class="check icon"></i>通过<%= show_user.ac_problems.length %> 题</a>
+<a><i class="check icon"></i>AC Count:<%= show_user.ac_problems.length %></a>
 <a><i class="star icon"></i>Rating<%= show_user.rating %></a>
 </div>
 </div>
@@ -56,7 +58,7 @@ padding-top: 100%;
 <div class="ui grid">
 <div class="row">
 <div class="column">
-<h4 class="ui top attached block header">用户名</h4>
+<h4 class="ui top attached block header">User Name</h4>
 <div class="ui bottom attached segment">
 <%= show_user.username %>
 <% if (show_user.nameplate) { %>
@@ -77,7 +79,7 @@ padding-top: 100%;
 <% } %>
 <div class="row">
 <div class="column">
-<h4 class="ui top attached block header">个性签名</h4>
+<h4 class="ui top attached block header">Nick Name</h4>
 <div class="ui bottom attached segment" class="font-content">
 <%- show_user.information %>
 </div>
@@ -85,7 +87,7 @@ padding-top: 100%;
 </div>
 <div class="row">
 <div class="column">
-<h4 class="ui top attached block header">注册于</h4>
+<h4 class="ui top attached block header">Registered At</h4>
 <div class="ui bottom attached segment" class="font-content">
 <%= zoj.utils.formatDate(show_user.register_time) %>
 </div>
@@ -93,7 +95,7 @@ padding-top: 100%;
 </div>
 <div class="row">
 <div class="column">
-<h4 class="ui top attached block header">通过的题目</h4>
+<h4 class="ui top attached block header">Accepted Problems</h4>
 <div class="ui bottom attached segment">
 <% for (let problem of show_user.ac_problems) { %>
 <a href="<%= zoj.utils.makeUrl(['problem', problem]) %>">
@@ -109,7 +111,7 @@ padding-top: 100%;
 <div class="ui grid">
 <div class="row">
 <div class="column">
-<h4 class="ui top attached block header">统计</h4>
+<h4 class="ui top attached block header">Statistics</h4>
 <div class="ui bottom attached segment">
 <div id="pie_chart_legend"></div>
 <div style="width: 260px; height: 260px; margin-left: 33.5px; ">
@@ -126,15 +128,15 @@ padding-top: 100%;
 </div>
 <div class="row">
 <div class="column">
-<h4 class="ui top attached block header">帖子</h4>
+<h4 class="ui top attached block header">Articles</h4>
 <div class="ui bottom attached <% if (!show_user.articles.length) { %>center aligned <% } %>segment">
-<% if (!show_user.articles.length) { %>该用户从未发表帖子
+<% if (!show_user.articles.length) { %>This user has never posted a article.
 <% } else { %>
 <table class="ui very basic table">
 <thead>
 <tr>
-<th>标题</th>
-<th>时间</th>
+<th>Title</th>
+<th>Time</th>
 </tr>
 </thead>
 <tbody>
@@ -158,13 +160,13 @@ padding-top: 100%;
 </div>
 <div class="row">
 <div class="column">
-<h4 class="ui top attached block header">比赛</h4>
+<h4 class="ui top attached block header">Contests</h4>
 <div class="ui bottom attached segment">
 <table class="ui very basic table">
 <thead>
 <tr>
-<th>比赛</th>
-<th>名次</th>
+<th>Contest</th>
+<th>Ranking</th>
 <th>Rating</th>
 </tr>
 </thead>

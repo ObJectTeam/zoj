@@ -2,9 +2,9 @@
 <%
 if (typeof contest === 'undefined') contest = null;
 if (contest) {
-  this.title = this.alpha(pid) + '. ' + zoj.utils.removeTitleTag(problem.title) + ' - ' + contest.title + ' - 比赛';
+  this.title = this.alpha(pid) + '. ' + zoj.utils.removeTitleTag(problem.title) + ' - ' + contest.title + ' - Contest';
 } else {
-  this.title = problem.title + ' - 题目';
+  this.title = problem.title + ' - Problem';
 }
 %>
 <% include header %>
@@ -36,39 +36,39 @@ div[class*=ace_br] {
     </div>
     <% if (problem.type !== 'submit-answer') { %>
       <div class="row" style="margin-top: -15px">
-          <span class="ui label">内存限制：<%= problem.memory_limit %> MiB</span>
-          <span class="ui label">时间限制：<%= problem.time_limit %> ms</span>
+          <span class="ui label">Memory Limit：<%= problem.memory_limit %> MiB</span>
+          <span class="ui label">Time Limit：<%= problem.time_limit %> ms</span>
           <% if (problem.type === 'interaction') { %>
-            <span class="ui label">题目类型：交互</span>
+            <span class="ui label">Problem Type：Interaction</span>
           <% } else if (problem.file_io) { %>
-            <span class="ui label">输入文件: <%= problem.file_io_input_name %></span>
-            <span class="ui label">输出文件: <%= problem.file_io_output_name %></span>
+            <span class="ui label">Input File: <%= problem.file_io_input_name %></span>
+            <span class="ui label">Output File: <%= problem.file_io_output_name %></span>
           <% } else { %>
-            <span class="ui label">标准输入输出</span>
+            <span class="ui label">Standard IO</span>
           <% } %>
       </div>
     <% } %>
     <% if (problem.type !== 'interaction') { %>
       <div class="row" style="margin-top: -<%= problem.type === 'submit-answer' ? 15 : 23 %>px">
-          <span class="ui label">题目类型：<%= { 'submit-answer': '答案提交', 'interaction': '交互', 'traditional': '传统' }[problem.type] %></span>
-          <span class="ui label">评测方式：<%= (testcases && !testcases.error) ? (testcases.spj ? 'Special Judge' : '文本比较') : '无测试数据' %></span>
+          <span class="ui label">Problem Type：<%= { 'submit-answer': 'Submit Answer', 'interaction': 'Interaction', 'traditional': 'Traditional' }[problem.type] %></span>
+          <span class="ui label">Testcases：<%= (testcases && !testcases.error) ? (testcases.spj ? 'Special Judge' : 'Compare Texts') : 'No Testdata' %></span>
       </div>
     <% } %>
     <% if (!contest) { %>
         <div class="row" style="margin-top: -23px">
-            <span class="ui label">上传者：
+            <span class="ui label">Uploaded by：
             <% if (problem.is_anonymous && !problem.allowedManage) { %>
-              匿名
+              Anonymous
             <% } else { %>
               <a href="<%= zoj.utils.makeUrl(['user', problem.user_id]) %>"><%= problem.user.username %></a>
             <% } %>
             </span>
             <% if (problem.allowedManage) { %>
-                <span class="ui label">公开者：
+                <span class="ui label">Published by:
                 <% if (problem.publicizer) { %>
                   <a href="<%= zoj.utils.makeUrl(['user', problem.publicizer_id]) %>"><%= problem.publicizer.username %></a>
                 <% } else { %>
-                  未知
+                  Unknown
                 <% } %>
                 </span>
             <% } %>
@@ -81,72 +81,72 @@ div[class*=ace_br] {
       <div class="ui buttons">
         <% if (typeof contest !== 'undefined' && contest) { %>
           <% if (!contest.ended) { %>
-            <a class="small ui primary button" href="#submit_code">提交</a>
+            <a class="small ui primary button" href="#submit_code">Submit</a>
           <% } else { %>
-            <a class="small ui primary button" href="<%= zoj.utils.makeUrl(['problem', problem.id]) %>">转到题库</a>
+            <a class="small ui primary button" href="<%= zoj.utils.makeUrl(['problem', problem.id]) %>">Go to Problems</a>
           <% } %>
-          <a class="small ui positive button" href="<%= zoj.utils.makeUrl(['contest', contest.id, 'submissions'], { problem_id: pid }) %>">提交记录</a>
+          <a class="small ui positive button" href="<%= zoj.utils.makeUrl(['contest', contest.id, 'submissions'], { problem_id: pid }) %>">Submissions</a>
           <% if (problem.additional_file) { %>
-            <a class="small ui teal button" href="<%= zoj.utils.makeUrl(['contest', contest.id, pid, 'download', 'additional_file']) %>">附加文件</a>
+            <a class="small ui teal button" href="<%= zoj.utils.makeUrl(['contest', contest.id, pid, 'download', 'additional_file']) %>">Additional Files</a>
           <% } %>
-          <a href="<%= zoj.utils.makeUrl(['contest', contest.id]) %>" class="ui orange button">返回比赛</a>
+          <a href="<%= zoj.utils.makeUrl(['contest', contest.id]) %>" class="ui orange button">Return to the Contest</a>
         <% } else { %>
           <% if (testcases && !testcases.error) { %>
-            <a class="small ui primary button" href="#submit_code">提交</a>
+            <a class="small ui primary button" href="#submit_code">Submit</a>
           <% } %>
-          <a class="small ui positive button" href="<%= zoj.utils.makeUrl(['submissions'], { problem_id: problem.id }) %>">提交记录</a>
-          <a class="small ui orange button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'statistics', problem.type === 'submit-answer' ? 'min' : 'fastest']) %>">统计</a>
+          <a class="small ui positive button" href="<%= zoj.utils.makeUrl(['submissions'], { problem_id: problem.id }) %>">Submissions</a>
+          <a class="small ui orange button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'statistics', problem.type === 'submit-answer' ? 'min' : 'fastest']) %>">Statistics</a>
           <a class="small ui brown button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'discussion']) %>" style="position: relative; ">
-            讨论
+            Discussion
             <% if (discussionCount) { %>
               <div class="floating ui red tiny circular label"><%= discussionCount %></div>
             <% } %>
           </a>
-          <a class="small ui yellow button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'testdata']) %>">测试数据</a>
+          <a class="small ui yellow button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'testdata']) %>">Testdata</a>
           <% if (problem.additional_file) { %>
-            <a class="small ui teal button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'download', 'additional_file']) %>">附加文件</a>
+            <a class="small ui teal button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'download', 'additional_file']) %>">Additional Files</a>
           <% } %>
         <% } %>
       </div>
       <% if (!contest) { %>
         <div class="ui buttons right floated">
           <% if (problem.allowedEdit) { %>
-            <a class="small ui button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'edit']) %>">编辑</a>
-            <a class="small ui button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'manage']) %>">管理</a>
+            <a class="small ui button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'edit']) %>">Edit</a>
+            <a class="small ui button" href="<%= zoj.utils.makeUrl(['problem', problem.id, 'manage']) %>">Manage</a>
           <% } %>
           <% if (problem.allowedManage) { %>
             <% if (problem.is_public) {  %>
-              <a class="small ui button" id="dis_public" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'dis_public']) %>">取消公开</a>
+              <a class="small ui button" id="dis_public" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'dis_public']) %>">Unpublish</a>
             <% } else { %>
-              <a class="small ui button" id="public" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'public']) %>">公开</a>
+              <a class="small ui button" id="public" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'public']) %>">Publish</a>
             <% } %>
             <% if (problem.is_protected) {  %>
-              <a class="small ui button" id="dis_public" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'dis_protect']) %>">取消权限</a>
+              <a class="small ui button" id="dis_public" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'dis_protect']) %>">Unprotect</a>
             <% } else { %>
-              <a class="small ui button" id="public" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'protect']) %>">权限</a>
+              <a class="small ui button" id="public" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'protect']) %>">Protect</a>
             <% } %>
             <div class="ui basic modal" id="modal-delete">
               <div class="ui icon header">
                 <i class="trash icon"></i>
-                <p style="margin-top: 15px; ">删除题目</p>
+                <p style="margin-top: 15px; ">Delete this Problem</p>
               </div>
               <div class="content" style="text-align: center; ">
-                <p>确认删除此题目吗？提交记录、讨论以及测试数据将一并删除。<br>
-                删除题目导致的修改用户提交、通过数量可能会耗费一些时间。</p>
-                <b>警告：删除比赛中的题目会导致系统错乱！请确认没有比赛使用此题目。</b>
+                <p>Are you sure to delete this problem? Submissions,discussions and test data will be deleted.<br>
+                  Delete the problem may take some time to modify the user submissions and the accepted number.</p>
+                <b>WARNING: Deleting a problem from a contest can cause system confusion! Please confirm that there is no contest that have this problem.</b>
               </div>
               <div class="actions">
                 <div class="ui red basic cancel inverted button">
                   <i class="remove icon"></i>
-                  否
+                  No
                 </div>
                 <a class="ui green ok inverted button" href-post="<%= zoj.utils.makeUrl(['problem', problem.id, 'delete']) %>">
                   <i class="checkmark icon"></i>
-                  是
+                  Yes
                 </a>
               </div>
             </div>
-            <div class="small ui red button" onclick="$('#modal-delete').modal('show')">删除</div>
+            <div class="small ui red button" onclick="$('#modal-delete').modal('show')">Delete</div>
           <% } %>
         </div>
       <% } %>
@@ -155,7 +155,7 @@ div[class*=ace_br] {
   <% if (problem.description) { %>
   <div class="row">
     <div class="column">
-      <h4 class="ui top attached block header">题目描述</h4>
+      <h4 class="ui top attached block header">Problem Description</h4>
       <div class="ui bottom attached segment font-content"><%- problem.description %></div>
     </div>
   </div>
@@ -163,7 +163,7 @@ div[class*=ace_br] {
   <% if (problem.input_format) { %>
   <div class="row">
     <div class="column">
-        <h4 class="ui top attached block header">输入格式</h4>
+        <h4 class="ui top attached block header">Input</h4>
         <div class="ui bottom attached segment font-content"><%- problem.input_format %></div>
     </div>
   </div>
@@ -171,7 +171,7 @@ div[class*=ace_br] {
   <% if (problem.output_format) { %>
     <div class="row">
         <div class="column">
-          <h4 class="ui top attached block header">输出格式</h4>
+          <h4 class="ui top attached block header">Output</h4>
           <div class="ui bottom attached segment font-content"><%- problem.output_format %></div>
         </div>
     </div>
@@ -179,7 +179,7 @@ div[class*=ace_br] {
   <% if (problem.example) { %>
     <div class="row">
         <div class="column">
-          <h4 class="ui top attached block header">样例</h4>
+          <h4 class="ui top attached block header">Example</h4>
           <div class="ui bottom attached segment font-content"><%- problem.example %></div>
         </div>
     </div>
@@ -187,7 +187,7 @@ div[class*=ace_br] {
   <% if (problem.limit_and_hint) { %>
     <div class="row">
         <div class="column">
-          <h4 class="ui top attached block header">数据范围与提示</h4>
+          <h4 class="ui top attached block header">Testdata Range and Tips</h4>
           <div class="ui bottom attached segment font-content"><%- problem.limit_and_hint %></div>
         </div>
     </div>
@@ -195,7 +195,7 @@ div[class*=ace_br] {
   <% if (problem.tags && problem.tags.length && (typeof contest === 'undefined' || !contest)) { %>
     <div class="row">
       <div class="column">
-        <h4 class="ui block header" id="show_tag_title_div" style="margin-bottom: 0; margin-left: -1px; margin-right: -1px; "><a href="#" id="show_tag_button" style="color: #000; ">显示分类标签</a></h4>
+        <h4 class="ui block header" id="show_tag_title_div" style="margin-bottom: 0; margin-left: -1px; margin-right: -1px; "><a href="#" id="show_tag_button" style="color: #000; ">Show Tags</a></h4>
         <div class="ui bottom attached segment" style="display: none; " id="show_tag_div">
           <% for (let tag of problem.tags) { %>
             <a href="<%= zoj.utils.makeUrl(['problems', 'tag', tag.id]) %>" class="ui medium <%= tag.color %> label">
@@ -211,7 +211,7 @@ div[class*=ace_br] {
         e.preventDefault();
         $('#show_tag_title_div').addClass('top');
         $('#show_tag_title_div').addClass('top attached');
-        $('#show_tag_title_div').text('分类标签');
+        $('#show_tag_title_div').text('Tags');
         $('#show_tag_div').css('display', '');
       })
     });
@@ -305,7 +305,7 @@ div[class*=ace_br] {
                 <div class="inline fields" style="width: 100%; ">
               </div>
               </div>
-              <div class="ui center aligned vertical segment" style="padding-bottom: 0; "><button id="submit" type="submit" class="ui button">提交</button></div>
+              <div class="ui center aligned vertical segment" style="padding-bottom: 0; "><button id="submit" type="submit" class="ui button">Submit</button></div>
             <% } else { %>
               <input name="language" type="hidden" id="form">
               <input name="code" type="hidden">
@@ -333,7 +333,7 @@ div[class*=ace_br] {
               </div>
               </div>
               <div class="ui center aligned vertical segment" style="padding-bottom: 0; ">
-                <button id="submit" type="submit" class="ui button">提交</button>
+                <button id="submit" type="submit" class="ui button">Submit</button>
               </div>
             <% } %>
           </form>

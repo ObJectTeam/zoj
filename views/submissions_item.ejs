@@ -24,7 +24,7 @@ textFit(e, { maxFontSize: 14 });
     <% if (judge.allowedSeeCode) { %>
       <td><a href="<%= zoj.utils.makeUrl(['submission', judge.id]) %>"><%= zoj.config.languages[judge.language].show %></a> / <%= zoj.utils.formatSize(judge.code.length) %></td>
     <% } else { %>
-      <td><a href="<%= zoj.utils.makeUrl(['submission', judge.id]) %>"><%= zoj.config.languages[judge.language].show %></a> / 隐藏</td>
+      <td><a href="<%= zoj.utils.makeUrl(['submission', judge.id]) %>"><%= zoj.config.languages[judge.language].show %></a> / Hide</td>
     <% } %>
   <% } else { %>
     <td>-</td><td>-</td>

@@ -1,4 +1,4 @@
-<% this.title = '重设密码';  %>
+<% this.title = 'Reset the Password';  %>
     <% this.noPreserveUrl = true; %>
         <% include header %>
             <div class="ui message" id="msgBox" hidden>
@@ -9,7 +9,7 @@
                     <div class="column" style="max-width: 450px">
                         <h2 class="ui image header">
                             <div class="content">
-                                重设密码
+                                Reset the Password
                             </div>
                         </h2>
                         <form class="ui large form" id="resetForm">
@@ -17,16 +17,16 @@
                                 <div class="field">
                                     <div class="ui left icon input">
                                         <i class="lock icon"></i>
-                                        <input type="password" placeholder="密码" id="password1">
+                                        <input type="password" placeholder="Password" id="password1">
                                     </div>
                                 </div>
                                 <div class="field">
                                     <div class="ui left icon input">
                                         <i class="undo icon"></i>
-                                        <input type="password" placeholder="确认密码" id="password2">
+                                        <input type="password" placeholder="Repeat the Password" id="password2">
                                     </div>
                                 </div>
-                                <button type="submit" class="ui fluid large submit button" id="resetPassword">重设</div>
+                                <button type="submit" class="ui fluid large submit button" id="resetPassword">Reset</div>
                     </div>
                     </form>
                 </div>
@@ -41,16 +41,16 @@
                 }
                 function submitForm() {
                     if ($("#password1").val() != $("#password2").val()) {
-                        showMessage("error", "两次输入的密码不一致");
+                        showMessage("error", "The two passwords are not the same!");
                         return;
                     }
                     if ($("#password1").val().length < 6) {
-                        showMessage("error", "密码长度过短");
+                        showMessage("error", "The password is too short!");
                         return;
                     }
                     password = md5($("#password1").val());
                     $("#resetPassword").fadeOut(0);
-                    showMessage("positive", "系统正在处理，请稍候");
+                    showMessage("positive", "The system is processing,please wait...");
                     $.ajax({
                         url: "/api/reset_password",
                         type: 'POST',
@@ -64,10 +64,10 @@
                             error_code = data.error_code;
                             switch (error_code) {
                                 case 1:
-                                    showMessage("positive", "密码重置成功。");
+                                    showMessage("positive", "Reset successfully!");
                                     break;
                                 default:
-                                    showMessage("error", "未知错误 " + error_code);
+                                    showMessage("error", "Unknown error!" + error_code);
                                     break;
                             }
                             $("#resetPassword").fadeIn(0);

@@ -66,7 +66,7 @@ class File extends Model {
 
 		let buf = await fs.readFileAsync(path);
 
-		if (!noLimit && buf.length > zoj.config.limit.data_size) throw new ErrorMessage('数据包太大。');
+		if (!noLimit && buf.length > zoj.config.limit.data_size) throw new ErrorMessage('The data package is too large.');
 
 		try {
 			let p7zip = new (require('node-7z'));
@@ -106,7 +106,7 @@ class File extends Model {
 			}
 		}
 
-		if (this.unzipSize === null) throw new ErrorMessage('无效的 ZIP 文件。');
+		if (this.unzipSize === null) throw new ErrorMessage('Invaild ZIP file.');
 		else return this.unzipSize;
 	}
 
