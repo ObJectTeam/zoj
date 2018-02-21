@@ -8,10 +8,6 @@
       </div>
       <div class="ui bottom attached tab segment active" data-tab="edit">
         <div class="field">
-          <!-- DEBUG -->
-          <% for (let tag of post.tags) { %>
-            <%= tag.id %> <%= tag.name %> <br>
-          <% } %>
           <label for="title">Title</label>
           <input class="font-content" type="text" id="title" name="title" value="<%= post.title %>">
           <label for="title">From</label>
