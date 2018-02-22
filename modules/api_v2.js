@@ -90,6 +90,26 @@ app.get('/api/v2/search/tags/:keyword*?', async (req, res) => {
 	}
 });
 
+app.get('/api/v2/search/post_tags/:keyword*?', async (req, res) => {
+	try {
+		let Post = zoj.model('blog_post');
+		let PostTag = zoj.model('blog_post_tag');
+
+		let keyword = req.params.keyword || '';
+		let tags = await PostTag.query(null, {
+			name: { like: `%${req.params.keyword}%` }
+		}, [['name', 'asc']]);
+
+		let result = tags.slice(0, zoj.config.page.edit_problem_tag_list);
+
+		result = result.map(x => ({ name: x.name, value: x.id }));
+		res.send({ success: true, results: result });
+	} catch (e) {
+		zoj.log(e);
+		res.send({ success: false });
+	}
+});
+
 app.apiRouter.post('/api/v2/markdown', async (req, res) => {
 	try {
 		let s = await zoj.utils.markdown(req.body.s.toString(), null, req.body.noReplaceUI === 'true');

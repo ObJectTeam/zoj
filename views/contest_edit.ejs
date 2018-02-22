@@ -14,11 +14,8 @@
           <label>Problem List</label>
           <select class="ui fluid search dropdown" multiple="" id="search_problems" name="problems">
             <% for (let problem of problems) { %>
-              <option value="<%= problem.id %>" selected>#
-                <%= problem.id %>.
-                  <%= problem.title %>
-              </option>
-              <% } %>
+              <option value="<%= problem.id %>" selected>#<%= problem.id %>.<%= problem.title %></option>
+            <% } %>
           </select>
         </div>
         <div class="inline fields">
@@ -52,7 +49,9 @@
           </div>
         </div>
         <div class="field">
-          <label>Contest Bulletins<i class="mega-octicon octicon-markdown"></i></label>
+          <label>Contest Bulletins
+            <i class="mega-octicon octicon-markdown"></i>
+          </label>
           <textarea class="" rows="5" id="doc-ta-1" name="information" class="font-content"><%= contest.information %></textarea>
         </div>
         <div class="field">
