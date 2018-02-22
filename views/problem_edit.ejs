@@ -43,14 +43,12 @@
               <option value="<%= tag.id %>" selected><%= tag.name %></option>
             <% } %>
           </select>
-          <lable style="margin-top: 15px; "><!--Wait for change-->
-            Original Tags:<br>
-            <% for (let tag of problem.tags) { %>
-              <a class="ui medium <%= tag.color %> label">
-                <%= tag.name %>
-              </a>
-            <% } %>
-          </lable><!--Wait for change-->
+
+          <% for (let tag of problem.tags) { %>
+             <a class="ui label transition visible" data-value="<%= tag.id %>"> 
+              <%= tag.name %>
+             </a>
+          <% } %>
           <br>
           <div class="ui <% if (problem.is_anonymous) { %>checked <% } %>checkbox" style="margin-top: 15px; ">
             <input <% if (problem.is_anonymous) { %>checked=""<% } %> name="is_anonymous" type="checkbox">
