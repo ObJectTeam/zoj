@@ -1,5 +1,5 @@
 /*!
- * # Semantic UI 2.2.14 - Modal
+ * # Semantic UI 2.2.9 - Modal
  * http://github.com/semantic-org/semantic-ui/
  *
  *
@@ -22,8 +22,7 @@
   text-align: left;
   background: #FFFFFF;
   border: none;
-  -webkit-box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.2), 1px 3px 15px 2px rgba(0, 0, 0, 0.2);
-          box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.2), 1px 3px 15px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.2), 1px 3px 15px 2px rgba(0, 0, 0, 0.2);
   -webkit-transform-origin: 50% 25%;
           transform-origin: 50% 25%;
   border-radius: 0.28571429rem;
@@ -80,8 +79,7 @@
   background: #FFFFFF;
   margin: 0em;
   padding: 1.25rem 1.5rem;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
   color: rgba(0, 0, 0, 0.85);
   border-bottom: 1px solid rgba(34, 36, 38, 0.15);
 }
@@ -121,18 +119,22 @@
           flex: 0 1 auto;
   width: '';
   -ms-flex-item-align: top;
+      -ms-grid-row-align: top;
       align-self: top;
 }
 .ui.modal > [class*="top aligned"] {
   -ms-flex-item-align: top;
+      -ms-grid-row-align: top;
       align-self: top;
 }
 .ui.modal > [class*="middle aligned"] {
   -ms-flex-item-align: middle;
+      -ms-grid-row-align: middle;
       align-self: middle;
 }
 .ui.modal > [class*="stretched"] {
   -ms-flex-item-align: stretch;
+      -ms-grid-row-align: stretch;
       align-self: stretch;
 }
 
@@ -144,6 +146,7 @@
           flex: 1 0 auto;
   min-width: 0px;
   -ms-flex-item-align: top;
+      -ms-grid-row-align: top;
       align-self: top;
 }
 .ui.modal > .content > .icon + .description,
@@ -265,8 +268,7 @@
     width: 100% !important;
     margin: 0em !important;
     padding: 1rem 0rem !important;
-    -webkit-box-shadow: none;
-            box-shadow: none;
+    box-shadow: none;
   }
   
 /* Let Buttons Stack */
@@ -284,8 +286,7 @@
 ---------------*/
 
 .ui.inverted.dimmer > .ui.modal {
-  -webkit-box-shadow: 1px 3px 10px 2px rgba(0, 0, 0, 0.2);
-          box-shadow: 1px 3px 10px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 3px 10px 2px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -297,8 +298,7 @@
   background-color: transparent;
   border: none;
   border-radius: 0em;
-  -webkit-box-shadow: none !important;
-          box-shadow: none !important;
+  box-shadow: none !important;
   color: #FFFFFF;
 }
 .ui.basic.modal > .header,
@@ -332,11 +332,6 @@
              States
 *******************************/
 
-.ui.loading.modal {
-  display: block;
-  visibility: hidden;
-  z-index: -1;
-}
 .ui.active.modal {
   display: block;
 }
@@ -364,9 +359,7 @@
   position: fixed;
 }
 .modals.dimmer .ui.scrolling.modal {
-  position: relative !important;
-  left: auto !important;
-  top: auto !important;
+  position: static !important;
   margin: 3.5rem auto !important;
 }
 
@@ -393,12 +386,6 @@
     margin-top: 1rem !important;
     margin-bottom: 1rem !important;
   }
-}
-
-/* Scrolling Content */
-.ui.modal .scrolling.content {
-  max-height: calc(70vh);
-  overflow: auto;
 }
 
 /*--------------
@@ -428,80 +415,6 @@
 
 .ui.modal {
   font-size: 1rem;
-}
-
-/* Mini */
-.ui.mini.modal > .header:not(.ui) {
-  font-size: 1.3em;
-}
-
-/* Mini Modal Width */
-@media only screen and (max-width: 767px) {
-  .ui.mini.modal {
-    width: 95%;
-    margin: 0em 0em 0em -47.5%;
-  }
-}
-@media only screen and (min-width: 768px) {
-  .ui.mini.modal {
-    width: 35.2%;
-    margin: 0em 0em 0em -17.6%;
-  }
-}
-@media only screen and (min-width: 992px) {
-  .ui.mini.modal {
-    width: 340px;
-    margin: 0em 0em 0em -170px;
-  }
-}
-@media only screen and (min-width: 1200px) {
-  .ui.mini.modal {
-    width: 360px;
-    margin: 0em 0em 0em -180px;
-  }
-}
-@media only screen and (min-width: 1920px) {
-  .ui.mini.modal {
-    width: 380px;
-    margin: 0em 0em 0em -190px;
-  }
-}
-
-/* mini */
-.ui.small.modal > .header:not(.ui) {
-  font-size: 1.3em;
-}
-
-/* Tiny Modal Width */
-@media only screen and (max-width: 767px) {
-  .ui.tiny.modal {
-    width: 95%;
-    margin: 0em 0em 0em -47.5%;
-  }
-}
-@media only screen and (min-width: 768px) {
-  .ui.tiny.modal {
-    width: 52.8%;
-    margin: 0em 0em 0em -26.4%;
-  }
-}
-@media only screen and (min-width: 992px) {
-  .ui.tiny.modal {
-    width: 510px;
-    margin: 0em 0em 0em -255px;
-  }
-}
-@media only screen and (min-width: 1200px) {
-  .ui.tiny.modal {
-    width: 540px;
-    margin: 0em 0em 0em -270px;
-  }
-}
-@media only screen and (min-width: 1920px) {
-  .ui.tiny.modal {
-    width: 570px;
-    margin: 0em 0em 0em -285px;
-  }
 }
 
 /* Small */

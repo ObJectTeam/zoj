@@ -48,7 +48,6 @@
 		"xss": "^0.3.3"
 	},
 	"devDependencies": {
-		"gulp": "^3.9.1",
-		"semantic-ui": "^2.2.14"
+		"gulp": "^3.9.1"
 	}
 }
