@@ -45,12 +45,13 @@
           </select>
           <lable style="margin-top: 15px; "><!--Wait for change-->
             Original Tags:<br>
-            <% for (let tag of post.tags) { %>
+            <% for (let tag of problem.tags) { %>
               <a class="ui medium <%= tag.color %> label">
                 <%= tag.name %>
               </a>
             <% } %>
           </lable><!--Wait for change-->
+          <br>
           <div class="ui <% if (problem.is_anonymous) { %>checked <% } %>checkbox" style="margin-top: 15px; ">
             <input <% if (problem.is_anonymous) { %>checked=""<% } %> name="is_anonymous" type="checkbox">
             <label><strong>Anonymous Upload</strong></label>
