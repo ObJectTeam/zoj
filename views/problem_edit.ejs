@@ -43,12 +43,13 @@
               <option value="<%= tag.id %>" selected><%= tag.name %></option>
             <% } %>
           </select>
+          <div class="ui segment" style="display: none">
           <% for (let tag of problem.tags) { %>
-             <a class="ui label transition visible" data-value="<%= tag.id %>"> 
+             <a class="ui large label transition visible" data-value="<%= tag.id %>"> 
               <%= tag.name %>
              </a>
           <% } %>
-          <br>
+          </div>
           <div class="ui <% if (problem.is_anonymous) { %>checked <% } %>checkbox" style="margin-top: 15px; ">
             <input <% if (problem.is_anonymous) { %>checked=""<% } %> name="is_anonymous" type="checkbox">
             <label><strong>Anonymous Upload</strong></label>
