@@ -43,7 +43,6 @@
               <option value="<%= tag.id %>" selected><%= tag.name %></option>
             <% } %>
           </select>
-
           <% for (let tag of problem.tags) { %>
              <a class="ui label transition visible" data-value="<%= tag.id %>"> 
               <%= tag.name %>
