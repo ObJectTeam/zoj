@@ -27,7 +27,7 @@
           <% } %>
           <label for="title">Problem Name</label>
           <input class="font-content" type="text" id="title" name="title" value="<%= problem.title %>">
-          <label style="margin-top: 15px; " for="description">Problem Description</label>
+          <label style="margin-top: 15px; " for="description">Description</label>
           <textarea class="font-content" rows="15" id="description" name="description"><%= problem.description %></textarea>
           <label style="margin-top: 15px; " for="input_format">Input</label>
           <textarea class="font-content" rows="10" id="input" name="input_format"><%= problem.input_format %></textarea>
@@ -35,7 +35,7 @@
           <textarea class="font-content" rows="10" id="output" name="output_format"><%= problem.output_format %></textarea>
           <label style="margin-top: 15px; ">Example</label>
           <textarea class="font-content" rows="15" id="example" name="example"><%= problem.example %></textarea>
-          <label style="margin-top: 15px; ">Testdata Range and Tips</label>
+          <label style="margin-top: 15px; ">Limits and Hints</label>
           <textarea class="font-content" rows="10" id="hint" name="limit_and_hint"><%= problem.limit_and_hint %></textarea>
           <label style="margin-top: 15px; ">Add Tags</label><!--Wait for change-->
           <select class="ui fluid search dropdown" multiple="" id="search_tags" name="tags">
@@ -61,7 +61,7 @@
       </div>
       <div class="ui bottom attached tab segment" data-tab="preview" id="preview">
         <h1 class="ui header problem_header" id="pv-title"></h1>
-        <h2 class="ui header">Problem Description</h2>
+        <h2 class="ui header">Description</h2>
         <div class="font-content" id="pv-description"></div>
         <h2 class="ui header">Input</h2>
         <div class="font-content" id="pv-input"></div>
@@ -69,7 +69,7 @@
         <div class="font-content" id="pv-output"></div>
         <h2 class="ui header">Example</h2>
         <div class="font-content" id="pv-example"></div>
-        <h2 class="ui header">Testdata Range and Tips</h2>
+        <h2 class="ui header">Limits and Hints</h2>
         <div class="font-content" id="pv-hint"></div>
       </div>
       <% if (problem.allowedEdit) { %>
