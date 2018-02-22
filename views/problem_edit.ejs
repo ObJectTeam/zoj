@@ -72,21 +72,9 @@
       </div>
       <% if (problem.allowedEdit) { %>
       <button type="submit" class="ui button">Submit</button>
-      <button class="small ui red button" onclick="TAG_CLEAR()">Clean All the Selections & Submit</button>
-      <!--Wait for change-->
       <% } %>
     </form>
 </div>
-<!--Wait for change-->
-<script type="text/javascript">
-  function TAG_CLEAR(){
-    alert("It will clean all of the problem's tags!!!");//wait for change
-    obj = document.getElementById("search_tags");
-    for(i=0;i<obj.length;++i){
-      obj[i].selected=false;
-    }
-  }
-</script>
 <script type="text/javascript">
 $(function () {
     function render(output, input) {
