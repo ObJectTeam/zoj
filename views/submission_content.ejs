@@ -93,7 +93,7 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
               </div>
               <div class="content" style="text-align: center; ">
                 <p>Are you sure to rejudge this submission?</p>
-                <p id="warning_pending"><strong>Warning: Only an administrator can re-evaluate an unfinished record, which usually occurs after the evaluation service is interrupted.<br>If a submission is being evaluated, re-evaluating it will cause system confusion!</strong></p>
+                <p id="warning_pending"><strong>Warning: Only an administrator can rejudge an unfinished submission, which usually occurs after the judge service is interrupted.<br>If a submission is being judged, rejudging it will cause system confusion!</strong></p>
                 <script>
                 var pending = <%= judge.pending %>;
                 function check_rejudge() {

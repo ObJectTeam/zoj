@@ -1,4 +1,4 @@
-<% this.title = 'Edit post'; %>
+<% this.title = 'Edit Article'; %>
 <% include header %>
 <div class="padding">
     <form class="ui form" method="post" action="<%= zoj.utils.makeUrl(['blog', req.params.id, 'edit']) %>">
@@ -16,12 +16,19 @@
           <input class="font-content" type="text" id="problem_id" name="problem_id" value="<%= post.problem_id %>">
           <label style="margin-top: 15px; " for="content">Content</label>
           <textarea class="font-content" rows="15" id="content" name="content"><%= post.content %></textarea>
-          <label style="margin-top: 15px; ">Tags</label>
+          <label style="margin-top: 15px; ">Add Tags</label>
           <select class="ui fluid search dropdown" multiple="" id="search_tags" name="tags">
             <% for (let tag of post.tags) { %>
               <option value="<%= tag.id %>" selected><%= tag.name %></option>
             <% } %>
           </select>
+          <div class="ui segment" style="display: none">
+          <% for (let tag of post.tags) { %>
+             <a class="ui large label transition visible" data-value="<%= tag.id %>"> 
+              <%= tag.name %>
+             </a>
+          <% } %>
+          </div>
         </div>
       </div>
       <div class="ui bottom attached tab segment" data-tab="preview" id="preview">

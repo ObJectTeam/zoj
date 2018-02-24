@@ -70,7 +70,7 @@ app.get('/api/v2/search/blogs/:keyword*?', async (req, res) => {
 	}
 });
 
-app.get('/api/v2/search/tags/:keyword*?', async (req, res) => {
+app.get('/api/v2/search/tags_problem/:keyword*?', async (req, res) => {
 	try {
 		let Problem = zoj.model('problem');
 		let ProblemTag = zoj.model('problem_tag');
@@ -90,13 +90,14 @@ app.get('/api/v2/search/tags/:keyword*?', async (req, res) => {
 	}
 });
 
-app.get('/api/v2/search/post_tags/:keyword*?', async (req, res) => {
+
+app.get('/api/v2/search/tags_blog_post/:keyword*?', async (req, res) => {
 	try {
-		let Post = zoj.model('blog_post');
-		let PostTag = zoj.model('blog_post_tag');
+		let Problem = zoj.model('blog_post');
+		let ProblemTag = zoj.model('blog_post_tag');
 
 		let keyword = req.params.keyword || '';
-		let tags = await PostTag.query(null, {
+		let tags = await ProblemTag.query(null, {
 			name: { like: `%${req.params.keyword}%` }
 		}, [['name', 'asc']]);
 
