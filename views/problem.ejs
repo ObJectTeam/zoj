@@ -30,7 +30,7 @@ div[class*=ace_br] {
         <% if (contest) { %>
           <%= this.alpha(pid) %>. <%= zoj.utils.removeTitleTag(problem.title) %>
         <% } else { %>
-          #<%= problem.id %>. <%= problem.title %><% if (problem.allowedEdit) { if (!problem.is_public) {%><span class="ui tiny red label">未公开</span><% } if(problem.is_protected) { %> <span class="ui tiny green label">权限</span> <% } } %>
+          #<%= problem.id %>. <%= problem.title %><% if (problem.allowedEdit) { if (!problem.is_public) {%><span class="ui tiny red label">Unpublished</span><% } if(problem.is_protected) { %> <span class="ui tiny green label">权限</span> <% } } %>
         <% } %>
       </h1>
     </div>
