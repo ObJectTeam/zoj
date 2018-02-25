@@ -83,7 +83,14 @@ function getColorOfScore(score) {
               <% if (problem.type !== 'submit-answer') { %>
                 <td><%= judge.result.total_time %> ms</td>
                 <td><%= parseInt(judge.result.max_memory) || 0 %> K</td>
-                <td><a href="<%= zoj.utils.makeUrl(['submission', judge.id]) %>"><%= zoj.config.languages[judge.language].show %></a> / <%= zoj.utils.formatSize(judge.code.length) %></td>
+                <td><a href="<%= zoj.utils.makeUrl(['submission', judge.id]) %>"><%= zoj.config.languages[judge.language].show %></a> /
+                  <% if (judge.allowedSeeCode) { %>
+                    <%= zoj.utils.formatSize(judge.code.length) %>
+                  <% } else { %>
+                    Hide
+                  <% } %>  
+                  
+                </td>
               <% } else { %>
                 <td><%= zoj.utils.formatSize(judge.max_memory) %></td>
               <% } %>
