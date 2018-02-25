@@ -118,27 +118,29 @@ class JudgeState extends Model {
 
 	async isAllowedSeeCodeBy(user) {
 		await this.loadRelationships();
-
-		if (user && user.id === this.problem.user_id) return true;
+		if (!user) return false;
+		if (user.admin >= 3) return true;
+		if (user.id === this.problem.user_id) return true;
+		if (user.id === this.user_id) return true;
 		// The user is the creator of the problem
-		else if (user && user.id === this.user_id) return true;
+		else if (user.id === this.user_id) return true;
 		// The user is the submitter
-		else if (this.type === 0) return this.problem.is_public || (user && (await user.admin >= 3));
+		else if (this.type === 0) {
+			this.problem.judge_state = await this.problem.getJudgeState(user);
+			if (!this.problem.judge_state) return false;
+			return (user && (await user.admin >= 3)) ||
+					this.problem.judge_state.result.status === 'Accepted';
+		}
 		// Normal submission
-		// 1. The problem is public
-		// 2. The user is teacher/system admin
+		// 1. The user is teacher/system admin
+		// 2. The user has accpted this problem
 		else if (this.type === 1) {
 			let contest = await Contest.fromID(this.type_info);
-			if (await contest.isRunning()) {
-				return (user && user.admin >= 3) || (user && user.id === contest.holder_id);
-			} else {
-				return true;
-			}
+			return (user && user.admin >= 3) || (user && user.id === contest.holder_id);
 		}
 		// Contest's submission
 		// 1. The user is the teacher/system admin
 		// 2. The user is the holder of the contest
-		// 3. The contest is not running
 	}
 
 	async isAllowedSeeCaseBy(user) {

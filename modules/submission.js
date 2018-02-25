@@ -80,7 +80,7 @@ app.get('/submissions/:ids/ajax', async (req, res) => {
 
 		for (let id of ids) {
 			let judge_state = await JudgeState.fromID(id);
-			if (!judge_state) throw new ErrorMessage('无此提交记录。');
+			if (!judge_state) throw new ErrorMessage('No such a submission.');
 
 			await judge_state.loadRelationships();
 
@@ -136,15 +136,17 @@ app.get('/submission/:id', async (req, res) => {
 
 		await judge.loadRelationships();
 
-		if (judge.problem.type !== 'submit-answer') {
-			judge.codeLength = judge.code.length;
-			judge.code = await zoj.utils.highlight(judge.code, zoj.config.languages[judge.language].highlight);
-		}
 		judge.allowedSeeCode = await judge.isAllowedSeeCodeBy(res.locals.user);
 		judge.allowedSeeCase = await judge.isAllowedSeeCaseBy(res.locals.user);
 		judge.allowedSeeData = await judge.isAllowedSeeDataBy(res.locals.user);
 		judge.allowedRejudge = await judge.problem.isAllowedEditBy(res.locals.user);
 		judge.allowedManage = await judge.problem.isAllowedManageBy(res.locals.user);
+
+		if (judge.problem.type !== 'submit-answer') {
+			judge.codeLength = judge.code.length;
+			judge.code = await zoj.utils.highlight(judge.code, zoj.config.languages[judge.language].highlight);
+		}
+		// judge.allowedSeeCode |= judge.problem.judge_state.result.status == 'Accepted';
 
 		let hideScore = false;
 		if (contest) {
@@ -160,7 +162,6 @@ app.get('/submission/:id', async (req, res) => {
 				hideScore = true;
 			}
 		}
-
 		res.render('submission', {
 			hideScore, hideScore,
 			contest: contest,
