@@ -123,9 +123,8 @@ class JudgeState extends Model {
 		if (user.id === this.problem.user_id) return true;
 		if (user.id === this.user_id) return true;
 		// The user is the creator of the problem
-		else if (user.id === this.user_id) return true;
 		// The user is the submitter
-		else if (this.type === 0) {
+		if (this.type === 0) {
 			this.problem.judge_state = await this.problem.getJudgeState(user);
 			if (!this.problem.judge_state) return false;
 			return this.problem.judge_state.result.status === 'Accepted';
@@ -150,7 +149,7 @@ class JudgeState extends Model {
 		if (user.id === this.problem.user_id) return true;
 		// The user is the creator of the problem
 		if (user.id === this.user_id) return true;
-		else if (this.type === 0) {
+		if (this.type === 0) {
 			this.problem.judge_state = await this.problem.getJudgeState(user);
 			if (!this.problem.judge_state) return false;
 			return this.problem.judge_state.result.status == 'Accepted';
