@@ -79,10 +79,21 @@
 					</div>
 				</div>
 				<div class="right floated five wide column">
-					<h4 class="ui top attached block header">Saying</h4>
+					<h4 class="ui top attached block header">良い文章</h4>
 					<div class="ui bottom attached center aligned segment">
-						<div style="font-size: 1em; line-height: 1.5em; " id="hitokoto-content">Talk is cheap, show me the code.</div>
-						<div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666; " id="hitokoto-from">Linus</div>
+						<div class="ui active centered inline loader" id="hitokoto-loader"></div>
+						<script>
+							$.get('https://sslapi.hitokoto.cn/?c=a', function (data) {
+								data = JSON.parse(data);
+								$('#hitokoto-loader').removeClass('active');
+								$('#hitokoto-content').css('display', '').text(data.hitokoto);
+								if (data.from) {
+									$('#hitokoto-from').css('display', '').text('——' + data.from);
+								}
+							});
+						</script>
+						<div style="font-size: 1em; line-height: 1.5em; display: none; " id="hitokoto-content"></div>
+						<div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666; display: none; " id="hitokoto-from"></div>
 					</div>
 					<h4 class="ui top attached block header">Search Problems</h4>
 					<div class="ui bottom attached segment">
