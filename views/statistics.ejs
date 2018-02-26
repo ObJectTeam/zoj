@@ -127,7 +127,14 @@ function getColorOfScore(score) {
   	labels: ['number'],
   	hoverCallback: function(index, options, content, row) {
   		var scr = row.score;
-  		return '<div class="morris-hover-row-label">Score：' + scr + '</div><div class="morris-hover-point">Count：' + row.count + '</div>';
+      
+      return '<div class="morris-hover-row-label">Score: ' + scr 
+              + '<br><div" class="morris-hover-point">'
+              + '<a style="font-weight:normal" href="/submissions'
+              + '?problem_id=' + <%- problem.id %>
+              + '&amp;min_score=' + scr 
+              + '&amp;max_score=' + scr
+              + '">Count：' + row.count + '</a></div></div>';
   	},
   	resize: true
   });
@@ -160,10 +167,11 @@ function getColorOfScore(score) {
   	hoverCallback: function(index, options, content, row) {
   		var scr = row.score / 100;
       return '<div class="morris-hover-row-label">Score：≤ ' + scr 
-              + '</div><div onclick="alert(233)" class="morris-hover-point"><a href="/submissions'
+              + '<br><div" class="morris-hover-point">'
+              + '<a style="font-weight:normal" href="/submissions'
               + '?problem_id=' + <%- problem.id %>
               + '&amp;max_score=' + scr 
-              + '">Count：' + row.count + '</a></div>';
+              + '">Count：' + row.count + '</a></div></div>';
   	},
   	resize: true
   });
@@ -195,8 +203,12 @@ function getColorOfScore(score) {
   	},
   	hoverCallback: function(index, options, content, row) {
   		var scr = row.score / 100;
-      return '<div class="morris-hover-row-label">Score：≥ ' + scr + '</div><div class="morris-hover-point">Count：' + row.count + '</div>';
-  	},
+      return '<div class="morris-hover-row-label">Score：≥ ' + scr 
+              + '<br><div" class="morris-hover-point">'
+              + '<a style="font-weight:normal" href="/submissions'
+              + '?problem_id=' + <%- problem.id %>
+              + '&amp;min_score=' + scr 
+              + '">Count：' + row.count + '</a></div></div>';},
   	resize: true
   });
   </script>
