@@ -1,6 +1,6 @@
 {
 	"name": "zoj",
-	"version": "5.0.6",
+	"version": "5.0.7",
 	"description": "A powerfull manage system for OI",
 	"main": "app.js",
 	"scripts": {
