@@ -449,9 +449,9 @@ class Problem extends Model {
 
 	async validate() {
 		if (this.time_limit <= 0) return 'Invalid time limit';
-		if (this.time_limit > zoj.config.limit.time_limit) return 'Time limit too large';
+		if (this.time_limit > zoj.config.limit.time_limit) this.time_limit = zoj.config.limit.time_limit;
 		if (this.memory_limit <= 0) return 'Invalid memory limit';
-		if (this.memory_limit > zoj.config.limit.memory_limit) return 'Memory limit too large';
+		if (this.memory_limit > zoj.config.limit.memory_limit) this.memory_limit = zoj.config.limit.memory_limit;
 
 		if (this.type === 'traditional') {
 			let filenameRE = /^[\w \-\+\.]*$/;
