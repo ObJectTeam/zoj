@@ -419,7 +419,7 @@ app.post('/problem/:id/import', async (req, res) => {
 
 		let json = await request({
 			uri: req.body.url + (req.body.url.endsWith('/') ? 'export' : '/export'),
-			timeout: 1500,
+			timeout: 5000,
 			json: true
 		});
 
