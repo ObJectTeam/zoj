@@ -130,7 +130,7 @@ function getColorOfScore(score) {
       
       return '<div class="morris-hover-row-label">Score: ' + scr 
               + '<br><div" class="morris-hover-point">'
-              + '<a style="font-weight:normal" href="/submissions'
+              + '<a class="link" style="font-weight:normal" href="/submissions'
               + '?problem_id=' + <%- problem.id %>
               + '&amp;min_score=' + scr 
               + '&amp;max_score=' + scr
@@ -168,7 +168,7 @@ function getColorOfScore(score) {
   		var scr = row.score / 100;
       return '<div class="morris-hover-row-label">Score：≤ ' + scr 
               + '<br><div" class="morris-hover-point">'
-              + '<a style="font-weight:normal" href="/submissions'
+              + '<a class="link" style="font-weight:normal" href="/submissions'
               + '?problem_id=' + <%- problem.id %>
               + '&amp;max_score=' + scr 
               + '">Count：' + row.count + '</a></div></div>';
@@ -205,7 +205,7 @@ function getColorOfScore(score) {
   		var scr = row.score / 100;
       return '<div class="morris-hover-row-label">Score：≥ ' + scr 
               + '<br><div" class="morris-hover-point">'
-              + '<a style="font-weight:normal" href="/submissions'
+              + '<a class="link" style="font-weight:normal" href="/submissions'
               + '?problem_id=' + <%- problem.id %>
               + '&amp;min_score=' + scr 
               + '">Count：' + row.count + '</a></div></div>';},
