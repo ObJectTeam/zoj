@@ -121,8 +121,8 @@ class JudgeState extends Model {
 		if (!user) return false;
 		if (user.admin >= 3) return true;
 		if (user.id === this.problem.user_id) return true;
-		if (user.id === this.user_id) return true;
 		// The user is the creator of the problem
+		if (user.id === this.user_id) return true;
 		// The user is the submitter
 		if (this.type === 0) {
 			this.problem.judge_state = await this.problem.getJudgeState(user);

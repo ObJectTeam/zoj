@@ -64,9 +64,9 @@ if (typeof tags !== 'undefined') tagIDs = tags.map(x => x.id);
         <div style="margin-left: 10px; display: inline-block; ">
           <% if (allowedManageTag) { %>
             <% if (typeof tags !== 'undefined' && tags.length === 1) { %>
-              <a style="margin-left: 10px; " href="<%= zoj.utils.makeUrl(['problems', 'tag', tags[0].id, 'edit']) %>" class="ui labeled icon mini blue button"><i class="write icon"></i> Edit Tags</a>
+              <a style="margin-left: 10px; " href="<%= zoj.utils.makeUrl(['problems', 'tag', tags[0].id, 'edit']) %>" class="ui labeled icon mini blue button"><i class="write icon"></i> Edit Tag</a>
             <% } %>
-            <a style="margin-left: 10px; " href="<%= zoj.utils.makeUrl(['problems', 'tag', 0, 'edit']) %>" class="ui labeled icon mini green button"><i class="plus icon"></i> Add Tags</a>
+            <a style="margin-left: 10px; " href="<%= zoj.utils.makeUrl(['problems', 'tag', 0, 'edit']) %>" class="ui labeled icon mini green button"><i class="plus icon"></i> Add Tag</a>
           <% } %>
           <div style="margin-left: 10px; " class="ui mini buttons">
             <div class="ui labeled icon mini dropdown button" id="add_problem_dropdown"><i class="plus icon"></i> Add Problem

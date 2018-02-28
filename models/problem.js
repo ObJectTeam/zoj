@@ -220,6 +220,7 @@ let model = db.define('problem', {
 	memory_limit: { type: Sequelize.INTEGER },
 
 	additional_file_id: { type: Sequelize.INTEGER },
+	testdata_hash: {type: Sequelize.STRING(120) },
 
 	ac_num: { type: Sequelize.INTEGER },
 	submit_num: { type: Sequelize.INTEGER },
@@ -275,7 +276,8 @@ class Problem extends Model {
 			file_io_input_name: '',
 			file_io_output_name: '',
 
-			type: 'traditional'
+			type: 'traditional',
+			testdata_hash: ''
 		}, val)));
 	}
 
@@ -316,6 +318,17 @@ class Problem extends Model {
 		return zoj.utils.resolvePath(zoj.config.upload_dir, 'testdata', this.id.toString());
 	}
 
+	async updateTestdataHash(){
+		if (!await zoj.utils.isFile(this.getTestdataPath() + '.zip')) {
+			await this.makeTestdataZip();
+		}
+		let fs = Promise.promisifyAll(require('fs-extra'));
+		let buffer = fs.readFileSync(this.getTestdataPath() + '.zip');
+		let md5 = zoj.utils.md5(buffer);
+		this.testdata_hash = md5;
+		await this.save();
+	}
+
 	async updateTestdata(path, noLimit) {
 		await zoj.utils.lock(['Problem::Testdata', this.id], async () => {
 			let p7zip = new (require('node-7z'));
@@ -336,6 +349,7 @@ class Problem extends Model {
 			await p7zip.extract(path, dir);
 			await fs.moveAsync(path, dir + '.zip', { overwrite: true });
 		});
+		await this.updateTestdataHash();
 	}
 
 	async uploadTestdataSingleFile(filename, filepath, size, noLimit) {
@@ -359,6 +373,7 @@ class Problem extends Model {
 			await fs.moveAsync(filepath, path.join(dir, filename), { overwrite: true });
 			await fs.removeAsync(dir + '.zip');
 		});
+		await this.updateTestdataHash();
 	}
 
 	async deleteTestdataSingleFile(filename) {
@@ -368,6 +383,7 @@ class Problem extends Model {
 			await fs.removeAsync(path.join(dir, filename));
 			await fs.removeAsync(dir + '.zip');
 		});
+		await this.updateTestdataHash();
 	}
 
 	async makeTestdataZip() {
@@ -445,13 +461,14 @@ class Problem extends Model {
 		}
 
 		await this.save();
+		await this.updateTestdataHash();
 	}
 
 	async validate() {
 		if (this.time_limit <= 0) return 'Invalid time limit';
-		if (this.time_limit > zoj.config.limit.time_limit) return 'Time limit too large';
+		if (this.time_limit > zoj.config.limit.time_limit) this.time_limit = zoj.config.limit.time_limit;
 		if (this.memory_limit <= 0) return 'Invalid memory limit';
-		if (this.memory_limit > zoj.config.limit.memory_limit) return 'Memory limit too large';
+		if (this.memory_limit > zoj.config.limit.memory_limit) this.memory_limit = zoj.config.limit.memory_limit;
 
 		if (this.type === 'traditional') {
 			let filenameRE = /^[\w \-\+\.]*$/;
