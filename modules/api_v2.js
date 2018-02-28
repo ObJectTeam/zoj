@@ -250,8 +250,7 @@ app.apiRouter.get('/api/v2/problemhash/:id/:token', async (req, res) => {
 
 		if (!problem) return res.status(404).send({ err: 'Permission denied' });
 
-		let hash = problem.testdata_hash.toString();
-		if (hash == null || hash == '')
+		if (problem.testdata_hash == null || problem.testdata_hash == '')
 			await problem.updateTestdataHash();
 		res.send(problem.testdata_hash);
 	} catch (e) {

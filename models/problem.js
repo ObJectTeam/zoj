@@ -320,7 +320,7 @@ class Problem extends Model {
 
 	async updateTestdataHash(){
 		if (!await zoj.utils.isFile(this.getTestdataPath() + '.zip')) {
-			await makeTestdataZip();
+			await this.makeTestdataZip();
 		}
 		let fs = Promise.promisifyAll(require('fs-extra'));
 		let buffer = fs.readFileSync(this.getTestdataPath() + '.zip');
