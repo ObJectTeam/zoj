@@ -214,11 +214,3 @@ app.post('/api/markdown', async (req, res) => {
 		res.send(e);
 	}
 });
-
-app.get('/static/uploads/answer/:md5', async (req, res) => {
-	try {
-		res.sendFile(File.resolvePath('answer', req.params.md5));
-	} catch (e) {
-		res.status(500).send(e);
-	}
-});
