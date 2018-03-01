@@ -127,8 +127,7 @@ class JudgeState extends Model {
 		if (this.type === 0) {
 			this.problem.judge_state = await this.problem.getJudgeState(user);
 			if (!this.problem.judge_state) return false;
-			return (user && (await user.admin >= 3)) ||
-					this.problem.judge_state.result.status === 'Accepted';
+			return this.problem.judge_state.result.status === 'Accepted';
 		}
 		// Normal submission
 		// 1. The user is teacher/system admin
@@ -144,27 +143,33 @@ class JudgeState extends Model {
 
 	async isAllowedSeeCaseBy(user) {
 		await this.loadRelationships();
-
-		if (user && user.id === this.problem.user_id) return true;
+		if (!user) return false;
+		if (user.admin >= 3) return true;
+		// The user is teachar/system admin
+		if (user.id === this.problem.user_id) return true;
 		// The user is the creator of the problem
-		else if (this.type === 0) return this.problem.is_public || (user && (await user.admin >= 3));
-		// Normal Submission
-		// 1. The problem is public
-		// 2. The user is teacher/system admin
+		if (user.id === this.user_id) return true;
+		if (this.type === 0) {
+			this.problem.judge_state = await this.problem.getJudgeState(user);
+			if (!this.problem.judge_state) return false;
+			return this.problem.judge_state.result.status == 'Accepted';
+			// Normal submission
+			// 1. The user has accepted the problem
+		}
 		else if (this.type === 1) {
 			let contest = await Contest.fromID(this.type_info);
 			if (await contest.isRunning()) {
-				return (contest.type === 'ioi' && user && user.id === this.user_id) 
-						|| (user && user.admin >= 3) || (user && user.id === contest.holder_id);
+				return (user.admin >= 3 || user.id === contest.holder_id);
 			} else {
-				return true;
+				this.problem.judge_state = await this.problem.getJudgeState(user);
+				if (!this.problem.judge_state) return false;
+				return this.problem.judge_state.result.status == 'Accepted';
 			}
 		}
 		// Contest's submission
 		// 1.The user is teacher/system admin
-		// 2.The contest's type is "ioi" and the user is the submitter
-		// 3.The user is the holder of the contest
-		// 4.The contest is not running
+		// 2.The user is the holder of the contest
+		// 3.The contest is not running and the user has accepted this problem
 	}
 
 	async isAllowedSeeDataBy(user) {

@@ -842,6 +842,9 @@ app.get('/problem/:id/statistics/:type', async (req, res) => {
 
 		let paginate = zoj.utils.paginate(count, req.query.page, zoj.config.page.problem_statistics);
 		let statistics = await problem.getStatistics(req.params.type, paginate);
+		for (let judge of statistics.judge_state) {
+			judge.allowedSeeCode = judge.isAllowedSeeCodeBy(res.locals.user);
+		}
 
 		await statistics.judge_state.forEachAsync(async x => x.loadRelationships());
 

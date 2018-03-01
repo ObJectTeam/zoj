@@ -83,9 +83,24 @@ function getColorOfScore(score) {
               <% if (problem.type !== 'submit-answer') { %>
                 <td><%= judge.result.total_time %> ms</td>
                 <td><%= parseInt(judge.result.max_memory) || 0 %> K</td>
-                <td><a href="<%= zoj.utils.makeUrl(['submission', judge.id]) %>"><%= zoj.config.languages[judge.language].show %></a> / <%= zoj.utils.formatSize(judge.code.length) %></td>
+                <td><a href="<%= zoj.utils.makeUrl(['submission', judge.id]) %>"><%= zoj.config.languages[judge.language].show %></a> /
+                  <% 
+                  if (judge.allowedSeeCode) { %>
+                    <%= zoj.utils.formatSize(judge.code.length) %>
+                  <% } else { %>
+                    Hide
+                  <% } %>  
+                  
+                </td>
               <% } else { %>
-                <td><%= zoj.utils.formatSize(judge.max_memory) %></td>
+              
+                <td>
+                  <% if (judge.allowedSeeCode) { %>
+                  <%= zoj.utils.formatSize(judge.max_memory) %>
+                  <% } else {%>
+                  Hide
+                  <% } %>
+                </td>
               <% } %>
               <td><a href="<%= zoj.utils.makeUrl(['user', judge.user_id]) %>"><%= judge.user.username %></a><% if (judge.user.nameplate) { %><%- judge.user.nameplate %><% } %></td>
               <td><%= zoj.utils.formatDate(judge.submit_time) %></td>
@@ -112,7 +127,14 @@ function getColorOfScore(score) {
   	labels: ['number'],
   	hoverCallback: function(index, options, content, row) {
   		var scr = row.score;
-  		return '<div class="morris-hover-row-label">Score：' + scr + '</div><div class="morris-hover-point">Count：' + row.count + '</div>';
+      
+      return '<div class="morris-hover-row-label">Score: ' + scr 
+              + '<br><div" class="morris-hover-point">'
+              + '<a class="link" style="font-weight:normal" href="/submissions'
+              + '?problem_id=' + <%- problem.id %>
+              + '&amp;min_score=' + scr 
+              + '&amp;max_score=' + scr
+              + '">Count：' + row.count + '</a></div></div>';
   	},
   	resize: true
   });
@@ -144,7 +166,12 @@ function getColorOfScore(score) {
   	},
   	hoverCallback: function(index, options, content, row) {
   		var scr = row.score / 100;
-      return '<div class="morris-hover-row-label">Score：≤ ' + scr + '</div><div class="morris-hover-point">Count：' + row.count + '</div>';
+      return '<div class="morris-hover-row-label">Score：≤ ' + scr 
+              + '<br><div" class="morris-hover-point">'
+              + '<a class="link" style="font-weight:normal" href="/submissions'
+              + '?problem_id=' + <%- problem.id %>
+              + '&amp;max_score=' + scr 
+              + '">Count：' + row.count + '</a></div></div>';
   	},
   	resize: true
   });
@@ -176,8 +203,12 @@ function getColorOfScore(score) {
   	},
   	hoverCallback: function(index, options, content, row) {
   		var scr = row.score / 100;
-      return '<div class="morris-hover-row-label">Score：≥ ' + scr + '</div><div class="morris-hover-point">Count：' + row.count + '</div>';
-  	},
+      return '<div class="morris-hover-row-label">Score：≥ ' + scr 
+              + '<br><div" class="morris-hover-point">'
+              + '<a class="link" style="font-weight:normal" href="/submissions'
+              + '?problem_id=' + <%- problem.id %>
+              + '&amp;min_score=' + scr 
+              + '">Count：' + row.count + '</a></div></div>';},
   	resize: true
   });
   </script>
