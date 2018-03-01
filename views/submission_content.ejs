@@ -200,13 +200,17 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
       <div class="content auto_update">
         <% if (!testcase.pending && judge.allowedSeeData && testcase.status !== 'Skipped') { %>
           <p>
-              <strong>Input File<% if (testcase.input_file_name) { %>（<span style="font-family: monospace; "><%= testcase.input_file_name %></span>）<% } %></strong>
-              <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.input %></code></pre></div>
+              <% if (judge.problem.type !== 'submit-answer') { %>
+                <strong>Input File<% if (testcase.input_file_name) { %>（<span style="font-family: monospace; "><%= testcase.input_file_name %></span>）<% } %></strong>
+                <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.input %></code></pre></div>
+              <% } %>
+              <% if (judge.problem.type !== 'interaction' && judge.problem.type !== 'submit-answer') { %>
+                  <strong>Output File<% if (testcase.output_file_name) { %>（<span style="font-family: monospace; "><%= testcase.output_file_name %></span>）<% } %></strong>
+                  <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.answer %></code></pre></div>
+              <% } %>
               <% if (judge.problem.type !== 'interaction') { %>
-                <strong>Output File<% if (testcase.output_file_name) { %>（<span style="font-family: monospace; "><%= testcase.output_file_name %></span>）<% } %></strong>
-                <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.answer %></code></pre></div>
-                <strong>Your Output</strong>
-                <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.user_out %></code></pre></div>
+                  <strong>Your Output</strong>
+                  <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.user_out %></code></pre></div>
               <% } %>
               <% if (testcase.spj_message) { %>
                 <strong><%= judge.problem.type === 'interaction' ? 'Interaction' : 'Special Judge ' %>Information</strong>
