@@ -43,10 +43,20 @@ app.get('/api/v2/search/blogs/:keyword*?', async (req, res) => {
 		let BlogPost = zoj.model('blog_post');
 
 		let keyword = req.params.keyword || '';
-		let posts = await BlogPost.query(null, {
-			title: { like: `%${req.params.keyword}%` }
-		}, [['id', 'desc']]);
+		let posts;
 
+		// console.log(res.locals.user);
+		// console.log(req.cookies['selfonly_mode']);
+		if (req.cookies['selfonly_mode'] == '1' && res.locals.user) {
+			posts = await BlogPost.query(null, {
+				title: { like: `%${req.params.keyword}%` },
+				user_id: res.locals.user.id
+			}, [['id', 'desc']]);
+		} else {
+			posts = await BlogPost.query(null, {
+				title: { like: `%${req.params.keyword}%` }
+			}, [['id', 'desc']]);
+		}
 		let result = [];
 
 		let id = parseInt(keyword);

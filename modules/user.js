@@ -75,7 +75,7 @@ app.get('/sign_up', async (req, res) => {
 app.post('/logout', async (req, res) => {
 	req.session.user_id = null;
 	res.clearCookie('login');
-	res.redirect(req.query.url || '/');
+	res.redirect('/');
 });
 
 // Forget Password
