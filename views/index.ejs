@@ -61,7 +61,7 @@
 											<%= i %>
 										</td>
 										<td>
-											<a href="<%= zoj.utils.makeUrl(['user', user.id]) %>">
+											<a class="<%= zoj.utils.getUsernameColor(user) %>" href="<%= zoj.utils.makeUrl(['user', user.id]) %>">
 												<%= user.username %>
 											</a>
 											<% if (user.nameplate) { %>

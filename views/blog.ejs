@@ -123,7 +123,7 @@ if (typeof tags !== 'undefined') tagIDs = tags.map(x => x.id);
         <% if (blog.is_public || blog.allowedEdit) { %>
         <tr style="height: 44px; ">
             <td><%= blog.id %></td>
-            <td><%= blog.user.username %></td>
+            <td><a class="<%= zoj.utils.getUsernameColor(blog.user) %>"><%= blog.user.username %></a></td>
             <td><%= blog.from %></td>
             <td><%= blog.problem_id %></td>
             <td>
