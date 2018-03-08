@@ -12,7 +12,7 @@ let User = zoj.model('user');
 
 app.get('/blogs', async (req, res) => {
     try {
-        req.cookies['selfonly_mode'] = '0';
+		req.cookies['selfonly_mode'] = '0';
         let where = {};
         if (!res.locals.user) {
             where = {
@@ -52,8 +52,8 @@ app.get('/blogs', async (req, res) => {
 app.get('/blogs/user/:id', async (req, res) => {
     try {
         let id = parseInt(req.params.id);
-        let user = await User.fromID(id);
-        if (res.locals.user && id !== res.locals.user.id) req.cookies['selfonly_mode'] = '0';
+		let user = await User.fromID(id);
+		if (res.locals.user && id !== res.locals.user.id) req.cookies['selfonly_mode'] = '0';
         if (!user) throw new ErrorMessage('No such user.');
         let where = {};
         if (!res.locals.user) {
@@ -109,16 +109,16 @@ app.get('/blogs/search', async (req, res) => {
                 id: id
             }
         };
-        if (res.locals.user && req.cookies['selfonly_mode'] == '1') {
-            where = {
-                $and: [
-                    where, 
-                    {
-                        user_id: res.locals.user.id,
-                    }
-                ]
-            }
-        }
+		if (res.locals.user && req.cookies['selfonly_mode'] == '1') {
+			where = {
+				$and: [
+					where,
+					{
+						user_id: res.locals.user.id,
+					}
+				]
+			}
+		}
         if (!res.locals.user) {
             where = {
                 $and: [
@@ -193,10 +193,6 @@ app.get('/blogs/tag/:tagIDs', async (req, res) => {
             } else {
                 sql += 'AND (`post`.`is_public` = 1)';
             }
-        }
-
-        if (res.locals.user && req.cookies['selfonly_mode'] == '1') {
-            sql += 'AND (`post`.`user_id` = ' + res.locals.user.id + ')'
         }
 
         let paginate = zoj.utils.paginate(await BlogPost.count(sql), req.query.page, zoj.config.page.post);

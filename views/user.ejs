@@ -29,12 +29,10 @@ padding-top: 100%;
 </div>
 <div class="content">
 <div class="header">
-<a class="<%= zoj.utils.getUsernameColor(show_user) %>">
-<%= show_user.username %>
+<%= show_user %>
 <% if (show_user.nameplate) { %>
 <%- show_user.nameplate %>
 <% } %>
-</a>
 <% if (show_user.sex == 1) { %>
 <i class="man icon"></i>
 <% } else if (show_user.sex == -1) { %>
@@ -46,8 +44,8 @@ padding-top: 100%;
 </div>
 </div>
 <div class="extra content">
-<a><i class="check icon"></i>AC Count:<%= show_user.ac_problems.length %></a>
-<a><i class="star icon"></i>Rating<%= show_user.rating %></a>
+<a><i class="check icon"></i><%= show_user.ac_problems.length %></a>
+<a><i class="star icon"></i><%= show_user.rating %></a>
 </div>
 </div>
 </div>
@@ -83,17 +81,9 @@ padding-top: 100%;
 <% } %>
 <div class="row">
 <div class="column">
-<h4 class="ui top attached block header">Nick Name</h4>
+<h4 class="ui top attached block header">Motto</h4>
 <div class="ui bottom attached segment" class="font-content">
 <%- show_user.information %>
-</div>
-</div>
-</div>
-<div class="row">
-<div class="column">
-<h4 class="ui top attached block header">Registered At</h4>
-<div class="ui bottom attached segment" class="font-content">
-<%= zoj.utils.formatDate(show_user.register_time) %>
 </div>
 </div>
 </div>

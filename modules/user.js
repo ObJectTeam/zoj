@@ -72,7 +72,7 @@ app.get('/sign_up', async (req, res) => {
 });
 
 // Logout
-app.post('/logout', async (req, res) => {
+app.get('/logout', async (req, res) => {
 	req.session.user_id = null;
 	res.clearCookie('login');
 	res.redirect('/');
@@ -184,7 +184,6 @@ app.post('/user/:id/edit', async (req, res) => {
 		if (res.locals.user && await res.locals.user.admin >= 3) {
 			if (!zoj.utils.isValidUsername(req.body.username)) throw new ErrorMessage('Invalid user name.');
 			user.username = req.body.username;
-			user.email = req.body.email;
 		}
 
 		if (await res.locals.user.admin >= 3 && res.locals.user.admin > user.admin) {
@@ -194,7 +193,9 @@ app.post('/user/:id/edit', async (req, res) => {
 
 		user.information = req.body.information;
 		user.sex = req.body.sex;
+		user.email = req.body.email;
 		user.public_email = (req.body.public_email === 'on');
+		user.theme = req.body.theme;
 
 		await user.save();
 
@@ -202,10 +203,7 @@ app.post('/user/:id/edit', async (req, res) => {
 
 		res.locals.user.allowedManage = await res.locals.user.admin >= 3;
 
-		res.render('user_edit', {
-			edited_user: user,
-			error_info: ''
-		});
+		res.redirect('/user/' + id);
 	} catch (e) {
 		res.locals.user.allowedManage = await res.locals.user.admin >= 3;
 

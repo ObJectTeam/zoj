@@ -275,3 +275,32 @@ app.post('/admin/raw', async (req, res) => {
 		})
 	}
 });
+
+app.get('/admin/upgrade', async (req, res) => {
+	try {
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('You do not have permission to do this.');
+
+		res.render('admin_upgrade', {});
+	} catch (e) {
+		zoj.log(e);
+		res.render('error', {
+			err: e
+		})
+	}
+});
+
+app.post('/admin/upgrade', async (req, res) => {
+	try {
+		if (!res.locals.user || !res.locals.user.admin >= 4) throw new ErrorMessage('You do not have permission to do this.');
+
+		var spawn = require('child_process').spawn;
+		free = spawn('bash', ['upgrade.sh']);
+
+		res.redirect('/');
+	} catch (e) {
+		zoj.log(e);
+		res.render('error', {
+			err: e
+		})
+	}
+});

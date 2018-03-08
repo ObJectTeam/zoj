@@ -1,8 +1,8 @@
 <%
 let subtaskType = {
   sum: 'The total score will be the average value of all the subtasks.',
-  min: 'The total score will be the product of all the subtasks.',
-  mul: 'The total score will be the mininum value of all the subtasks.'
+  mul: 'The total score will be the product of all the subtasks.',
+  min: 'The total score will be the mininum value of all the subtasks.'
 };
 %>
 <% if (testcases && testcases.error) { %>
@@ -11,11 +11,9 @@ let subtaskType = {
 } else if (testcases) {
 %>
   <% if (testcases.spj) { %>
-    <p>Testcases：Special Judge</p>
-  <% } else if (problem.type === 'interaction') { %>
-    <p>Testcases：Interaction</p>
+    <p>Judge method：Special Judge</p>
   <% } else { %>
-    <p>Testcases：Compare Texts</p>
+    <p>Judge method：Compare Texts</p>
   <% } %>
   <table class="ui celled table">
     <tbody>

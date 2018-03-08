@@ -1,12 +1,12 @@
 <% include util %>
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" <% if(user && user.theme == 'dark'){ %> style="filter: invert(1);background: black;" <% } %>>
 <head data-csrf-token="<%= req.csrfToken() %>">
     <meta charset="utf-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <title><%= title %> - <%= zoj.config.title %></title>
-    <style>
-        a.link:hover{ text-decoration: underline }
+	<style>
+		a.link:hover{ text-decoration: underline }
 		a.colorlvl_0, a.colorlvl_0:hover{ color: Brown!important }
 		a.colorlvl_1, a.colorlvl_1:hover{ color: blue!important }
 		a.colorlvl_2, a.colorlvl_2:hover{ color: green!important }
@@ -33,6 +33,9 @@
         gtag('js', new Date());
         gtag('config', '<%= zoj.config.google_publisher_id %>');
     </script>
+    <% if(user && user.theme == 'dark'){ %> 
+        <script>$('img').css('filter', 'invert(1)');</script>
+    <% } %>
 </head>
 <body>
     <div class="ui fixed borderless menu" style="position: fixed; ">
@@ -53,7 +56,7 @@
               <div class="ui simple dropdown item">
                 <i class="power icon"></i>
                 <div class="menu">
-                  <a class="item" href="<%= zoj.utils.makeUrl(['user', user.id]) %>"><i class="user circle outline icon"></i><%= user.username %><% if (user.nameplate) { %><%- user.nameplate %><% } %></a>
+                  <a class="item <%= zoj.utils.getUsernameColor(user) %>" href="<%= zoj.utils.makeUrl(['user', user.id]) %>"><i class="user circle outline icon"></i><%= user.username %><% if (user.nameplate) { %><%- user.nameplate %><% } %></a>
                   <a class="item" href="<%= zoj.utils.makeUrl(['user', user.id, 'edit']) %>"><i class="edit icon"></i>Edit profile</a>
                   <a class="item" href="<%= zoj.utils.makeUrl(['blogs', 'user', user.id]) %>"><i class="coffee icon"></i>Blog</a>
                   <% if (user.admin >= 4) { %>
@@ -61,7 +64,7 @@
                   <% } else if(user.admin >= 3){ %>
                     <a class="item" href="<%= zoj.utils.makeUrl(['admin', 'rating']) %>"><i class="settings icon"></i>Rating management</a>
                   <% } %>
-                  <a class="item" href-post="<%= zoj.utils.makeUrl(['logout'], { url: req.originalUrl }) %>"><i class="sign out alternate icon"></i>Logout</a>
+                  <a class="item" href="<%= zoj.utils.makeUrl(['logout']) %>"><i class="sign out alternate icon"></i>Logout</a>
                 </div>
               </div>
               </a>

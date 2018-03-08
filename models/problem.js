@@ -234,7 +234,7 @@ let model = db.define('problem', {
 
 	type: {
 		type: Sequelize.ENUM,
-		values: ['traditional', 'submit-answer', 'interaction']
+		values: ['traditional', 'submit-answer']
 	}
 }, {
 		timestamps: false,

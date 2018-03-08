@@ -1,7 +1,7 @@
 </div>
     <div class="ui vertical footer segment">
       <div class="ui center aligned container">
-        <span style="color: #999;"><%= zoj.config.title %> Powered by <a href="https://github.com/sky-develop-team" target="_blank">ObJect</a>.</span>
+        <span style="color: #999;"><%= zoj.config.title %> Powered by <a href="https://git.zhangzisu.cn/zhangzisu/ZenOnlineJudge" target="_blank">ZhangZisu</a>.</span>
         <br><span style="color: #999;">version:<%= zoj.version %></span>
       </div>
     </div>
@@ -9,5 +9,8 @@
 <script src="/semantic-ui/semantic.min.js"></script>
 <script src="/libs/Chart.js/Chart.bundle.min.js"></script>
 <script src="/script.js"></script>
+<% if(user && user.theme == 'dark'){ %> 
+  <script>$('img').css('filter', 'invert(1)');</script>
+<% } %>
 </body>
 </html>
