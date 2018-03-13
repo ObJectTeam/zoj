@@ -94,8 +94,7 @@ class JudgeState extends Model {
 		else if (user && user.id === this.user_id) return true;
 		// The user is the submitter.
 		else if (this.type === 0) {
-			if (await user.admin < 3) return this.problem.isAllowedUseBy(res.locals.user);
-			return true;
+			return await this.problem.isAllowedUseBy(user);
 		}
 		// Normal submission
 		// 1. The problem is public and not protected
@@ -106,7 +105,7 @@ class JudgeState extends Model {
 			if (await contest.isRunning()) {
 				return ((user && user.admin >= 3) || (user && user.id === contest.holder_id));
 			} else {
-				return true;
+				return await this.problem.isAllowedUseBy(user);
 			}
 		}
 		// Contest's submissions

@@ -299,7 +299,7 @@ class Problem extends Model {
 		if (this.is_public && !this.is_protected) return true;
 		if (!user) return false;
 		if (this.user_id === user.id) return true;
-		if (this.is_public && this.is_protected) return user.admin >= 1;
+		if (this.is_public && this.is_protected) return await user.admin >= 1;
 		if (await user.admin >= 3) return true;
 		return false;
 		// 1. The problem is publid and not protected
