@@ -94,8 +94,7 @@ class JudgeState extends Model {
 		else if (user && user.id === this.user_id) return true;
 		// The user is the submitter.
 		else if (this.type === 0) {
-			if (!user || await user.admin < 1) return this.problem.is_public && !this.problem.is_protected;
-			else if (await user.admin < 3) return this.problem.isAllowedUseBy(res.locals.user);
+			if (await user.admin < 3) return this.problem.isAllowedUseBy(res.locals.user);
 			return true;
 		}
 		// Normal submission
