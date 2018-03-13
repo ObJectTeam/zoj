@@ -146,8 +146,8 @@ class JudgeState extends Model {
 		// The user is teachar/system admin
 		if (user.id === this.problem.user_id) return true;
 		// The user is the creator of the problem
-		if (user.id === this.user_id) return true;
 		if (this.type === 0) {
+			if (user.id === this.user_id) return true;
 			this.problem.judge_state = await this.problem.getJudgeState(user);
 			if (!this.problem.judge_state) return false;
 			return this.problem.judge_state.result.status == 'Accepted';
@@ -157,8 +157,9 @@ class JudgeState extends Model {
 		else if (this.type === 1) {
 			let contest = await Contest.fromID(this.type_info);
 			if (await contest.isRunning()) {
-				return (user.admin >= 3 || user.id === contest.holder_id);
+				return (user.id === contest.holder_id);
 			} else {
+				if (user.id === this.user_id) return true;
 				this.problem.judge_state = await this.problem.getJudgeState(user);
 				if (!this.problem.judge_state) return false;
 				return this.problem.judge_state.result.status == 'Accepted';
