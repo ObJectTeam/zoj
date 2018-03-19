@@ -33,6 +33,7 @@ app.get('/blogs', async (req, res) => {
         await posts.forEachAsync(async post => {
             await post.loadRelationships();
             post.allowedEdit = await post.isAllowedEditBy(res.locals.user);
+	    post.allowedSee = await post.isAllowedSeeBy(res.locals.user);
             post.tags = await post.getTags();
         });
 
@@ -83,6 +84,7 @@ app.get('/blogs/user/:id', async (req, res) => {
         await posts.forEachAsync(async post => {
             await post.loadRelationships();
             post.allowedEdit = await post.isAllowedEditBy(res.locals.user);
+	    post.allowedSee = await post.isAllowedSeeBy(res.locals.user);
             post.tags = await post.getTags();
         });
 
@@ -149,6 +151,7 @@ app.get('/blogs/search', async (req, res) => {
 
         await posts.forEachAsync(async post => {
             post.allowedEdit = await post.isAllowedEditBy(res.locals.user);
+	    post.allowedSee = await post.isAllowedSeeBy(res.locals.user);
             post.tags = await post.getTags();
             await post.loadRelationships();
         });
