@@ -118,7 +118,7 @@ if (typeof tags !== 'undefined') tagIDs = tags.map(x => x.id);
       </tr>
     </thead>
     <tbody>
-    <% for (let blog of posts) if (blog.AllowedSee) { %>
+    <% for (let blog of posts) { %>
         <% if (blog.is_public || blog.allowedEdit) { %>
         <tr style="height: 44px; ">
             <td><%= blog.id %></td>
