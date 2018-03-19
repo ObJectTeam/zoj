@@ -36,7 +36,6 @@ app.get('/blogs', async (req, res) => {
         await posts.forEachAsync(async post => {
             await post.loadRelationships();
             post.allowedEdit = await post.isAllowedEditBy(res.locals.user);
-	    post.allowedSee = await post.isAllowedSeeBy(res.locals.user);
             post.tags = await post.getTags();
         });
 
@@ -60,11 +59,14 @@ app.get('/blogs/user/:id', async (req, res) => {
 		if (res.locals.user && id !== res.locals.user.id) req.cookies['selfonly_mode'] = '0';
         if (!user) throw new ErrorMessage('No such user.');
         let where = {};
-        if (!res.locals.user) {
+	let user_id;
+	if (!res.locals.user) user_id = 0;
+	else user_id = res.locals.user.id;
+        if (!res.locals.user || res.locals.user.admin < 1) {
             where = {
                 $and: {
                     user_id: id,
-                    is_public: 1
+		    user_id: user_id
                 }
             };
         } else if (res.locals.user.admin < 3) {
@@ -87,7 +89,6 @@ app.get('/blogs/user/:id', async (req, res) => {
         await posts.forEachAsync(async post => {
             await post.loadRelationships();
             post.allowedEdit = await post.isAllowedEditBy(res.locals.user);
-	    post.allowedSee = await post.isAllowedSeeBy(res.locals.user);
             post.tags = await post.getTags();
         });
 
@@ -107,7 +108,9 @@ app.get('/blogs/user/:id', async (req, res) => {
 app.get('/blogs/search', async (req, res) => {
     try {
         let id = parseInt(req.query.keyword) || 0;
-
+	let user_id;
+	if (!res.locals.user) user_id = 0;
+	else user_id = res.locals.user.id;
         let where = {
             $or: {
                 title: { like: `%${req.query.keyword}%` },
@@ -124,12 +127,15 @@ app.get('/blogs/search', async (req, res) => {
 				]
 			}
 		}
-        if (!res.locals.user) {
+        if (!res.locals.user || res.locals.user.admin < 1) {
             where = {
                 $and: [
                     where,
                     {
-                        is_public: 1,
+			$and: {
+                            is_public: 1,
+			    user_id: user_id
+			}
                     }
                 ]
             };
@@ -154,7 +160,6 @@ app.get('/blogs/search', async (req, res) => {
 
         await posts.forEachAsync(async post => {
             post.allowedEdit = await post.isAllowedEditBy(res.locals.user);
-	    post.allowedSee = await post.isAllowedSeeBy(res.locals.user);
             post.tags = await post.getTags();
             await post.loadRelationships();
         });
