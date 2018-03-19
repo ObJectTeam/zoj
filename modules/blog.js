@@ -12,11 +12,12 @@ let User = zoj.model('user');
 
 app.get('/blogs', async (req, res) => {
     try {
-		req.cookies['selfonly_mode'] = '0';
+	req.cookies['selfonly_mode'] = '0';
         let where = {};
-        if (!res.locals.user) {
+	let user_id = res.locals.user.id || 0;
+        if (!res.locals.user || res.locals.user.admin < 1) {
             where = {
-                is_public: 1
+		user_id: user_id
             };
         } else if (res.locals.user.admin < 3) {
             where = {
