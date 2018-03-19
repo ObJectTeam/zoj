@@ -65,11 +65,11 @@ class BlogPost extends Model {
 	}
 
 	async isAllowedSeeBy(user) {
-        if (await this.is_public)return true;
-        if (!user) return false;
-        if (await user.admin >= 3) return true;
+        	if (!user) return false;
+        	if (await this.is_public)return await user.admin >= 1;
+        	if (await user.admin >= 3) return true;
 		return this.user_id === user.id;
-		// 1.The post is public
+		// 1.The post is public and the user is indoor student
 		// 2.The user is teacher/system admin
 		// 3.The user is the owner of this post
 	}
