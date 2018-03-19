@@ -14,7 +14,9 @@ app.get('/blogs', async (req, res) => {
     try {
 	req.cookies['selfonly_mode'] = '0';
         let where = {};
-	let user_id = res.locals.user.id || 0;
+	let user_id;
+	if (!res.locals.user) user_id = 0;
+	else user_id = res.locals.user.id;
         if (!res.locals.user || res.locals.user.admin < 1) {
             where = {
 		user_id: user_id
