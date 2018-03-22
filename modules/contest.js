@@ -111,7 +111,8 @@ app.get('/contest/:id', async (req, res) => {
 
 		let contest = await Contest.fromID(contest_id);
 		if (!contest) throw new ErrorMessage('No such contest.');
-		if (!contest.is_public && (!res.locals.user || !res.locals.user.admin >= 3)) throw new ErrorMessage('No such contest.');
+		if (!await contest.isAllowedSeeBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+		// if (!contest.is_public && (!res.locals.user || !res.locals.user.admin >= 3)) throw new ErrorMessage('No such contest.');
 
 		contest.allowedEdit = await contest.isAllowedEditBy(res.locals.user);
 		contest.running = await contest.isRunning();
