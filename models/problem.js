@@ -290,7 +290,7 @@ class Problem extends Model {
 	async isAllowedEditBy(user) {
 		if (!user) return false;
 		if (await user.admin >= 3) return true;
-		return this.user_id === user.id;
+		return this.user_id === await user.id;
 		// 1. The user is teacher/system admin
 		// 2. The user is the creator of this problem
 	}
@@ -298,7 +298,7 @@ class Problem extends Model {
 	async isAllowedUseBy(user) {
 		if (this.is_public && !this.is_protected) return true;
 		if (!user) return false;
-		if (this.user_id === user.id) return true;
+		if (this.user_id === await user.id) return true;
 		if (this.is_public && this.is_protected) return await user.admin >= 1;
 		if (await user.admin >= 3) return true;
 		return false;
@@ -310,7 +310,7 @@ class Problem extends Model {
 
 	async isAllowedManageBy(user) {
 		if (!user) return false;
-		return user.admin >= 3;
+		return await user.admin >= 3;
 		// The user is teacher/system admin
 	}
 
