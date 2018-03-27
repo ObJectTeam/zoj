@@ -140,6 +140,7 @@ app.get('/submission/:id', async (req, res) => {
 		judge.allowedSeeCode = await judge.isAllowedSeeCodeBy(res.locals.user);
 		judge.allowedSeeCase = await judge.isAllowedSeeCaseBy(res.locals.user);
 		judge.allowedSeeData = await judge.isAllowedSeeDataBy(res.locals.user);
+		judge.allowedChangeInvalid = await judge.isAllowedChangeInvalidBy(res.locals.user);
 		judge.allowedRejudge = await judge.problem.isAllowedEditBy(res.locals.user);
 		judge.allowedManage = await judge.problem.isAllowedManageBy(res.locals.user);
 
@@ -233,7 +234,7 @@ app.post('/submission/:id/rejudge', async (req, res) => {
 		let id = parseInt(req.params.id);
 		let judge = await JudgeState.fromID(id);
 
-		if (judge.pending && !(res.locals.user && await res.locals.user.admin >= 3)) throw new ErrorMessage('无法重新评测一个评测中的提交。');
+		if (judge.pending && !(res.locals.user && await res.locals.user.admin >= 3)) throw new ErrorMessage('Cannot rejudge a submission when judging it.');
 
 		await judge.loadRelationships();
 
@@ -242,6 +243,23 @@ app.post('/submission/:id/rejudge', async (req, res) => {
 
 		await judge.rejudge();
 
+		res.redirect(zoj.utils.makeUrl(['submission', id]));
+	} catch (e) {
+		zoj.log(e);
+		res.render('error', {
+			err: e
+		});
+	}
+});
+
+app.post('/submission/:id/changeinvalid', async (req, res) => {
+	try {
+		let id = parseInt(req.params.id);
+		let judge = await JudgeState.fromID(id);
+		if (!await judge.isAllowedChangeInvalidBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+		let sql = "UPDATE judge_state SET invalid=" + (judge.invalid ^ 1) + " WHERE id=" + judge.id + ";";
+		zoj.db.query(sql, { model: this.model });
+		judge.invalid = !judge.invalid;
 		res.redirect(zoj.utils.makeUrl(['submission', id]));
 	} catch (e) {
 		zoj.log(e);

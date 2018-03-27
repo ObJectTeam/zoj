@@ -54,6 +54,9 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
         <% if (judge.allowedRejudge) { %>
           <th>Rejudge</th>
         <% } %>
+        <% if (judge.allowedChangeInvalid) { %>
+          <th>Valid</th>
+        <% } %>
       </tr>
      </thead>
      <tbody>
@@ -119,6 +122,19 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
             </div>
           </td>
         <% } %>
+       
+       <% if (judge.allowedChangeInvalid) { %>
+         <td>
+            <a href-post="<%= zoj.utils.makeUrl(['submission', judge.id, 'changeinvalid']) %>" style="color: #000; ">
+            <% if (judge.invalid) { %>
+              <i class="delete icon"></i>
+            <% } else { %>
+              <i class="check icon"> </i>
+              
+            <% } %>
+            </a>
+          </td>
+       <% } %>
        </tr>
      </tbody>
   </table>

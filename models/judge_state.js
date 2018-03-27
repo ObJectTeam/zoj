@@ -38,7 +38,8 @@ let model = db.define('judge_state', {
 	 * "type" indicate it's contest's submission(type = 1) or normal submission(type = 0)
 	 * "type_info" will be the contest id if it's a contest's submission
 	 */
-	type_info: { type: Sequelize.INTEGER }
+	type_info: { type: Sequelize.INTEGER },
+	invalid: { type: Sequelize.BOOLEAN }
 }, {
 		timestamps: false,
 		tableName: 'judge_state',
@@ -77,7 +78,9 @@ class JudgeState extends Model {
 			total_time: 0,
 			max_memory: 0,
 			status: 'Waiting',
-			result: '{ "status": "Waiting", "total_time": 0, "max_memory": 0, "score": 0, "case_num": 0, "compiler_output": "", "pending": true, "judger": "" }'
+			result: '{ "status": "Waiting", "total_time": 0, "max_memory": 0, "score": 0, "case_num": 0, "compiler_output": "", "pending": true, "judger": "" }',
+
+			invalid: 0
 		}, val)));
 	}
 
@@ -191,6 +194,10 @@ class JudgeState extends Model {
 		// Contest's submission
 		// 1. The user is teacher/system admin
 		// 2. The user is the holder of the contest
+	}
+
+	async isAllowedChangeInvalidBy(user) {
+		return user && user.admin >= 3;
 	}
 
 	async updateResult(result) {
