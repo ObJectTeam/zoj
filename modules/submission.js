@@ -60,7 +60,7 @@ app.get('/submissions', async (req, res) => {
 		await judge_state.forEachAsync(async obj => obj.loadRelationships());
 
 		for (let i = 0; i < judge_state.length; i++) 
-			if (await judge_state.isAllowedVisitBy(res.locals.user)) judge_state.splice(i, 1);
+			if (await judge_state[i].isAllowedVisitBy(res.locals.user)) judge_state.splice(i, 1);
 
 		await judge_state.forEachAsync(async obj => obj.allowedSeeCode = await obj.isAllowedSeeCodeBy(res.locals.user));
 		await judge_state.forEachAsync(async obj => obj.allowedSeeData = await obj.isAllowedSeeDataBy(res.locals.user));
