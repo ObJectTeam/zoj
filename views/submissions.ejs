@@ -80,10 +80,9 @@
     <tbody>
       <% let ids = []; %>
 	  <% for (let judge of judge_state) { %>
-		<% if (judge.allowedSee) { %>
         <% if (judge.pending) ids.push(judge.id); %>
         <tr id="submissions_<%= judge.id %>"><% include submissions_item %></tr>
-      <% } } %>
+      <% } %>
     </tbody>
   </table>
   <script>
