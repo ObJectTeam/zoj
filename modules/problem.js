@@ -706,7 +706,7 @@ app.get('/problem/:id/testdata', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('No such problem.');
-		if (!res.locals.user || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+		if (!await problem.isAllowedManageBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		let testdata = await problem.listTestdata();
 		let testcases = await zoj.utils.parseTestdata(problem.getTestdataPath(), problem.type === 'submit-answer');
@@ -733,7 +733,7 @@ app.post('/problem/:id/testdata/upload', app.multer.array('file'), async (req, r
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('No such problem.');
-		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+		if (!await problem.isAllowedManageBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		if (req.files) {
 			for (let file of req.files) {
@@ -756,7 +756,7 @@ app.post('/problem/:id/testdata/delete/:filename', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('No such problem.');
-		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedEditBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+		if (!await problem.isAllowedManageBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		await problem.deleteTestdataSingleFile(req.params.filename);
 
@@ -775,7 +775,7 @@ app.get('/problem/:id/testdata/download/:filename?', async (req, res) => {
 		let problem = await Problem.fromID(id);
 
 		if (!problem) throw new ErrorMessage('No such problem.');
-		if (!res.locals.user || !(res.locals.user.admin >= 2) || !await problem.isAllowedUseBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
+		if (!await problem.isAllowedManageBy(res.locals.user)) throw new ErrorMessage('You do not have permission to do this.');
 
 		if (!req.params.filename) {
 			if (!await zoj.utils.isFile(problem.getTestdataPath() + '.zip')) {

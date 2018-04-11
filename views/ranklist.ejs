@@ -12,7 +12,7 @@
 	        <tr>
 	            <th style="width: 80px; ">#</th>
 	            <th style="width: 170px; "><%- createSortableTitle('username', 'User Name', true) %></th>
-	            <th>Nick Name</th>
+	            <th>Motto</th>
               <th style="width: 100px; "><%- createSortableTitle('ac_num', 'AC Count', false) %></th>
               <th style="width: 100px; "><%- createSortableTitle('rating', 'Rating', false) %></th>
               <% if(privilege) {%>
@@ -29,7 +29,7 @@
             %>
             <tr>
 		        	<td><%= i %></td>
-		        	<td><a href="<%= zoj.utils.makeUrl(['user', user.id]) %>"><%= user.username %></a><% if (user.nameplate) { %><%- user.nameplate %><% } %></td>
+		        	<td><a class="<%= zoj.utils.getUsernameColor(user) %>" href="<%= zoj.utils.makeUrl(['user', user.id]) %>"><%= user.username %></a><% if (user.nameplate) { %><%- user.nameplate %><% } %></td>
               <td><%= user.information %></td>
               <td><%= user.ac_num %></td>
               <td><%= user.rating %></td>

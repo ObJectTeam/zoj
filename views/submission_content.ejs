@@ -54,6 +54,9 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
         <% if (judge.allowedRejudge) { %>
           <th>Rejudge</th>
         <% } %>
+        <% if (judge.allowedChangeInvalid) { %>
+          <th>Valid</th>
+        <% } %>
       </tr>
      </thead>
      <tbody>
@@ -80,7 +83,7 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
         <% } else { %>
           <td><%= zoj.utils.formatSize(judge.max_memory) %></td>
         <% } %>
-        <td><a href="<%= zoj.utils.makeUrl(['user', judge.user_id]) %>"><%= judge.user.username %></a><% if (judge.user.nameplate) { %><%- judge.user.nameplate %><% } %></td>
+        <td><a class="<%= zoj.utils.getUsernameColor(judge.user) %>" href="<%= zoj.utils.makeUrl(['user', judge.user_id]) %>"><%= judge.user.username %></a><% if (judge.user.nameplate) { %><%- judge.user.nameplate %><% } %></td>
         <td><%= zoj.utils.formatDate(judge.submit_time) %></td>
         <td><%= judge.result.judger %></td>
         <% if (judge.allowedRejudge) { %>
@@ -119,6 +122,19 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
             </div>
           </td>
         <% } %>
+       
+       <% if (judge.allowedChangeInvalid) { %>
+         <td>
+            <a href-post="<%= zoj.utils.makeUrl(['submission', judge.id, 'changeinvalid']) %>" style="color: #000; ">
+            <% if (judge.invalid) { %>
+              <i class="delete icon"></i>
+            <% } else { %>
+              <i class="check icon"> </i>
+              
+            <% } %>
+            </a>
+          </td>
+       <% } %>
        </tr>
      </tbody>
   </table>
@@ -154,7 +170,7 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
   <h3 class="ui header">System Debugging Information</h3>
   <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= judge.result.message %></code></pre></div>
 <% } else if (judge.result.spj_compiler_output) { %>
-  <h3 class="ui header"><%= judge.problem.type === 'interaction' ? 'Interaction' : 'Special Judge ' %>Compile Information</h3>
+  <h3 class="ui header">Special Judge Compile Information</h3>
   <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%- zoj.utils.ansiToHTML(judge.result.spj_compiler_output) %></code></pre></div>
 <% } else if (judge.allowedSeeCase && judge.result.subtasks && (judge.result.subtasks.length !== 1 || judge.result.subtasks[0].case_num)) { %>
 <div class="ui styled fluid accordion" id="subtasks_list">
@@ -204,16 +220,14 @@ else problemUrl = zoj.utils.makeUrl(['problem', judge.problem_id]);
                 <strong>Input File<% if (testcase.input_file_name) { %>（<span style="font-family: monospace; "><%= testcase.input_file_name %></span>）<% } %></strong>
                 <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.input %></code></pre></div>
               <% } %>
-              <% if (judge.problem.type !== 'interaction' && judge.problem.type !== 'submit-answer') { %>
+              <% if (judge.problem.type !== 'submit-answer') { %>
                   <strong>Output File<% if (testcase.output_file_name) { %>（<span style="font-family: monospace; "><%= testcase.output_file_name %></span>）<% } %></strong>
                   <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.answer %></code></pre></div>
               <% } %>
-              <% if (judge.problem.type !== 'interaction') { %>
-                  <strong>Your Output</strong>
-                  <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.user_out %></code></pre></div>
-              <% } %>
+              <strong>Your Output</strong>
+              <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.user_out %></code></pre></div>
               <% if (testcase.spj_message) { %>
-                <strong><%= judge.problem.type === 'interaction' ? 'Interaction' : 'Special Judge ' %>Information</strong>
+                <strong>Special Judge Information</strong>
                 <div class="ui existing segment"><pre style="margin-top: 0; margin-bottom: 0; "><code><%= testcase.spj_message %></code></pre></div>
               <% } %>
               <% if (testcase.user_err) { %>

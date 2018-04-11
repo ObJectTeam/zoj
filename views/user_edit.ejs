@@ -23,7 +23,7 @@
 	    </div>
 	    <div class="field">
 	    	<label for="email">Email</label>
-	    	<input class="font-content" type="email" id="email" name="email" value="<%= edited_user.email %>"<% if (!user.allowedManage) { %> readonly<% } %>>
+	    	<input class="font-content" type="email" id="email" name="email" value="<%= edited_user.email %>">
 	    </div>
       <div class="inline field">
         <label class="ui header">Publish Email</label>
@@ -33,9 +33,17 @@
         </div>
 	    </div>
 	    <div class="field">
-	    	<label for="information">Nick Name</label>
-	    	<input type="text" class="font-content" id="information" name="information" value="<%= edited_user.information %>"></textarea>
-	    </div>
+	    	<label for="information">Motto</label>
+	    	<input type="text" class="font-content" id="information" name="information" value="<%= edited_user.information %>">
+      </div>
+      <div class="field">
+	    	<label for="theme">Theme</label>
+        <select class="ui dropdown" id="theme" name="theme">
+          <option value="">Theme</option>
+          <option value="light" <% if(edited_user.theme === 'light'){ %> selected <% } %> >Light</option>
+          <option value="dark" <% if(edited_user.theme === 'dark'){ %> selected <% } %> >Dark</option>
+        </select>
+      </div>
       <div class="field">
       <label class="ui header">Password</label>
         <input type="password" placeholder="The original password (Won't modify if it is empty)" name="old_password" id="old_password">

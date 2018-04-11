@@ -172,6 +172,15 @@ module.exports = {
 		}
 		return parseInt(+d / 1000);
 	},
+	getUsernameColor(user) {
+		if (!user.is_show) return 'colorlvl_0';
+		if (user.admin >= 3) return 'colorlvl_inf';
+		if (user.rating >= 2500) return 'colorlvl_5';
+		if (user.rating >= 2200) return 'colorlvl_4';
+		if (user.rating >= 1800) return 'colorlvl_3';
+		if (user.rating >= 1500) return 'colorlvl_2';
+		return 'colorlvl_1';
+	},
 	makeUrl(req_params, form) {
 		let res = '';
 		if (!req_params) res = '/';

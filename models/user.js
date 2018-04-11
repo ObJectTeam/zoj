@@ -46,7 +46,8 @@ let model = db.define('user', {
 	// is_show : Whether the user is banned
 	public_email: { type: Sequelize.BOOLEAN },
 	sex: { type: Sequelize.INTEGER },
-	rating: { type: Sequelize.INTEGER }
+	rating: { type: Sequelize.INTEGER },
+	theme: { type: Sequelize.STRING(10) }
 }, {
 		timestamps: false,
 		tableName: 'user',
@@ -77,7 +78,8 @@ class User extends Model {
 			submit_num: 0,
 			sex: 0,
 			is_show: zoj.config.default.user.show,
-			rating: zoj.config.default.user.rating
+			rating: zoj.config.default.user.rating,
+			theme: "light"
 		}, val)));
 	}
 

@@ -6,12 +6,12 @@
 <div class="ui center aligned grid">
     <div class="row">
       <h1 class="ui header">
-          <%= post.from %> #<%= post.problem_id %>. <%= post.title %><% if (post.allowedEdit) { if (!post.is_public) {%><span class="ui tiny red label">Unpublished</span><% }} %>
+          <%= post.from %> #<%= post.problem_id %>. <%= post.title %><% if (post.allowedEdit) { if (!post.is_public) {%><span class="ui tiny red label">U</span><% }} %>
       </h1>
     </div>
     <div class="row" style="margin-top: -23px">
         <span class="ui label">Author:
-            <a href="<%= zoj.utils.makeUrl(['user', post.user_id]) %>"><%= post.user.username %></a>
+            <a class="<%= zoj.utils.getUsernameColor(post.user) %>" href="<%= zoj.utils.makeUrl(['user', post.user_id]) %>"><%= post.user.username %></a>
         </span>
     </div>
 </div>

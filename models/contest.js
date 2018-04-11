@@ -80,6 +80,12 @@ class Contest extends Model {
 		this.ranklist = await ContestRanklist.fromID(this.ranklist_id);
 	}
 
+	async isAllowedSeeBy(user) {
+		if (!user || user.admin < 1) return this.is_public && !this.is_protected;
+		if (user.admin < 3) return this.is_public;
+		return true;
+	}
+
 	async isAllowedEditBy(user) {
 		return user && (user.admin >= 3 || this.holder_id === user.id);
 	}

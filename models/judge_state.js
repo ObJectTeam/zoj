@@ -38,7 +38,8 @@ let model = db.define('judge_state', {
 	 * "type" indicate it's contest's submission(type = 1) or normal submission(type = 0)
 	 * "type_info" will be the contest id if it's a contest's submission
 	 */
-	type_info: { type: Sequelize.INTEGER }
+	type_info: { type: Sequelize.INTEGER },
+	invalid: { type: Sequelize.BOOLEAN }
 }, {
 		timestamps: false,
 		tableName: 'judge_state',
@@ -77,7 +78,9 @@ class JudgeState extends Model {
 			total_time: 0,
 			max_memory: 0,
 			status: 'Waiting',
-			result: '{ "status": "Waiting", "total_time": 0, "max_memory": 0, "score": 0, "case_num": 0, "compiler_output": "", "pending": true, "judger": "" }'
+			result: '{ "status": "Waiting", "total_time": 0, "max_memory": 0, "score": 0, "case_num": 0, "compiler_output": "", "pending": true, "judger": "" }',
+
+			invalid: 0
 		}, val)));
 	}
 
@@ -94,9 +97,7 @@ class JudgeState extends Model {
 		else if (user && user.id === this.user_id) return true;
 		// The user is the submitter.
 		else if (this.type === 0) {
-			if (!user || await user.admin < 1) return this.problem.is_public && !this.problem.is_protected;
-			else if (await user.admin < 3) return this.problem.is_public;
-			return true;
+			return await this.problem.isAllowedUseBy(user);
 		}
 		// Normal submission
 		// 1. The problem is public and not protected
@@ -107,7 +108,7 @@ class JudgeState extends Model {
 			if (await contest.isRunning()) {
 				return ((user && user.admin >= 3) || (user && user.id === contest.holder_id));
 			} else {
-				return true;
+				return await this.problem.isAllowedUseBy(user);
 			}
 		}
 		// Contest's submissions
@@ -115,7 +116,7 @@ class JudgeState extends Model {
 		// 2. The user is the holder of the contest
 		// 3. The contest is not running
 	}
-
+	
 	async isAllowedSeeCodeBy(user) {
 		await this.loadRelationships();
 		if (!user) return false;
@@ -148,8 +149,8 @@ class JudgeState extends Model {
 		// The user is teachar/system admin
 		if (user.id === this.problem.user_id) return true;
 		// The user is the creator of the problem
-		if (user.id === this.user_id) return true;
 		if (this.type === 0) {
+			if (user.id === this.user_id) return true;
 			this.problem.judge_state = await this.problem.getJudgeState(user);
 			if (!this.problem.judge_state) return false;
 			return this.problem.judge_state.result.status == 'Accepted';
@@ -159,8 +160,9 @@ class JudgeState extends Model {
 		else if (this.type === 1) {
 			let contest = await Contest.fromID(this.type_info);
 			if (await contest.isRunning()) {
-				return (user.admin >= 3 || user.id === contest.holder_id);
+				return (user.id === contest.holder_id);
 			} else {
+				if (user.id === this.user_id) return true;
 				this.problem.judge_state = await this.problem.getJudgeState(user);
 				if (!this.problem.judge_state) return false;
 				return this.problem.judge_state.result.status == 'Accepted';
@@ -170,7 +172,7 @@ class JudgeState extends Model {
 		// 1.The user is teacher/system admin
 		// 2.The user is the holder of the contest
 		// 3.The contest is not running and the user has accepted this problem
-	}
+}
 
 	async isAllowedSeeDataBy(user) {
 		await this.loadRelationships();
@@ -192,6 +194,10 @@ class JudgeState extends Model {
 		// Contest's submission
 		// 1. The user is teacher/system admin
 		// 2. The user is the holder of the contest
+	}
+
+	async isAllowedChangeInvalidBy(user) {
+		return user && user.admin >= 3;
 	}
 
 	async updateResult(result) {
@@ -247,7 +253,7 @@ class JudgeState extends Model {
 				this.max_memory = 0;
 			}
 			this.pending = true;
-			this.result = { status: "Waiting", total_time: 0, max_memory: 0, score: 0, case_num: 0, compiler_output: "", pending: true };
+			this.result = { status: "Waiting", total_time: 0, max_memory: 0, score: 0, case_num: 0, compiler_output: "", pending: true, judger: "" };
 			await this.save();
 
 			let WaitingJudge = zoj.model('waiting_judge');

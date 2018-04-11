@@ -33,7 +33,34 @@ if (typeof tags !== 'undefined') tagIDs = tags.map(x => x.id);
           </form>
         <% } %>
       </div>
-      <div class="nine wide right aligned column">
+	  <div class="nine wide right aligned column">
+		<% if (res.locals.user) { %>
+		<div class="ui toggle checkbox" id="onlyself">
+			<style id="onlyself_style"></style>
+			<script>
+			<% if (req.cookies['selfonly_mode'] == '1') { %>
+			document.write('<input type="checkbox" checked>');
+			<% } else { %>
+			document.write('<input type="checkbox">');
+			<% } %> 
+			</script>
+			<script>
+			$(function () {
+			$('#onlyself').checkbox('setting', 'onChange', function () {
+				let checked = $('#onlyself').checkbox('is checked');
+				localStorage.setItem('onlyself', checked ? '1' : '0');
+				document.cookie='selfonly_mode='+(checked?1:0)+";path=/";
+				if (checked) {
+				window.location = '/blogs/user/<%= res.locals.user.id %>';
+				} else {
+				window.location = '/blogs';
+				}
+			});
+			});
+			</script>
+			<label>Only view your blogs</label>
+		</div>
+		<% } %>
         <div class="ui toggle checkbox" id="show_tag">
           <style id="show_tag_style"></style>
           <script>
@@ -95,13 +122,12 @@ if (typeof tags !== 'undefined') tagIDs = tags.map(x => x.id);
         <% if (blog.is_public || blog.allowedEdit) { %>
         <tr style="height: 44px; ">
             <td><%= blog.id %></td>
-            <td><%= blog.user.username %></td>
+            <td><a class="<%= zoj.utils.getUsernameColor(blog.user) %>" href="<%= zoj.utils.makeUrl(['user', blog.user.id]) %>"><%= blog.user.username %></td>
             <td><%= blog.from %></td>
             <td><%= blog.problem_id %></td>
             <td>
               <a style="vertical-align: middle; " href="<%= zoj.utils.makeUrl(['blog', blog.id]) %>"><%= blog.title %>
-                <% if (!blog.is_public) { %><span class="ui header"><span class="ui tiny red label">Unpublished</span></span><% } %>
-                <% if (blog.is_protected) { %><span class="ui header"><span class="ui tiny green label">Protected</span></span><% } %>
+                <% if (!blog.is_public) { %><span class="ui header"><span class="ui tiny red label">U</span></span><% } %>
               </a>
               <div class="show_tag_controled" style="float: right; ">
                 <%

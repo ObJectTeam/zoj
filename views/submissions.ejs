@@ -6,7 +6,7 @@
   <form action="<%= zoj.utils.makeUrl(['submissions']) %>" class="ui mini form" method="get" role="form" id="form">
     <div class="inline fields" style="margin-bottom: 25px; white-space: nowrap; ">
       <label style="font-size: 1.2em; margin-right: 1px; ">Problem：</label>
-      <div class="field"><input name="problem_id" style="width: 50px; " type="text" value="<%= form.problem_id %>"></div>
+      <div class="field"><input name="problem_id" style="width: 60px; " type="text" value="<%= form.problem_id %>"></div>
       <label style="font-size: 1.2em; margin-right: 1px; ">Submitted By：</label>
       <div class="field"><input name="submitter" style="width: 100px; " type="text" value="<%= form.submitter %>"></div>
       <label style="font-size: 1.2em; margin-right: 1px; ">Score：</label>
@@ -44,11 +44,11 @@
         </div>
       </div>
     
-      <button class="ui icon mini button" style="margin-left: auto; width:60px;"type="submit" title="Search">
+      <button class="ui icon mini button fluid" style="margin-left: auto;" type="submit" title="Search">
         <i class="search icon"></i>
       </button>
       <% if (user) { %>
-      <a class="ui mini icon blue button" style="margin-left: auto; " id="my_submit" title="My Submissions">
+      <a class="ui mini icon blue button fluid" style="margin-left: auto;" id="my_submit" title="My Submissions">
         <i class="user icon"></i>
       </a>
       <script>
@@ -79,10 +79,11 @@
     </thead>
     <tbody>
       <% let ids = []; %>
-      <% for (let judge of judge_state) { %>
+	  <% for (let judge of judge_state) { %>
+		<% if (judge.allowedSee) { %>
         <% if (judge.pending) ids.push(judge.id); %>
         <tr id="submissions_<%= judge.id %>"><% include submissions_item %></tr>
-      <% } %>
+      <% } } %>
     </tbody>
   </table>
   <script>

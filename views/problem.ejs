@@ -30,7 +30,7 @@ div[class*=ace_br] {
         <% if (contest) { %>
           <%= this.alpha(pid) %>. <%= zoj.utils.removeTitleTag(problem.title) %>
         <% } else { %>
-          #<%= problem.id %>. <%= problem.title %><% if (problem.allowedEdit) { if (!problem.is_public) {%><span class="ui tiny red label">Unpublished</span><% } if(problem.is_protected) { %> <span class="ui tiny green label">Protected</span> <% } } %>
+          #<%= problem.id %>. <%= problem.title %><% if (problem.allowedEdit) { if (!problem.is_public) {%><span class="ui tiny red label">U</span><% } if(problem.is_protected) { %> <span class="ui tiny green label">P</span> <% } } %>
         <% } %>
       </h1>
     </div>
@@ -38,9 +38,7 @@ div[class*=ace_br] {
       <div class="row" style="margin-top: -15px">
           <span class="ui label">Memory Limit：<%= problem.memory_limit %> MiB</span>
           <span class="ui label">Time Limit：<%= problem.time_limit %> ms</span>
-          <% if (problem.type === 'interaction') { %>
-            <span class="ui label">Problem Type：Interaction</span>
-          <% } else if (problem.file_io) { %>
+          <% if (problem.file_io) { %>
             <span class="ui label">Input File: <%= problem.file_io_input_name %></span>
             <span class="ui label">Output File: <%= problem.file_io_output_name %></span>
           <% } else { %>
@@ -48,25 +46,23 @@ div[class*=ace_br] {
           <% } %>
       </div>
     <% } %>
-    <% if (problem.type !== 'interaction') { %>
-      <div class="row" style="margin-top: -<%= problem.type === 'submit-answer' ? 15 : 23 %>px">
-          <span class="ui label">Problem Type：<%= { 'submit-answer': 'Submit Answer', 'interaction': 'Interaction', 'traditional': 'Traditional' }[problem.type] %></span>
-          <span class="ui label">Testcases：<%= (testcases && !testcases.error) ? (testcases.spj ? 'Special Judge' : 'Compare Texts') : 'No Testdata' %></span>
-      </div>
-    <% } %>
+    <div class="row" style="margin-top: -<%= problem.type === 'submit-answer' ? 15 : 23 %>px">
+        <span class="ui label">Problem Type：<%= { 'submit-answer': 'Submit Answer', 'traditional': 'Traditional' }[problem.type] %></span>
+        <span class="ui label">Judge method：<%= (testcases && !testcases.error) ? (testcases.spj ? 'Special Judge' : 'Compare Texts') : 'No Testdata' %></span>
+    </div>
     <% if (!contest) { %>
         <div class="row" style="margin-top: -23px">
             <span class="ui label">Uploaded by：
             <% if (problem.is_anonymous && !problem.allowedManage) { %>
               Anonymous
             <% } else { %>
-              <a href="<%= zoj.utils.makeUrl(['user', problem.user_id]) %>"><%= problem.user.username %></a>
+              <a class="<%= zoj.utils.getUsernameColor(problem.user) %>" href="<%= zoj.utils.makeUrl(['user', problem.user_id]) %>"><%= problem.user.username %></a>
             <% } %>
             </span>
             <% if (problem.allowedManage) { %>
                 <span class="ui label">Published by:
                 <% if (problem.publicizer) { %>
-                  <a href="<%= zoj.utils.makeUrl(['user', problem.publicizer_id]) %>"><%= problem.publicizer.username %></a>
+                  <a class="<%= zoj.utils.getUsernameColor(problem.publicizer) %>" href="<%= zoj.utils.makeUrl(['user', problem.publicizer_id]) %>"><%= problem.publicizer.username %></a>
                 <% } else { %>
                   Unknown
                 <% } %>
