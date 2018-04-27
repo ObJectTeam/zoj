@@ -173,11 +173,11 @@ module.exports = {
 		return parseInt(+d / 1000);
 	},
 	getUsernameColor(user) {
-		if (!user.is_show) return 'brown';
+		if (!user.is_show) return 'pink';
 		if (user.admin >= 3) return 'purple';
 		if (user.rating >= 3000) return 'rgb(255,0,0)';
 		let x = user.rating / 3000;
-		return 'rgb(' + Math.round(x * 255) + ',' + Math.round(-1020 * (x - 0.5) * (x - 0.5) + 255) + ',' + Math.round(255 - 255 * x) + ')';
+		return 'rgb(' + Math.round(x * 255) + ',' + Math.round(255 - 255 * x) + ',0)';
 	},
 	makeUrl(req_params, form) {
 		let res = '';
