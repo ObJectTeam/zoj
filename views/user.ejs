@@ -29,7 +29,7 @@ padding-top: 100%;
 </div>
 <div class="content">
 <div class="header">
-<a class="<%= zoj.utils.getUsernameColor(show_user) %>">
+<a style="color: <%= zoj.utils.getUsernameColor(show_user) %>" class="zoj-username">
 <%= show_user.username %>
 <% if (show_user.nameplate) { %>
 <%- show_user.nameplate %>
@@ -62,7 +62,7 @@ padding-top: 100%;
 <div class="column">
 <h4 class="ui top attached block header">User Name</h4>
 <div class="ui bottom attached segment">
-<a class="<%= zoj.utils.getUsernameColor(show_user) %>">
+<a style="color: <%= zoj.utils.getUsernameColor(show_user) %>" class="zoj-username">
 <%= show_user.username %>
 <% if (show_user.nameplate) { %>
 <%- show_user.nameplate %>

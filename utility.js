@@ -173,13 +173,11 @@ module.exports = {
 		return parseInt(+d / 1000);
 	},
 	getUsernameColor(user) {
-		if (!user.is_show) return 'colorlvl_0';
-		if (user.admin >= 3) return 'colorlvl_inf';
-		if (user.rating >= 2500) return 'colorlvl_5';
-		if (user.rating >= 2200) return 'colorlvl_4';
-		if (user.rating >= 1800) return 'colorlvl_3';
-		if (user.rating >= 1500) return 'colorlvl_2';
-		return 'colorlvl_1';
+		if (!user.is_show) return 'brown';
+		if (user.admin >= 3) return 'purple';
+		if (user.rating >= 3000) return 'rgb(255,0,0)';
+		let x = user.rating / 3000;
+		return 'rgb(' + Math.round(x * 255) + ',' + Math.round(-1020 * (x - 0.5) * (x - 0.5) + 255) + ',' + Math.round(255 - 255 * x) + ')';
 	},
 	makeUrl(req_params, form) {
 		let res = '';
