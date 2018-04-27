@@ -1,6 +1,7 @@
 'use strict';
 
 let User = zoj.model('user');
+let xss = require('xss');
 const RatingCalculation = zoj.model('rating_calculation');
 const RatingHistory = zoj.model('rating_history');
 const Contest = zoj.model('contest');
@@ -190,8 +191,18 @@ app.post('/user/:id/edit', async (req, res) => {
 			if (req.body.admin) user.admin = req.body.admin;
 			user.is_show = is_show;
 		}
-
-		user.information = req.body.information;
+		let options = {
+			whiteList: {
+				a: ['href', 'style', 'class'],
+				p: ['href', 'style', 'class'],
+				pre: [],
+				br: [],
+				font: ['style', 'class'],
+				span: ['style', 'class']
+			}
+		}
+		let html = xss(req.body.information, options);
+		user.information = html;
 		user.sex = req.body.sex;
 		user.email = req.body.email;
 		user.public_email = (req.body.public_email === 'on');
