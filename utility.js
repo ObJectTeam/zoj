@@ -175,8 +175,8 @@ module.exports = {
 	getUsernameColor(user) {
 		if (!user.is_show) return 'pink';
 		if (user.admin >= 3) return 'purple';
-		if (user.rating >= 3000) return 'rgb(255,0,0)';
-		let x = user.rating / 3000;
+		if (user.rating >= 2500) return 'rgb(255,0,0)';
+		let x = user.rating / 2500;
 		return 'rgb(' + Math.round(x * 255) + ',' + Math.round(255 - 255 * x) + ',0)';
 	},
 	makeUrl(req_params, form) {
