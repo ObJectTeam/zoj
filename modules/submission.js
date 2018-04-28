@@ -41,13 +41,13 @@ app.get('/submissions', async (req, res) => {
 			if (req.query.problem_id) {
 				where.problem_id = {
 					$and: [
-						{ $in: zoj.db.literal('(SELECT `id` FROM `problem` WHERE `is_public` = 1' + (res.locals.user ? (' OR `user_id` = ' + res.locals.user.id) : '') + ')') },
+						{ $in: zoj.db.literal('(SELECT `id` FROM `problem` WHERE (`is_public` = 1' + (!res.locals.user || res.locals.user.admin < 1 ? ' AND `is_protected` = 0)' : ')') + (res.locals.user ? (' OR `user_id` = ' + res.locals.user.id) : '') + ')') },
 						{ $eq: where.problem_id = parseInt(req.query.problem_id) || -1 }
 					]
 				};
 			} else {
 				where.problem_id = {
-					$in: zoj.db.literal('(SELECT `id` FROM `problem` WHERE `is_public` = 1' + (res.locals.user ? (' OR `user_id` = ' + res.locals.user.id) : '') + ')'),
+					$in: zoj.db.literal('(SELECT `id` FROM `problem` WHERE (`is_public` = 1' + (!res.locals.user || res.locals.user.admin < 1 ? ' AND `is_protected` = 0)' : ')') + (res.locals.user ? (' OR `user_id` = ' + res.locals.user.id) : '') + ')'),
 				};
 			}
 		} else {
@@ -60,7 +60,6 @@ app.get('/submissions', async (req, res) => {
 		await judge_state.forEachAsync(async obj => obj.loadRelationships());
 		await judge_state.forEachAsync(async obj => obj.allowedSeeCode = await obj.isAllowedSeeCodeBy(res.locals.user));
 		await judge_state.forEachAsync(async obj => obj.allowedSeeData = await obj.isAllowedSeeDataBy(res.locals.user));
-		await judge_state.forEachAsync(async obj => obj.allowedSee = await obj.isAllowedVisitBy(res.locals.user));
 
 		res.render('submissions', {
 			judge_state: judge_state,
