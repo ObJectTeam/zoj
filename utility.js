@@ -194,7 +194,7 @@ module.exports = {
 	getColOfRating(rating) {
 		if (rating < 1500) {
 			var H = 181.8181818181818182, S = 57.5757575757575758, V = 69.6969696969696970, k = rating / 1500;
-			return this.toRGB(H + (300 - H) (1 - k), 30 + (S - 30) * k, 50 + (V - 50) * k);
+			return this.toRGB(H + (300 - H) * (1 - k), 30 + (S - 30) * k, 50 + (V - 50) * k);
 		}
 		if(rating > 2500) rating = 2500;
 		return this.toRGB(300 - (rating - 850) * 300 / 1650, 30 + (rating - 850) * 70 / 1650, 50 + (rating - 850) * 50 / 1650);
