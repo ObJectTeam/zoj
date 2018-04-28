@@ -172,12 +172,37 @@ module.exports = {
 		}
 		return parseInt(+d / 1000);
 	},
+	toRGB(a, b, c) {
+		0 >= a && (a = 0), 0 >= b && (b = 0), 0 >= c && (c = 0), a > 360 && (a = 360), b > 100 && (b = 100), c > 100 && (c = 100);
+		var h = a, s = b, v = c;
+		var aa = 0, ab = 0, ac = 0, ad = h / 360, ae = s / 100, af = v / 100, r, g, b;
+		var var_h, var_i, var_1, var_2, var_3, var_r, var_g, var_b;
+		var_h = 6 * ad,
+		var_i = Math.floor(var_h),
+		var_1 = af * (1 - ae),
+		var_2 = af * (1 - ae * (var_h - var_i)),
+		var_3 = af * (1 - ae * (1 - (var_h - var_i))),
+		0 == var_i ? (var_r = af, var_g = var_3, var_b = var_1) : 1 == var_i ? (var_r = var_2, var_g = af, var_b = var_1) : 2 == var_i ? (var_r = var_1, var_g = af, var_b = var_3) : 3 == var_i ? (var_r = var_1, var_g = var_2, var_b = af) : 4 == var_i ? (var_r = var_3, var_g = var_1, var_b = af) : (var_r = af, var_g = var_1, var_b = var_2),
+		r = 255 * var_r,
+		g = 255 * var_g,
+		b = 255 * var_b,
+		r = Math.round(r),
+		g = Math.round(g),
+		b = Math.round(b);
+		return "rgb(" + r + "," + g + "," + b + ")";
+	},
+	getColOfRating(rating) {
+		if (rating < 1500) {
+			var H = 181.8181818181818182, S = 57.5757575757575758, V = 69.6969696969696970, k = rating / 1500;
+			return this.toRGB(H + (300 - H) (1 - k), 30 + (S - 30) * k, 50 + (V - 50) * k);
+		}
+		if(rating > 2500) rating = 2500;
+		return this.toRGB(300 - (rating - 850) * 300 / 1650, 30 + (rating - 850) * 70 / 1650, 50 + (rating - 850) * 50 / 1650);
+	},
 	getUsernameColor(user) {
 		if (!user.is_show) return 'pink';
 		if (user.admin >= 3) return 'purple';
-		if (user.rating >= 2500) return 'rgb(255,0,0)';
-		let x = user.rating / 2500;
-		return 'rgb(' + Math.round(x * 255) + ',' + Math.round(255 - 255 * x) + ',0)';
+		return this.getColOfRating(user.rating);
 	},
 	makeUrl(req_params, form) {
 		let res = '';
