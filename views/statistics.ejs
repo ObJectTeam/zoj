@@ -102,7 +102,7 @@ function getColorOfScore(score) {
                   <% } %>
                 </td>
               <% } %>
-              <%- zoj.utils.getUsername(judge.user) %><% if (judge.user.nameplate) { %><%- judge.user.nameplate %><% } %></td>
+              <td><%- zoj.utils.getUsername(judge.user) %><% if (judge.user.nameplate) { %><%- judge.user.nameplate %><% } %></td>
               <td><%= zoj.utils.formatDate(judge.submit_time) %></td>
           </tr>
       <% } %>
