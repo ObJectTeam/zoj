@@ -191,17 +191,7 @@ app.post('/user/:id/edit', async (req, res) => {
 			if (req.body.admin) user.admin = req.body.admin;
 			user.is_show = is_show;
 		}
-		let options = {
-			whiteList: {
-				a: ['href', 'style', 'class'],
-				p: ['href', 'style', 'class'],
-				pre: [],
-				br: [],
-				font: ['style', 'class'],
-				span: ['style', 'class']
-			}
-		}
-		let html = xss(req.body.information, options);
+		let html = xss(req.body.information, zoj.config.xss.options);
 		user.information = html;
 		user.sex = req.body.sex;
 		user.email = req.body.email;

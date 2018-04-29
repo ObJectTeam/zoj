@@ -28,13 +28,11 @@ padding-top: 100%;
 <img style="margin-top: -100%; " src="<%= zoj.utils.gravatar(show_user.email, 1000) %>">
 </div>
 <div class="content">
-<div class="header">
-<a style="color: <%= zoj.utils.getUsernameColor(show_user) %>" class="zoj-username">
-<%= show_user.username %>
+<div class="header">=
+<%- zoj.utils.getUsername(show_user) %>
 <% if (show_user.nameplate) { %>
 <%- show_user.nameplate %>
 <% } %>
-</a>
 <% if (show_user.sex == 1) { %>
 <i class="man icon"></i>
 <% } else if (show_user.sex == -1) { %>
@@ -62,12 +60,10 @@ padding-top: 100%;
 <div class="column">
 <h4 class="ui top attached block header">User Name</h4>
 <div class="ui bottom attached segment">
-<a style="color: <%= zoj.utils.getUsernameColor(show_user) %>" class="zoj-username">
-<%= show_user.username %>
+<%- zoj.utils.getUsername(show_user) %>
 <% if (show_user.nameplate) { %>
 <%- show_user.nameplate %>
 <% } %>
-</a>
 </div>
 </div>
 </div>

@@ -204,6 +204,17 @@ module.exports = {
 		if (user.admin >= 3) return 'purple';
 		return this.getColOfRating(user.rating);
 	},
+	getUsername(user) {
+		let res = '<a class="zoj-username" href=/user/' + user.id + ' style="color: ' + this.getUsernameColor(user) + '">'
+		if (user.is_show && user.admin < 3 && user.rating >= 2800) {
+			res += '<span class="legendary-user-first-letter">' + user.username[0] + '</span>';
+			res += user.username.substring(1);
+		} else {
+			res += user.username;
+		}
+		res += '</a>'
+		return res;
+	},
 	makeUrl(req_params, form) {
 		let res = '';
 		if (!req_params) res = '/';

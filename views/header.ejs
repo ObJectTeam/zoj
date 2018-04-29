@@ -5,13 +5,6 @@
     <meta charset="utf-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <title><%= title %> - <%= zoj.config.title %></title>
-	<style>
-		a.link:hover{ text-decoration: underline }
-        a.zoj-username{
-            text-decoration: none;
-            font-weight:bolder;
-        }
-    </style>
     <link rel="stylesheet" href="/semantic-ui/semantic.min.css">
     <link rel="stylesheet" href="/tomorrow.css">
     <link rel="stylesheet" href="/mathjax.css">
@@ -53,7 +46,7 @@
               <div class="ui simple dropdown item">
                 <i class="power icon"></i>
                 <div class="menu">
-                  <a style="color: <%= zoj.utils.getUsernameColor(user) %>" class="item zoj-username" href="<%= zoj.utils.makeUrl(['user', user.id]) %>"><i class="user circle outline icon"></i><%= user.username %><% if (user.nameplate) { %><%- user.nameplate %><% } %></a>
+                  <a class="item" href="<%= zoj.utils.makeUrl(['user', user.id]) %>"><i class="user circle outline icon"></i><%= user.username %><% if (user.nameplate) { %><%- user.nameplate %><% } %></a>
                   <a class="item" href="<%= zoj.utils.makeUrl(['user', user.id, 'edit']) %>"><i class="edit icon"></i>Edit profile</a>
                   <a class="item" href="<%= zoj.utils.makeUrl(['blogs', 'user', user.id]) %>"><i class="coffee icon"></i>Blog</a>
                   <% if (user.admin >= 4) { %>

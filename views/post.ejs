@@ -11,7 +11,7 @@
     </div>
     <div class="row" style="margin-top: -23px">
         <span class="ui label">Author:
-            <a style="color:<%= zoj.utils.getUsernameColor(post.user) %>" class="zoj-username" href="<%= zoj.utils.makeUrl(['user', post.user_id]) %>"><%= post.user.username %></a>
+            <%- zoj.utils.getUsername(post.user) %>
         </span>
     </div>
 </div>

@@ -49,9 +49,7 @@ for (let user of ranklist) {
 <%= i %>
 </td>
 <td>
-<a class="zoj-username" style="color:<%= zoj.utils.getUsernameColor(user) %>" href="<%= zoj.utils.makeUrl(['user', user.id]) %>">
-<%= user.username %>
-</a>
+<%- zoj.utils.getUsername(user) %>
 <% if (user.nameplate) { %>
 <%- user.nameplate %>
 <% } %>

@@ -336,6 +336,19 @@
     border: none;
 }
 
+a.link:hover { 
+  text-decoration: underline;
+}
+
+a.zoj-username {
+  text-decoration: none;
+  font-weight: bolder;
+}
+
+span.legendary-user-first-letter {
+  color: black !important;
+}
+
 th {
     white-space: nowrap;
 }

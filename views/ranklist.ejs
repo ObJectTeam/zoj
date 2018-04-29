@@ -29,7 +29,7 @@
             %>
             <tr>
 		        	<td><%= i %></td>
-		        	<td><a style="color: <%= zoj.utils.getUsernameColor(user) %>" class="zoj-username" href="<%= zoj.utils.makeUrl(['user', user.id]) %>"><%= user.username %></a><% if (user.nameplate) { %><%- user.nameplate %><% } %></td>
+		        	<td><%- zoj.utils.getUsername(user) %><% if (user.nameplate) { %><%- user.nameplate %><% } %></td>
               <td><%- user.information %></td>
               <td><%= user.ac_num %></td>
               <td><%= user.rating %></td>
