@@ -172,7 +172,9 @@ padding-top: 100%;
 <%= history.rank != null ? history.rank + " / " + history.participants : '' %>
 </td>
 <td>
+<a style="font-weight:bold; color:<%= zoj.utils.getColOfRating(history.value); %>">
 <%= history.value %>
+</a>
 <% if(history.delta != null) { %>
 <span class="<%= history.delta >= 0 ? 'rating_up' : 'rating_down' %>">
 (
