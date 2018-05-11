@@ -213,9 +213,6 @@ module.exports = {
 			res += user.username;
 		}
 		res += '</a>'
-		if (user.admin>=3){
-			res+='<a style="background-color:purple;color:white";font-family:"华文行楷";>管理员</a>';
-		}
 		return res;
 	},
 	makeUrl(req_params, form) {
