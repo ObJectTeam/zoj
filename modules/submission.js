@@ -47,7 +47,7 @@ app.get('/submissions', async (req, res) => {
 				};
 			} else {
 				where.problem_id = {
-					$in: zoj.db.literal('(SELECT `id` FROM `problem` WHERE (`is_public` = 1' + (!res.locals.user || res.locals.user.admin < 1 ? ' AND `is_protected` = 0)' : ')') + (res.locals.user ? (' OR `user_id` = ' + res.locals.user.id) : '') + ')'),
+					$in: zoj.db.literal('(SELECT `id` FROM `problem` WHERE (`is_public` = 1' + (!res.locals.user || res.locals.user.admin < 1 ? ' AND `is_protected` = 0' : '') + ')' + (res.locals.user ? (' OR `user_id` = ' + res.locals.user.id) : '') + ')'),
 				};
 			}
 		} else {
