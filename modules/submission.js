@@ -37,7 +37,7 @@ app.get('/submissions', async (req, res) => {
 
 		where.type = { $ne: 1 };
 
-		if (!res.locals.user || !await res.locals.user.admin >= 3) {
+		if (!res.locals.user || res.locals.user.admin < 3) {
 			if (req.query.problem_id) {
 				where.problem_id = {
 					$and: [
